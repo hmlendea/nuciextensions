@@ -9,21 +9,31 @@ namespace NuciExtensions
     /// </summary>
     public static class EnumerableExt
     {
-        static Random random;
-
         /// <summary>
-        /// Checks wether the collection is empty.
+        /// Checks wether the collection is null or empty.
         /// </summary>
         /// <param name="enumerable">The collection.</param>
-        /// <returns>True if the collection is empty, false otherwise.</returns>
+        /// <returns>True if the collection is null or empty, false otherwise.</returns>
         public static bool IsNullOrEmpty<T>(IEnumerable<T> enumerable)
         {
             if (enumerable == null)
             {
                 return true;
             }
-
-            return enumerable.Count() < 1;
+            
+            return IsEmpty(enumerable);
+        }
+        /// <summary>
+        /// Checks wether the collection is empty.
+        /// </summary>
+        /// <param name="enumerable">The collection.</param>
+        /// <returns>True if the collection is empty, false otherwise.</returns>
+        public static bool IsEmpty<T>(IEnumerable<T> enumerable)
+        {
+            int elementsCount = enumerable.Count();
+            bool isEmpty = elementsCount < 1;
+            
+            return isEmpty;
         }
     }
 }
