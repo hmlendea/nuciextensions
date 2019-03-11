@@ -11,11 +11,15 @@ namespace NuciExtensions
     {
         static Random random;
 
-        public static void Shuffle<T>(this IList<T> list)  
+        public static IList<T> Shuffle<T>(this IList<T> list)
         {  
-            if (EnumerableExt.IsNullOrEmpty(list))
+            if (list is null)
             {
                 throw new NullReferenceException();
+            }
+            else if (list.Count == 0)
+            {
+                return list;
             }
 
             if (random == null)
@@ -23,17 +27,19 @@ namespace NuciExtensions
                 random = new Random();
             }
 
-            int elementsCount = list.Count;
-
-            while (elementsCount > 1)
+            IList<T> clone = list.ToList();
+            IList<T> result = list.ToList();
+            
+            while (clone.Count > 0)
             {
-                elementsCount--;
-                int randomIndex = random.Next(elementsCount + 1);
+                int randomIndex = random.Next(clone.Count);
+                T obj = clone.ElementAt(randomIndex);
 
-                T element = list[randomIndex];
-                list[randomIndex] = list[elementsCount];
-                list[elementsCount] = element;
+                clone.RemoveAt(randomIndex);
+                result.Add(obj);
             }
+
+            return result;
         }
     }
 }
