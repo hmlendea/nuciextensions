@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>NuciExtensions</RootNamespace>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Description>Useful extension methods</Description>
     <Authors>Horațiu Mlendea</Authors>
     <Copyright>Copyright 2019 © Horațiu Mlendea</Copyright>
