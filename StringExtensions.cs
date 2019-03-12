@@ -13,6 +13,18 @@ namespace NuciExtensions
 
             return new string(stringChars);
         }
+
+        public static string Repeat(this string source, int count)
+        {
+            string result = string.Empty;
+
+            for (int i = 0; i < count; i++)
+            {
+                result += source;
+            }
+
+            return result;
+        }
         
         /// <summary>
         /// Gets the duplicated elements.
@@ -84,18 +96,6 @@ namespace NuciExtensions
             sentance = sentance.Trim();
 
             return sentance;
-        }
-
-        public static string Repeat(this string source, int count)
-        {
-            string result = string.Empty;
-
-            for (int i = 0; i < count; i++)
-            {
-                result += source;
-            }
-
-            return result;
         }
     }
 }
