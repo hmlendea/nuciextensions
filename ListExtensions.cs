@@ -41,5 +41,15 @@ namespace NuciExtensions
 
             return result;
         }
+        
+        public static T Pop<T>(this IList<T> source)
+        {
+            int index = source.Count - 1;
+
+            T element = source.ElementAt(index);
+            source.RemoveAt(index);
+
+            return element;
+        }
     }
 }
