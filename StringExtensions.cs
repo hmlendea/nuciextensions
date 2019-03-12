@@ -38,7 +38,24 @@ namespace NuciExtensions
         {
             char[] chars = source.ToLower().ToCharArray();
 
-            chars[0] = char.ToUpper(chars[0]);
+            bool isNewSentance = true;
+            for (int i = 0; i < source.Length; i++)
+            {
+                if (!isNewSentance)
+                {
+                    continue;
+                }
+
+                if (chars[i] >= 'a' && chars[i] <= 'z')
+                {
+                    chars[i] = char.ToUpper(chars[i]);
+                    isNewSentance = false;
+                }
+                else if (chars[i] == '.')
+                {
+                    isNewSentance = true;
+                }
+            }
 
             return new string(chars);
         }
