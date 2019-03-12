@@ -33,5 +33,52 @@ namespace NuciExtensions
 
             return new string(chars);
         }
+
+        public static string ToSentanceCase(this string source)
+        {
+            char[] chars = source.ToLower().ToCharArray();
+
+            chars[0] = char.ToUpper(chars[0]);
+
+            return new string(chars);
+        }
+
+        public static string ToSentance(this string source)
+        {
+            string sentance = source.Substring(0, 1);
+            string charsToReplaceWithSpace = "_\t";
+
+            for (int i = 1; i < source.Length; i++)
+            {
+                if (source[i] >= 'A' && source[i] <= 'Z')
+                {
+                    sentance += $" {source[i]}";
+                }
+                else if (charsToReplaceWithSpace.Contains(source[i]))
+                {
+                    sentance += ' ';
+                }
+                else
+                {
+                    sentance += source[i];
+                }
+            }
+
+            sentance = sentance.Trim();
+
+            return sentance;
+        }
+
+        public static string Repeat(this string source, int count)
+        {
+            string result = string.Empty;
+
+            for (int i = 0; i < count; i++)
+            {
+                result += source;
+            }
+
+            return result;
+        }
     }
 }
