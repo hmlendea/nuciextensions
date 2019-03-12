@@ -26,5 +26,13 @@ namespace NuciExtensions
                 source.Add(key, value);
             }
         }
+
+        public static TValue TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
+        {
+            TValue value;
+            source.TryGetValue(key, out value);
+
+            return value;
+        }
     }
 }
