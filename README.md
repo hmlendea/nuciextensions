@@ -7,6 +7,10 @@ C# NuGet package with useful extension methods
 
 # Extensions
 
+## DateTime
+  - GetCurrentTimeMilliseconds()
+    - Gets the current time in milliseconds since January 1 1970
+
 ## IDictionary
 
   - AddOrUpdate(TKey, TValue)
