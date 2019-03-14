@@ -23,6 +23,7 @@ namespace NuciExtensions
             
             return IsEmpty(enumerable);
         }
+
         /// <summary>
         /// Checks wether the collection is empty.
         /// </summary>
@@ -30,10 +31,7 @@ namespace NuciExtensions
         /// <returns>True if the collection is empty, false otherwise.</returns>
         public static bool IsEmpty<T>(IEnumerable<T> enumerable)
         {
-            int elementsCount = enumerable.Count();
-            bool isEmpty = elementsCount < 1;
-            
-            return isEmpty;
+            return enumerable.IsEmpty();
         }
     }
 }
