@@ -8,8 +8,8 @@ C# NuGet package with useful extension methods
 # Extensions
 
 ## DateTime
-  - GetCurrentTimeMilliseconds()
-    - Gets the current time in milliseconds since January 1 1970
+  - GetElapsedUnixTime()
+    - Gets the elapsed UTC time since January 1 1970
 
 ## IDictionary
 
