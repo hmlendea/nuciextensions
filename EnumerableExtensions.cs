@@ -52,5 +52,18 @@ namespace NuciExtensions
                 }
             }
         }
+
+        /// <summary>
+        /// Checks wether the collection is empty.
+        /// </summary>
+        /// <param name="enumerable">The collection.</param>
+        /// <returns>True if the collection is empty, false otherwise.</returns>
+        public static bool IsEmpty<T>(this IEnumerable<T> enumerable)
+        {
+            int elementsCount = enumerable.Count();
+            bool isEmpty = elementsCount < 1;
+            
+            return isEmpty;
+        }
     }
 }
