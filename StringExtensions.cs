@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace NuciExtensions
 {
@@ -96,6 +97,36 @@ namespace NuciExtensions
             sentance = sentance.Trim();
 
             return sentance;
+        }
+
+        public static string ToUpperSnakeCase(this string source)
+            => source.ToSnakeCase().ToUpper();
+
+        public static string ToLowerSnakeCase(this string source)
+            => source.ToSnakeCase().ToLower();
+
+        public static string ToSnakeCase(this string source)
+        {
+            string result = string.Empty;
+
+            foreach (char c in source)
+            {
+                if (char.IsLetterOrDigit(c))
+                {
+                    result += c;
+                }
+                else if (char.IsWhiteSpace(c))
+                {
+                    result += '_';
+                }
+            }
+            
+            while (result.Contains("__"))
+            {
+                result = result.Replace("__", "_");
+            }
+
+            return result;
         }
     }
 }
