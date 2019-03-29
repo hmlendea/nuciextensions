@@ -5,6 +5,7 @@ dist: xenial
 
 install:
   - dotnet restore
+  - dotnet test NuciExtensions.UnitTests
 
 script:
   - dotnet build
