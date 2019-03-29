@@ -7,14 +7,6 @@ C# NuGet package with useful extension methods
 
 # Extensions
 
-## Array
-  - Append(TValue item)
-    - Adds the item at the tail of the array
-  - Prepend(TValue item)
-    - Adds the item at the beginning of the array
-  - Pop()
-    - Removes the last item at the tail of the array and returns it
-
 ## DateTime
   - GetElapsedUnixTime()
     - Gets the elapsed UTC time since January 1 1970
