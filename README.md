@@ -58,3 +58,9 @@ C# NuGet package with useful extension methods
   - ToSentance()
     - Returns a new string that is the original one split into words and trimmed
     - The delimitation is done by looking for upper case characters and underscores
+  - ToSnakeCase()
+    - Returns a new string that is the original one with no punctuation, and the whitespaces trimmed and replaced with underscores
+  - ToUpperSnakeCase()
+    - Returns a snake case version of the original string, with all letters in upper case
+  - ToLowerSnakeCase()
+    - Returns a snake case verison of the original string, with all letters in lower case
