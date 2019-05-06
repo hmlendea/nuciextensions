@@ -26,6 +26,24 @@ namespace NuciExtensions
 
             return result;
         }
+
+        public static string RemoveDiacritics(this string source)
+        {
+            string normalisedSource = source.Normalize(NormalizationForm.FormD);
+            string result = string.Empty;
+
+            foreach (char c in normalisedSource)
+            {
+                UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(c);
+
+                if (category != UnicodeCategory.NonSpacingMark)
+                {
+                    result += c;
+                }
+            }
+
+            return result.Normalize(NormalizationForm.FormC);
+        }
         
         /// <summary>
         /// Gets the duplicated elements.
