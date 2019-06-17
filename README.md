@@ -43,6 +43,10 @@ C# NuGet package with useful extension methods
     - Returns a new string that is the reversed version of the original one
   - Repeat(int)
     - Returns a new string that is the original one concatenated with itself for a specified number of times
+  - RemoveDiacritics()
+    - Returns a new string that is the original one with its diacritic characters replaced with basic latin characters
+  - RemovePunctuation()
+    - Returns a new string that is the original one with its punctuation characters removed
   - ToTitleCase()
     - Returns a new string that is the original one with the first letter of each word in upper case, and the rest in lower case
   - ToSentanceCase()

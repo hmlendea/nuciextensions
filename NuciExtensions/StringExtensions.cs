@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace NuciExtensions
 {
@@ -45,6 +44,21 @@ namespace NuciExtensions
             }
 
             return result.Normalize(NormalizationForm.FormC);
+        }
+
+        public static string RemovePunctuation(this string source)
+        {
+            string result = string.Empty;
+
+            foreach (char c in source)
+            {
+                if (!char.IsPunctuation(c))
+                {
+                    result += c;
+                }
+            }
+
+            return result;
         }
         
         public static string ToSentance(this string source)
