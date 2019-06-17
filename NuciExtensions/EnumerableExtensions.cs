@@ -30,6 +30,22 @@ namespace NuciExtensions
 
             return enumerable.ElementAt(random.Next(enumerable.Count()));
         }
+
+        /// <summary>
+        /// Gets a random element.
+        /// </summary>
+        /// <returns>The element.</returns>
+        /// <param name="enumerable">Enumerable.</param>
+        /// <param name="random">Random object to use.</param>
+        public static T GetRandomElement<T>(this IEnumerable<T> enumerable, Random random)
+        {
+            if (EnumerableExt.IsNullOrEmpty(enumerable))
+            {
+                throw new NullReferenceException();
+            }
+
+            return enumerable.ElementAt(random.Next(enumerable.Count()));
+        }
         
         /// <summary>
         /// Gets the duplicated elements.
