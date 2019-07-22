@@ -22,5 +22,25 @@ namespace NuciExtensions
 
             return timeSpan;
         }
+
+        public static DateTime FromUnixTime(string unixTimestamp)
+        {
+            double unixTime;
+            bool isTimestampValid = double.TryParse(unixTimestamp, out unixTime);
+
+            if (!isTimestampValid)
+            {
+                throw new ArgumentException("The specified string is not a valid UNIX timestamp");
+            }
+
+            return FromUnixTime(unixTime);
+        }
+
+        public static DateTime FromUnixTime(double unixTime)
+        {
+            DateTime dateTime = Jan1st1970.AddSeconds(unixTime);
+
+            return dateTime;
+        }
     }
 }

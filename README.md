@@ -10,6 +10,8 @@ C# NuGet package with useful extension methods
 ## DateTime
   - GetElapsedUnixTime()
     - Gets the elapsed UTC time since January 1 1970
+  - FromUnixTime()
+    - Gets a DateTime object from a UNIX timestamp
 
 ## IDictionary
 
