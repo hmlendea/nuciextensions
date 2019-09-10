@@ -39,6 +39,14 @@ namespace NuciExtensions.UnitTests
         }
         
         [Test]
+        public void TryGetValue_KeyIsNull_ThrowsArgumentNullException()
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+
+            Assert.Throws<ArgumentNullException>(() => dict.TryGetValue(null));
+        }
+        
+        [Test]
         public void TryGetValue_KeyDoesNotExist_NullReturned()
         {
             string testKey = "testKeyTest";
