@@ -45,6 +45,8 @@ C# NuGet package with useful extension methods
     - Returns a new string that is the reversed version of the original one
   - Repeat(int)
     - Returns a new string that is the original one concatenated with itself for a specified number of times
+  - ReplaceFirst(string, string)
+    - Returns a new string that is the original one with the first occurance of a substring replaced by another
   - RemoveDiacritics()
     - Returns a new string that is the original one with its diacritic characters replaced with basic latin characters
   - RemovePunctuation()
