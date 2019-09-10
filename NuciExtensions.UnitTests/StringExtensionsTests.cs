@@ -81,6 +81,17 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        public void ReplaceFirst_OldValueNotFoundInSource_ReturnsSource()
+        {
+            string source = "test string test text";
+            string oldValue = "somethingelse";
+            string newValue = "this";
+            string expected = source;
+
+            Assert.AreEqual(expected, source.ReplaceFirst(oldValue, newValue));
+        }
+
+        [Test]
         public void RemoveDiacritics_ReturnsCorrectValue()
         {
             string input = "Horațiu says héllo";
