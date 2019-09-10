@@ -28,6 +28,27 @@ namespace NuciExtensions
             return result;
         }
 
+        public static string ReplaceFirst(this string source, string oldValue, string newValue)
+        {
+            if (source is null || oldValue is null || newValue is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            if (source == string.Empty)
+            {
+                return string.Empty;
+            }
+
+            if (oldValue == string.Empty)
+            {
+                return source;
+            }
+            
+            int loc = source.IndexOf(oldValue);
+            return source.Remove(loc, oldValue.Length).Insert(loc, newValue);
+        }
+
         public static string RemoveDiacritics(this string source)
         {
             string normalisedSource = source.Normalize(NormalizationForm.FormD);
