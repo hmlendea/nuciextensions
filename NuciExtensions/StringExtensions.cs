@@ -30,19 +30,29 @@ namespace NuciExtensions
 
         public static string ReplaceFirst(this string source, string oldValue, string newValue)
         {
-            if (source is null || oldValue is null || newValue is null)
+            if (source is null)
             {
                 throw new NullReferenceException();
+            }
+
+            if (oldValue is null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (oldValue == string.Empty)
+            {
+                throw new ArgumentException("String cannot be of zero length.");
+            }
+
+            if (newValue is null)
+            {
+                newValue = string.Empty;
             }
 
             if (source == string.Empty)
             {
                 return string.Empty;
-            }
-
-            if (oldValue == string.Empty)
-            {
-                return source;
             }
             
             int loc = source.IndexOf(oldValue);
