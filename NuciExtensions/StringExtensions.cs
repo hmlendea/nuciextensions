@@ -56,6 +56,12 @@ namespace NuciExtensions
             }
             
             int loc = source.IndexOf(oldValue);
+
+            if (loc < 0)
+            {
+                return source;
+            }
+
             return source.Remove(loc, oldValue.Length).Insert(loc, newValue);
         }
 
