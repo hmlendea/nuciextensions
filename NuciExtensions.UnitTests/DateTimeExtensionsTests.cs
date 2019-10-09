@@ -9,7 +9,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GetElapsedUnixTime_DateIsValidUnixDate_CorrectValueReturned()
         {
-            DateTime validDate = new DateTime(2001, 09, 11, 0, 0, 0, DateTimeKind.Utc);
+            DateTime validDate = new DateTime(2001, 09, 11);
 
             TimeSpan expected = new TimeSpan(10001664000000000);
             TimeSpan actual = DateTimeExtensions.GetElapsedUnixTime(validDate);
