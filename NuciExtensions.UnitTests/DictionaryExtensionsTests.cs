@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using NUnit.Framework;
 
-using NuciExtensions;
-
 namespace NuciExtensions.UnitTests
 {
     public class DictionaryExtensionsTests

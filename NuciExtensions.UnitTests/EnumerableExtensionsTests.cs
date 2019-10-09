@@ -4,8 +4,6 @@ using System.Linq;
 
 using NUnit.Framework;
 
-using NuciExtensions;
-
 namespace NuciExtensions.UnitTests
 {
     public class EnumerableExtensionsTests
