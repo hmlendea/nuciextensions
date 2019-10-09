@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
-
-using NuciExtensions;
 
 namespace NuciExtensions.UnitTests
 {
