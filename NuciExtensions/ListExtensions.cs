@@ -28,7 +28,7 @@ namespace NuciExtensions
             }
 
             IList<T> clone = list.ToList();
-            IList<T> result = list.ToList();
+            IList<T> result = new List<T>();
             
             while (clone.Count > 0)
             {
