@@ -11,7 +11,15 @@ namespace NuciExtensions
 
         public static TimeSpan GetElapsedUnixTime(DateTime time)
         {
-            DateTime timeInUtc = time.ToUniversalTime();
+            DateTime timeInUtc = new DateTime(
+                time.Year,
+                time.Month,
+                time.Day,
+                time.Hour,
+                time.Minute,
+                time.Second,
+                time.Millisecond,
+                DateTimeKind.Utc);
 
             if (timeInUtc < Jan1st1970)
             {
