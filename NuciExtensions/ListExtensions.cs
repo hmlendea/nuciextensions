@@ -44,6 +44,11 @@ namespace NuciExtensions
         
         public static T Pop<T>(this IList<T> source)
         {
+            if (source.Count == 0)
+            {
+                throw new IndexOutOfRangeException("There are no elements in the list");
+            }
+
             int index = source.Count - 1;
 
             T element = source.ElementAt(index);
