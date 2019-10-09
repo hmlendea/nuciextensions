@@ -2,8 +2,6 @@ using System;
 
 using NUnit.Framework;
 
-using NuciExtensions;
-
 namespace NuciExtensions.UnitTests
 {
     public class DateTimeExtensionsTests
@@ -11,9 +9,9 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GetElapsedUnixTime_DateIsValidUnixDate_CorrectValueReturned()
         {
-            DateTime validDate = new DateTime(2001, 09, 11);
+            DateTime validDate = new DateTime(2001, 09, 11, 0, 0, 0, DateTimeKind.Utc);
 
-            TimeSpan expected = new TimeSpan(10001556000000000);
+            TimeSpan expected = new TimeSpan(10001664000000000);
             TimeSpan actual = DateTimeExtensions.GetElapsedUnixTime(validDate);
 
             Assert.AreEqual(expected, actual);
