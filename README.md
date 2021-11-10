@@ -1,10 +1,14 @@
-[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/fund.html) [![Build Status](https://github.com/hmlendea/nuciextensions/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nuciextensions/actions/workflows/dotnet.yml) [![Latest GitHub release](https://img.shields.io/github/v/release/hmlendea/nuciextensions)](https://github.com/hmlendea/nuciextensions/releases/latest) [![Nuget](https://img.shields.io/nuget/v/NuciExtensions.svg)](https://www.nuget.org/packages/NuciExtensions/)
+[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/fund.html) [![Build Status](https://github.com/hmlendea/nuciextensions/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nuciextensions/actions/workflows/dotnet.yml) [![Latest GitHub release](https://img.shields.io/github/v/release/hmlendea/nuciextensions)](https://github.com/hmlendea/nuciextensions/releases/latest)
 
 # NuciExtensions
 
 .NET NuGet package with useful extension methods.
 
-# Extensions
+# Installation
+
+[![Get it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciExtensions)
+
+# Features
 
 ## DateTime
 
