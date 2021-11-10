@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/hmlendea/nuciextensions.svg?branch=master)](https://travis-ci.com/hmlendea/nuciextensions)
+[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/fund.html)  [![Build Status](https://travis-ci.com/hmlendea/nuciextensions.svg?branch=master)](https://travis-ci.com/hmlendea/nuciextensions)
 
 [![Nuget](https://img.shields.io/nuget/v/NuciExtensions.svg)](https://www.nuget.org/packages/NuciExtensions/)
 
