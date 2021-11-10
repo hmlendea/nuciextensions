@@ -4,7 +4,11 @@
 
 .NET NuGet package with useful extension methods.
 
-# Extensions
+# Installation
+
+[![Get it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciExtensions)
+
+# Features
 
 ## DateTime
 
