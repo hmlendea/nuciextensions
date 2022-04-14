@@ -36,6 +36,11 @@
   - GetDisplayName()
     - Gets the value of the DisplayAttribute if it is defined, or the name of the enumeration item if it doesn't
 
+## File
+
+  - ExistsInPathVariable(string)
+    - Checks whether a file exists in any of the PATH environment variable's directories
+
 ## List
 
   - Shuffle()
