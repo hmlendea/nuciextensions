@@ -26,17 +26,12 @@ namespace NuciExtensions
 
         public static string ToSentanceCase(this string source)
         {
-            char[] chars = source.ToLower().ToCharArray();
+            char[] chars = source.ToCharArray();
 
             bool isNewSentance = true;
             for (int i = 0; i < source.Length; i++)
             {
-                if (!isNewSentance)
-                {
-                    continue;
-                }
-
-                if (chars[i] >= 'a' && chars[i] <= 'z')
+                if (isNewSentance && char.IsLetter(chars[i]))
                 {
                     chars[i] = char.ToUpper(chars[i]);
                     isNewSentance = false;
