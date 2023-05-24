@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace NuciExtensions
 {
-    public  static class StringCasingExtensions
+    public static class StringCasingExtensions
     {
         /// <summary>
         /// Gets the duplicated elements.
@@ -15,7 +15,7 @@ namespace NuciExtensions
 
             for (int i = 0; i < chars.Count(); i++)
             {
-                if (i == 0 || chars[i - 1] == ' ')
+                if (i == 0 || !char.IsLetterOrDigit(chars[i - 1]))
                 {
                     chars[i] = char.ToUpper(chars[i]);
                 }
@@ -26,17 +26,12 @@ namespace NuciExtensions
 
         public static string ToSentanceCase(this string source)
         {
-            char[] chars = source.ToLower().ToCharArray();
+            char[] chars = source.ToCharArray();
 
             bool isNewSentance = true;
             for (int i = 0; i < source.Length; i++)
             {
-                if (!isNewSentance)
-                {
-                    continue;
-                }
-
-                if (chars[i] >= 'a' && chars[i] <= 'z')
+                if (isNewSentance && char.IsLetter(chars[i]))
                 {
                     chars[i] = char.ToUpper(chars[i]);
                     isNewSentance = false;
@@ -71,7 +66,7 @@ namespace NuciExtensions
                     result += '_';
                 }
             }
-            
+
             while (result.Contains("__"))
             {
                 result = result.Replace("__", "_");
