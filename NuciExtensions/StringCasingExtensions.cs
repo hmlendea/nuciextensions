@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace NuciExtensions
 {
-    public  static class StringCasingExtensions
+    public static class StringCasingExtensions
     {
         /// <summary>
         /// Gets the duplicated elements.
@@ -15,7 +15,7 @@ namespace NuciExtensions
 
             for (int i = 0; i < chars.Count(); i++)
             {
-                if (i == 0 || chars[i - 1] == ' ')
+                if (i == 0 || !char.IsLetterOrDigit(chars[i - 1]))
                 {
                     chars[i] = char.ToUpper(chars[i]);
                 }
@@ -71,7 +71,7 @@ namespace NuciExtensions
                     result += '_';
                 }
             }
-            
+
             while (result.Contains("__"))
             {
                 result = result.Replace("__", "_");
