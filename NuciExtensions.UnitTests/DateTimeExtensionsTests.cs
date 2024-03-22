@@ -14,9 +14,9 @@ namespace NuciExtensions.UnitTests
             TimeSpan expected = new TimeSpan(10001664000000000);
             TimeSpan actual = DateTimeExtensions.GetElapsedUnixTime(validDate);
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
-        
+
         [Test]
         public void GetElapsedUnixTime_DateIsNotValidUnixDate_ThrowsArgumentOutOfRangeException()
         {
@@ -24,7 +24,7 @@ namespace NuciExtensions.UnitTests
 
             Assert.Throws<ArgumentOutOfRangeException>(() => DateTimeExtensions.GetElapsedUnixTime(invalidDate));
         }
-        
+
         [Test]
         public void FromUnixTime_CalledWithString_ParameterIsValid_ReturnsCorrectValue()
         {
@@ -32,9 +32,9 @@ namespace NuciExtensions.UnitTests
             DateTime expected = new DateTime(1970, 1, 8, 2, 31, 13);
             DateTime actual = DateTimeExtensions.FromUnixTime(timestamp);
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
-        
+
         [Test]
         public void FromUnixTime_CalledWithString_ParameterIsNotValid_ThrowsArgumentException()
         {
@@ -42,7 +42,7 @@ namespace NuciExtensions.UnitTests
 
             Assert.Throws<ArgumentException>(() => DateTimeExtensions.FromUnixTime(timestamp));
         }
-        
+
         [Test]
         public void FromUnixTime_CalledWithDouble_ReturnsCorrectValue()
         {
@@ -50,7 +50,7 @@ namespace NuciExtensions.UnitTests
             DateTime expected = new DateTime(2251, 12, 9, 20, 3, 51);
             DateTime actual = DateTimeExtensions.FromUnixTime(time);
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

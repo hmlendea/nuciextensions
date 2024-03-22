@@ -19,7 +19,7 @@ namespace NuciExtensions.UnitTests
             };
 
             dict.AddOrUpdate(testKey, testValue);
-            
+
             AssertThatDictionaryPairExists(dict, testKey, testValue);
         }
 
@@ -32,10 +32,10 @@ namespace NuciExtensions.UnitTests
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
             dict.AddOrUpdate(testKey, testValue);
-            
+
             AssertThatDictionaryPairExists(dict, testKey, testValue);
         }
-        
+
         [Test]
         public void TryGetValue_KeyIsNull_ThrowsArgumentNullException()
         {
@@ -43,7 +43,7 @@ namespace NuciExtensions.UnitTests
 
             Assert.Throws<ArgumentNullException>(() => dict.TryGetValue(null));
         }
-        
+
         [Test]
         public void TryGetValue_KeyDoesNotExist_NullReturned()
         {
@@ -52,14 +52,14 @@ namespace NuciExtensions.UnitTests
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
             string actual = dict.TryGetValue(testKey);
-            
-            Assert.AreEqual(null, actual);
+
+            Assert.That(actual, Is.Null);
         }
 
         void AssertThatDictionaryPairExists<TKey, TValue>(Dictionary<TKey, TValue> dict, TKey key, TValue value)
         {
-            Assert.IsTrue(dict.ContainsKey(key));
-            Assert.AreEqual(value, dict[key]);
+            Assert.That(dict.ContainsKey(key));
+            Assert.That(dict[key], Is.EqualTo(value));
         }
     }
 }

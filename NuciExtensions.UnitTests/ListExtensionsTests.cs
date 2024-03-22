@@ -15,7 +15,7 @@ namespace NuciExtensions.UnitTests
 
             IList<int> actual = collection.Shuffle();
 
-            Assert.IsTrue(
+            Assert.That(
                 actual[0] != 0 ||
                 actual[1] != 1 ||
                 actual[2] != 2 ||
@@ -40,8 +40,8 @@ namespace NuciExtensions.UnitTests
             IList<int> collection = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
             IList<int> actual = collection.Shuffle();
-            
-            Assert.AreEqual(collection.Count, actual.Count);
+
+            Assert.That(actual.Count, Is.EqualTo(collection.Count));
         }
 
         [Test]
@@ -51,8 +51,8 @@ namespace NuciExtensions.UnitTests
 
             IList<int> actualCollection = collection.ToList();
             actualCollection.Pop();
-            
-            Assert.AreEqual(collection.Count - 1, actualCollection.Count);
+
+            Assert.That(actualCollection.Count, Is.EqualTo(collection.Count -1 ));
         }
 
         [Test]
@@ -61,8 +61,8 @@ namespace NuciExtensions.UnitTests
             IList<int> collection = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             int actual = collection.ToList().Pop();
-            
-            Assert.AreEqual(collection.Last(), actual);
+
+            Assert.That(actual, Is.EqualTo(collection.Last()));
         }
 
         [Test]

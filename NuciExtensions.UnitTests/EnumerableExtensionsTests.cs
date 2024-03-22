@@ -18,7 +18,7 @@ namespace NuciExtensions.UnitTests
 
             string actual = collection.GetRandomElement();
 
-            Assert.IsTrue(collection.Any(x => x.Equals(actual)));
+            Assert.That(collection.Any(x => x.Equals(actual)));
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace NuciExtensions.UnitTests
             Random random = new Random(613);
             string actual = collection.GetRandomElement(random);
 
-            Assert.AreEqual(collection[2], actual);
+            Assert.That(actual, Is.EqualTo(collection[2]));
         }
     }
 }
