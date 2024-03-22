@@ -13,7 +13,7 @@ namespace NuciExtensions.UnitTests
 
             bool actual = EnumerableExt.IsEmpty(collection);
 
-            Assert.IsTrue(actual);
+            Assert.That(actual);
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace NuciExtensions.UnitTests
 
             bool actual = EnumerableExt.IsEmpty(collection);
 
-            Assert.IsFalse(actual);
+            Assert.That(actual, Is.False);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace NuciExtensions.UnitTests
 
             bool actual = EnumerableExt.IsNullOrEmpty(collection);
 
-            Assert.IsTrue(actual);
+            Assert.That(actual);
         }
     }
 }

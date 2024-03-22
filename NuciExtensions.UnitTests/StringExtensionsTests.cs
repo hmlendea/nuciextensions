@@ -24,7 +24,7 @@ namespace NuciExtensions.UnitTests
             string newValue = "this";
             string expected = string.Empty;
 
-            Assert.AreEqual(expected, source.ReplaceFirst(oldValue, newValue));
+            Assert.That(source.ReplaceFirst(oldValue, newValue), Is.EqualTo(expected));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace NuciExtensions.UnitTests
             string newValue = null;
             string expected = " string test text";
 
-            Assert.AreEqual(expected, source.ReplaceFirst(oldValue, newValue));
+            Assert.That(source.ReplaceFirst(oldValue, newValue), Is.EqualTo(expected));
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace NuciExtensions.UnitTests
             string newValue = string.Empty;
             string expected = " string test text";
 
-            Assert.AreEqual(expected, source.ReplaceFirst(oldValue, newValue));
+            Assert.That(source.ReplaceFirst(oldValue, newValue), Is.EqualTo(expected));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace NuciExtensions.UnitTests
             string newValue = "this";
             string expected = "this string test text";
 
-            Assert.AreEqual(expected, source.ReplaceFirst(oldValue, newValue));
+            Assert.That(source.ReplaceFirst(oldValue, newValue), Is.EqualTo(expected));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace NuciExtensions.UnitTests
             string newValue = "this";
             string expected = source;
 
-            Assert.AreEqual(expected, source.ReplaceFirst(oldValue, newValue));
+            Assert.That(source.ReplaceFirst(oldValue, newValue), Is.EqualTo(expected));
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace NuciExtensions.UnitTests
             string expected = "Horatiu says hello";
             string actual = input.RemoveDiacritics();
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace NuciExtensions.UnitTests
             string expected = "Hello world Am I greeting the world Yes Im indeed greeting the world";
             string actual = input.RemovePunctuation();
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }
