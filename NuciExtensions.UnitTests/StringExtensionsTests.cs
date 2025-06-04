@@ -92,14 +92,13 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
-        public void RemoveDiacritics_ReturnsCorrectValue()
-        {
-            string input = "Horațiu says héllo";
-            string expected = "Horatiu says hello";
-            string actual = input.RemoveDiacritics();
-
-            Assert.That(actual, Is.EqualTo(expected));
-        }
+        [TestCase("Alžir is the serbo-croatian name for Algiers", "Alzhir is the serbo-croatian name for Algiers")]
+        [TestCase("Horațiu says héllo", "Horatiu says hello")]
+        [TestCase("Šimšat", "Shimshat")]
+        [TestCase("Arunáčalpradéš", "Arunachalpradesh")]
+        [TestCase("STŘEDNÍ AMERIKA", "STRZHEDNI AMERIKA")]
+        public void RemoveDiacritics_ReturnsCorrectValue(string input, string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
 
         [Test]
         public void RemovePunctuation_ReturnsCorrectValue()
