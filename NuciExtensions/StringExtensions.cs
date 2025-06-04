@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NuciExtensions
 {
@@ -62,7 +64,25 @@ namespace NuciExtensions
 
         public static string RemoveDiacritics(this string source)
         {
-            string normalisedSource = source.Normalize(NormalizationForm.FormD);
+            string firstPass = source;
+
+            Dictionary<string, string> customMappings = new()
+            {
+                { "Ö", "OE" },
+                { "Č", "Ch" },
+                { "Š", "Sh" },
+                { "Ř", "Rzh" },
+                { "Ž", "Zh" },
+            };
+
+            foreach (var customMapping in customMappings)
+            {
+                firstPass = Regex.Replace(firstPass, "([\\p{Lu}])" + customMapping.Key, "$1" + customMapping.Value.ToUpper());
+                firstPass = Regex.Replace(firstPass, customMapping.Key + @"([^\p{Lu}])", customMapping.Value + "$1");
+                firstPass = Regex.Replace(firstPass, customMapping.Key.ToLower(), customMapping.Value.ToLower());
+            }
+
+            string normalisedSource = firstPass.Normalize(NormalizationForm.FormD);
             string result = string.Empty;
 
             foreach (char c in normalisedSource)
