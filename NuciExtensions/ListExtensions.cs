@@ -12,7 +12,7 @@ namespace NuciExtensions
         static Random random;
 
         public static IList<T> Shuffle<T>(this IList<T> list)
-        {  
+        {
             if (list is null)
             {
                 throw new NullReferenceException();
@@ -22,14 +22,11 @@ namespace NuciExtensions
                 return list;
             }
 
-            if (random == null)
-            {
-                random = new Random();
-            }
+            random ??= new Random();
 
-            IList<T> clone = list.ToList();
-            IList<T> result = new List<T>();
-            
+            List<T> clone = [.. list];
+            List<T> result = [];
+
             while (clone.Count > 0)
             {
                 int randomIndex = random.Next(clone.Count);
@@ -41,7 +38,7 @@ namespace NuciExtensions
 
             return result;
         }
-        
+
         public static T Pop<T>(this IList<T> source)
         {
             if (source.Count == 0)
