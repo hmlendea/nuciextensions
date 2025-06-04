@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/NuciExtensions.UnitTests/bin/Debug/netcoreapp2.2/NuciExtensions.UnitTests.dll",
+            "program": "${workspaceFolder}/NuciExtensions/bin/Debug/net9.0/NuciExtensions.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/NuciExtensions.UnitTests",
+            "cwd": "${workspaceFolder}/NuciExtensions",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
