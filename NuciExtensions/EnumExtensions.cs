@@ -23,7 +23,7 @@ namespace NuciExtensions
                 .FirstOrDefault()
                 .GetCustomAttribute<DisplayAttribute>();
 
-            if (displayAttribute != null)
+            if (displayAttribute is not null)
             {
                 return displayAttribute.GetName();
             }

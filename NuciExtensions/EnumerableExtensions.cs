@@ -23,10 +23,7 @@ namespace NuciExtensions
                 throw new NullReferenceException();
             }
 
-            if (random == null)
-            {
-                random = new Random();
-            }
+            random ??= new Random();
 
             return enumerable.ElementAt(random.Next(enumerable.Count()));
         }
@@ -46,7 +43,7 @@ namespace NuciExtensions
 
             return enumerable.ElementAt(random.Next(enumerable.Count()));
         }
-        
+
         /// <summary>
         /// Gets the duplicated elements.
         /// </summary>
@@ -54,17 +51,14 @@ namespace NuciExtensions
         /// <returns>The duplicated elements.</returns>
         public static IEnumerable<T> GetDuplicates<T>(this IEnumerable<T> source)
         {
-            HashSet<T> itemsSeen = new HashSet<T>();
-            HashSet<T> itemsYielded = new HashSet<T>();
+            HashSet<T> itemsSeen = [];
+            HashSet<T> itemsYielded = [];
 
             foreach (T item in source)
             {
-                if (!itemsSeen.Add(item))
+                if (!itemsSeen.Add(item) && itemsYielded.Add(item))
                 {
-                    if (itemsYielded.Add(item))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
         }
@@ -75,11 +69,6 @@ namespace NuciExtensions
         /// <param name="enumerable">The collection.</param>
         /// <returns>True if the collection is empty, false otherwise.</returns>
         public static bool IsEmpty<T>(this IEnumerable<T> enumerable)
-        {
-            int elementsCount = enumerable.Count();
-            bool isEmpty = elementsCount < 1;
-            
-            return isEmpty;
-        }
+            => !enumerable.Any();
     }
 }

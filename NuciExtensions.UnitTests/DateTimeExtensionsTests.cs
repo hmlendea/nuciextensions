@@ -9,46 +9,34 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GetElapsedUnixTime_DateIsValidUnixDate_CorrectValueReturned()
         {
-            DateTime validDate = new DateTime(2001, 09, 11);
-
-            TimeSpan expected = new TimeSpan(10001664000000000);
-            TimeSpan actual = DateTimeExtensions.GetElapsedUnixTime(validDate);
+            TimeSpan expected = new(10001664000000000);
+            TimeSpan actual = DateTimeExtensions.GetElapsedUnixTime(new(2001, 09, 11));
 
             Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
         public void GetElapsedUnixTime_DateIsNotValidUnixDate_ThrowsArgumentOutOfRangeException()
-        {
-            DateTime invalidDate = new DateTime(1917, 03, 08);
-
-            Assert.Throws<ArgumentOutOfRangeException>(() => DateTimeExtensions.GetElapsedUnixTime(invalidDate));
-        }
+            => Assert.Throws<ArgumentOutOfRangeException>(() => DateTimeExtensions.GetElapsedUnixTime(new(1917, 03, 08)));
 
         [Test]
         public void FromUnixTime_CalledWithString_ParameterIsValid_ReturnsCorrectValue()
         {
-            string timestamp = "613873";
-            DateTime expected = new DateTime(1970, 1, 8, 2, 31, 13);
-            DateTime actual = DateTimeExtensions.FromUnixTime(timestamp);
+            DateTime expected = new(1970, 1, 8, 2, 31, 13);
+            DateTime actual = DateTimeExtensions.FromUnixTime("613873");
 
             Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
         public void FromUnixTime_CalledWithString_ParameterIsNotValid_ThrowsArgumentException()
-        {
-            string timestamp = "bs";
-
-            Assert.Throws<ArgumentException>(() => DateTimeExtensions.FromUnixTime(timestamp));
-        }
+            => Assert.Throws<ArgumentException>(() => DateTimeExtensions.FromUnixTime("bs"));
 
         [Test]
         public void FromUnixTime_CalledWithDouble_ReturnsCorrectValue()
         {
-            double time = 8897112231;
-            DateTime expected = new DateTime(2251, 12, 9, 20, 3, 51);
-            DateTime actual = DateTimeExtensions.FromUnixTime(time);
+            DateTime expected = new(2251, 12, 9, 20, 3, 51);
+            DateTime actual = DateTimeExtensions.FromUnixTime(8897112231);
 
             Assert.That(actual, Is.EqualTo(expected));
         }

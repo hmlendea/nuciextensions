@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace NuciExtensions
 {
     public static class StringCasingExtensions
@@ -13,7 +11,7 @@ namespace NuciExtensions
         {
             char[] chars = source.ToLower().ToCharArray();
 
-            for (int i = 0; i < chars.Count(); i++)
+            for (int i = 0; i < chars.Length; i++)
             {
                 if (i == 0 || !char.IsLetterOrDigit(chars[i - 1]))
                 {

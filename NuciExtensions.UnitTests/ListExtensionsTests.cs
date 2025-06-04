@@ -11,7 +11,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void Shuffle_OrderIsNotTheSame()
         {
-            IList<int> collection = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            IList<int> collection = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
             IList<int> actual = collection.Shuffle();
 
@@ -37,7 +37,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void Shuffle_CountIsTheSame()
         {
-            IList<int> collection = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            IList<int> collection = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
             IList<int> actual = collection.Shuffle();
 
@@ -47,7 +47,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void Pop_ListIsPopulated_LastElementIsRemoved()
         {
-            IList<int> collection = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            IList<int> collection = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
             IList<int> actualCollection = collection.ToList();
             actualCollection.Pop();
@@ -58,7 +58,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void Pop_ListIsPopulated_LastElementIsReturned()
         {
-            IList<int> collection = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            IList<int> collection = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
             int actual = collection.ToList().Pop();
 
@@ -68,7 +68,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void Pop_ListIsEmpty_ThrowsIndexOutOfRangeException()
         {
-            IList<int> collection = new List<int>();
+            IList<int> collection = [];
 
             Assert.Throws<IndexOutOfRangeException>(() => collection.Pop());
         }

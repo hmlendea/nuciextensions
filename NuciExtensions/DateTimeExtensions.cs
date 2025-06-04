@@ -7,11 +7,11 @@ namespace NuciExtensions
     /// </summary>
     public static class DateTimeExtensions
     {
-        static readonly DateTime Jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        static readonly DateTime Jan1st1970 = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public static TimeSpan GetElapsedUnixTime(DateTime time)
         {
-            DateTime timeInUtc = new DateTime(
+            DateTime timeInUtc = new(
                 time.Year,
                 time.Month,
                 time.Day,
@@ -26,17 +26,12 @@ namespace NuciExtensions
                 throw new ArgumentOutOfRangeException(nameof(time));
             }
 
-            TimeSpan timeSpan = timeInUtc - Jan1st1970;
-
-            return timeSpan;
+            return timeInUtc - Jan1st1970;
         }
 
         public static DateTime FromUnixTime(string unixTimestamp)
         {
-            double unixTime;
-            bool isTimestampValid = double.TryParse(unixTimestamp, out unixTime);
-
-            if (!isTimestampValid)
+            if (!double.TryParse(unixTimestamp, out double unixTime))
             {
                 throw new ArgumentException("The specified string is not a valid UNIX timestamp");
             }
@@ -44,11 +39,6 @@ namespace NuciExtensions
             return FromUnixTime(unixTime);
         }
 
-        public static DateTime FromUnixTime(double unixTime)
-        {
-            DateTime dateTime = Jan1st1970.AddSeconds(unixTime);
-
-            return dateTime;
-        }
+        public static DateTime FromUnixTime(double unixTime) => Jan1st1970.AddSeconds(unixTime);
     }
 }
