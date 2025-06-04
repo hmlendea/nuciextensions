@@ -11,28 +11,26 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GetRandomElement_ReturnsElementFromCollection()
         {
-            IList<string> collection = new List<string>
-            {
+            IList<string> collection =
+            [
                 "test1", "test2", "test3"
-            };
+            ];
 
-            string actual = collection.GetRandomElement();
-
-            Assert.That(collection.Any(x => x.Equals(actual)));
+            Assert.That(collection.Any(x => x.Equals(collection.GetRandomElement())));
         }
 
         [Test]
         public void GetRandomElement_CalledWithRandomParameter_ReturnsTheExpectedElement()
         {
-            IList<string> collection = new List<string>
-            {
+            IList<string> collection =
+            [
                 "test1", "test2", "test3"
-            };
+            ];
 
-            Random random = new Random(613);
-            string actual = collection.GetRandomElement(random);
 
-            Assert.That(actual, Is.EqualTo(collection[2]));
+            Assert.That(
+                collection.GetRandomElement(new Random(613)),
+                Is.EqualTo(collection[2]));
         }
     }
 }

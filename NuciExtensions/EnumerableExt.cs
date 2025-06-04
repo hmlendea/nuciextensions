@@ -13,14 +13,7 @@ namespace NuciExtensions
         /// <param name="enumerable">The collection.</param>
         /// <returns>True if the collection is null or empty, false otherwise.</returns>
         public static bool IsNullOrEmpty<T>(IEnumerable<T> enumerable)
-        {
-            if (enumerable == null)
-            {
-                return true;
-            }
-            
-            return IsEmpty(enumerable);
-        }
+            => enumerable is null || IsEmpty(enumerable);
 
         /// <summary>
         /// Checks wether the collection is empty.
@@ -28,8 +21,6 @@ namespace NuciExtensions
         /// <param name="enumerable">The collection.</param>
         /// <returns>True if the collection is empty, false otherwise.</returns>
         public static bool IsEmpty<T>(IEnumerable<T> enumerable)
-        {
-            return enumerable.IsEmpty();
-        }
+            => enumerable.IsEmpty();
     }
 }

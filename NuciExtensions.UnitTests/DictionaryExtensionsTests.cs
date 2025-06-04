@@ -13,7 +13,7 @@ namespace NuciExtensions.UnitTests
             string testKey = "testKeyTest";
             string testValue = "new value to update";
 
-            Dictionary<string, string> dict = new Dictionary<string, string>
+            Dictionary<string, string> dict = new()
             {
                 { testKey, "old value" }
             };
@@ -29,7 +29,7 @@ namespace NuciExtensions.UnitTests
             string testKey = "testKeyTest";
             string testValue = "new value to add";
 
-            Dictionary<string, string> dict = new Dictionary<string, string>();
+            Dictionary<string, string> dict = [];
 
             dict.AddOrUpdate(testKey, testValue);
 
@@ -38,25 +38,13 @@ namespace NuciExtensions.UnitTests
 
         [Test]
         public void TryGetValue_KeyIsNull_ThrowsArgumentNullException()
-        {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-
-            Assert.Throws<ArgumentNullException>(() => dict.TryGetValue(null));
-        }
+            => Assert.Throws<ArgumentNullException>(() => new Dictionary<string, string>().TryGetValue(null));
 
         [Test]
         public void TryGetValue_KeyDoesNotExist_NullReturned()
-        {
-            string testKey = "testKeyTest";
+            => Assert.That(new Dictionary<string, string>().TryGetValue("testKeyTest"), Is.Null);
 
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-
-            string actual = dict.TryGetValue(testKey);
-
-            Assert.That(actual, Is.Null);
-        }
-
-        void AssertThatDictionaryPairExists<TKey, TValue>(Dictionary<TKey, TValue> dict, TKey key, TValue value)
+        static void AssertThatDictionaryPairExists<TKey, TValue>(Dictionary<TKey, TValue> dict, TKey key, TValue value)
         {
             Assert.That(dict.ContainsKey(key));
             Assert.That(dict[key], Is.EqualTo(value));

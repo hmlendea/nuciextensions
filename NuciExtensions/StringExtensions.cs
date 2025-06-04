@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 
 namespace NuciExtensions
@@ -35,26 +34,20 @@ namespace NuciExtensions
                 throw new NullReferenceException();
             }
 
-            if (oldValue is null)
-            {
-                throw new ArgumentNullException();
-            }
+            ArgumentNullException.ThrowIfNull(oldValue);
 
-            if (oldValue == string.Empty)
+            if (oldValue.Equals(string.Empty))
             {
                 throw new ArgumentException("String cannot be of zero length.");
             }
 
-            if (newValue is null)
-            {
-                newValue = string.Empty;
-            }
+            newValue ??= string.Empty;
 
-            if (source == string.Empty)
+            if (source.Equals(string.Empty))
             {
                 return string.Empty;
             }
-            
+
             int loc = source.IndexOf(oldValue);
 
             if (loc < 0)
@@ -62,7 +55,9 @@ namespace NuciExtensions
                 return source;
             }
 
-            return source.Remove(loc, oldValue.Length).Insert(loc, newValue);
+            return source
+                .Remove(loc, oldValue.Length)
+                .Insert(loc, newValue);
         }
 
         public static string RemoveDiacritics(this string source)
@@ -97,7 +92,7 @@ namespace NuciExtensions
 
             return result;
         }
-        
+
         public static string ToSentance(this string source)
         {
             string sentance = source.Substring(0, 1);
@@ -119,9 +114,7 @@ namespace NuciExtensions
                 }
             }
 
-            sentance = sentance.Trim();
-
-            return sentance;
+            return sentance.Trim();
         }
     }
 }

@@ -8,32 +8,16 @@ namespace NuciExtensions.UnitTests
     {
         [Test]
         public void IsEmpty_CollectionIsEmpty_ReturnsTrue()
-        {
-            IEnumerable<string> collection = new List<string>();
-
-            bool actual = EnumerableExt.IsEmpty(collection);
-
-            Assert.That(actual);
-        }
+            => Assert.That(EnumerableExt.IsEmpty(new List<string>()));
 
         [Test]
         public void IsEmpty_CollectionIsNotEmpty_ReturnsFalse()
-        {
-            IEnumerable<string> collection = new List<string> { "test" };
-
-            bool actual = EnumerableExt.IsEmpty(collection);
-
-            Assert.That(actual, Is.False);
-        }
+            => Assert.That(
+                EnumerableExt.IsEmpty(["test"]),
+                Is.False);
 
         [Test]
         public void IsNullOrEmpty_CollectionIsNull_ReturnsTrue()
-        {
-            IEnumerable<string> collection = null;
-
-            bool actual = EnumerableExt.IsNullOrEmpty(collection);
-
-            Assert.That(actual);
-        }
+            => Assert.That(EnumerableExt.IsNullOrEmpty((IEnumerable<string>)null));
     }
 }
