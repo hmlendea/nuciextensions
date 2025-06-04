@@ -93,6 +93,15 @@ namespace NuciExtensions
             return result;
         }
 
+        public static string Reeverse(this string source)
+        {
+            char[] chars = source.ToCharArray();
+
+            Array.Reverse(source.ToCharArray());
+
+            return new string(chars);
+        }
+
         public static string ToSentence(this string source)
         {
             string sentence = source[..1];

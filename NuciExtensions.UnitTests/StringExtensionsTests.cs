@@ -110,5 +110,9 @@ namespace NuciExtensions.UnitTests
 
             Assert.That(actual, Is.EqualTo(expected));
         }
+
+        [Test]
+        public void Reverse_ReturnsCorrectValue()
+            => Assert.That("abcdefg".Reverse(), Is.EqualTo("gfedcba"));
     }
 }
