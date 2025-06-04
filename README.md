@@ -60,6 +60,8 @@
     - Returns a new string that is the original one with its diacritic characters replaced with basic latin characters
   - RemovePunctuation()
     - Returns a new string that is the original one with its punctuation characters removed
+  - Reverse()
+    - Returns a new string that is the original one with all of its characters reversed
   - ToTitleCase()
     - Returns a new string that is the original one with the first letter of each word in upper case, and the rest in lower case
   - ToSentenceCase()
