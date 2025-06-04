@@ -22,21 +22,21 @@ namespace NuciExtensions
             return new string(chars);
         }
 
-        public static string ToSentanceCase(this string source)
+        public static string ToSentenceCase(this string source)
         {
             char[] chars = source.ToCharArray();
 
-            bool isNewSentance = true;
+            bool isNewSentence = true;
             for (int i = 0; i < source.Length; i++)
             {
-                if (isNewSentance && char.IsLetter(chars[i]))
+                if (isNewSentence && char.IsLetter(chars[i]))
                 {
                     chars[i] = char.ToUpper(chars[i]);
-                    isNewSentance = false;
+                    isNewSentence = false;
                 }
                 else if (chars[i] == '.')
                 {
-                    isNewSentance = true;
+                    isNewSentence = true;
                 }
             }
 

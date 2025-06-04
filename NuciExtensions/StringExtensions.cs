@@ -93,28 +93,28 @@ namespace NuciExtensions
             return result;
         }
 
-        public static string ToSentance(this string source)
+        public static string ToSentence(this string source)
         {
-            string sentance = source.Substring(0, 1);
+            string sentence = source[..1];
             string charsToReplaceWithSpace = "_\t";
 
             for (int i = 1; i < source.Length; i++)
             {
                 if (source[i] >= 'A' && source[i] <= 'Z')
                 {
-                    sentance += $" {source[i]}";
+                    sentence += $" {source[i]}";
                 }
                 else if (charsToReplaceWithSpace.Contains(source[i]))
                 {
-                    sentance += ' ';
+                    sentence += ' ';
                 }
                 else
                 {
-                    sentance += source[i];
+                    sentence += source[i];
                 }
             }
 
-            return sentance.Trim();
+            return sentence.Trim();
         }
     }
 }

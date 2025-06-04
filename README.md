@@ -62,9 +62,9 @@
     - Returns a new string that is the original one with its punctuation characters removed
   - ToTitleCase()
     - Returns a new string that is the original one with the first letter of each word in upper case, and the rest in lower case
-  - ToSentanceCase()
-    - Returns a new string that is the original one with the first letter of each sentance in upper case, and the rest in lower case
-  - ToSentance()
+  - ToSentenceCase()
+    - Returns a new string that is the original one with the first letter of each sentence in upper case, and the rest in lower case
+  - ToSentence()
     - Returns a new string that is the original one split into words and trimmed
     - The delimitation is done by looking for upper case characters and underscores
   - ToSnakeCase()

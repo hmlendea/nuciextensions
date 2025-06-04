@@ -12,11 +12,11 @@ namespace NuciExtensions.UnitTests
             => Assert.That(text.ToTitleCase(), Is.EqualTo(expectedResult));
 
         [Test]
-        [TestCase("this is a random sentance", "This is a random sentance")]
-        [TestCase("there are two. two sentances", "There are two. Two sentances")]
+        [TestCase("this is a random sentence", "This is a random sentence")]
+        [TestCase("there are two. two sentences", "There are two. Two sentences")]
         [TestCase("the words that are Already Capitalised remain CAPITALISED", "The words that are Already Capitalised remain CAPITALISED")]
-        public void GivenAString_WhenConvertingToSentanceCase_ThenEveryWordIsCapitalised(string text, string expectedResult)
-            => Assert.That(text.ToSentanceCase(), Is.EqualTo(expectedResult));
+        public void GivenAString_WhenConvertingToSentenceCase_ThenEveryWordIsCapitalised(string text, string expectedResult)
+            => Assert.That(text.ToSentenceCase(), Is.EqualTo(expectedResult));
 
         [Test]
         [TestCase("i want This to be in snake case", "i_want_This_to_be_in_snake_case")]
