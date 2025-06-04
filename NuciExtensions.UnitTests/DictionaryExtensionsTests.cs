@@ -44,8 +44,7 @@ namespace NuciExtensions.UnitTests
         public void TryGetValue_KeyDoesNotExist_NullReturned()
             => Assert.That(new Dictionary<string, string>().TryGetValue("testKeyTest"), Is.Null);
 
-        [Test]
-        void AssertThatDictionaryPairExists<TKey, TValue>(Dictionary<TKey, TValue> dict, TKey key, TValue value)
+        static void AssertThatDictionaryPairExists<TKey, TValue>(Dictionary<TKey, TValue> dict, TKey key, TValue value)
         {
             Assert.That(dict.ContainsKey(key));
             Assert.That(dict[key], Is.EqualTo(value));
