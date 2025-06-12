@@ -27,6 +27,15 @@ namespace NuciExtensions
             }
         }
 
+        /// <summary>
+        /// Tries to get the value associated with the specified key in the source dictionary.
+        /// If the key does not exist, it returns the default value for the type.
+        /// </summary>
+        /// <param name="source">Source dictionary.</param>
+        /// <param name="key">Key to look for.</param>
+        /// <returns>The value associated with the key if it exists; otherwise, the default value for the type.</returns>
+        /// <typeparam name="TKey">The key type.</typeparam>
+        /// <typeparam name="TValue">The value type.</typeparam>
         public static TValue TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
         {
             source.TryGetValue(key, out TValue value);
