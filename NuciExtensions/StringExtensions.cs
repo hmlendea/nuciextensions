@@ -145,15 +145,6 @@ namespace NuciExtensions
             return result;
         }
 
-        public static string Reeverse(this string source)
-        {
-            char[] chars = source.ToCharArray();
-
-            Array.Reverse(source.ToCharArray());
-
-            return new string(chars);
-        }
-
         /// <summary>
         /// Converts a string to a sentence format.
         /// </summary>
