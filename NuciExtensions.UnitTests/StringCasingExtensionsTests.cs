@@ -5,6 +5,13 @@ namespace NuciExtensions.UnitTests
     public class StringCasingExtensionsTests
     {
         [Test]
+        [TestCase("Ana are mere", "aNA ARE MERE")]
+        [TestCase("I am here, and you are there!", "i AM HERE, AND YOU ARE THERE!")]
+        [TestCase("This Is A Sentance", "tHIS iS a sENTANCE")]
+        public void GivenAString_WhenInvertingTheCase_ThenTheCorrectValueIsReturned(string text, string expectedResult)
+            => Assert.That(text.InvertCase(), Is.EqualTo(expectedResult));
+
+        [Test]
         [TestCase("my text is in all lower case", "My Text Is In All Lower Case")]
         [TestCase("my-Text-with-Dashes", "My-Text-With-Dashes")]
         [TestCase("my text.with periods", "My Text.With Periods")]

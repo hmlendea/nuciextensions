@@ -9,6 +9,26 @@ namespace NuciExtensions
     public  static class StringExtensions
     {
         /// <summary>
+        /// Inverts the case of each character in the specified string.
+        /// </summary>
+        /// <param name="text">The string whose case is to be inverted.</param>
+        /// <returns>A new string with each character's case inverted.</returns>
+        public static string InvertCase(this string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+
+            var result = new char[text.Length];
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+                result[i] = char.IsUpper(c) ? char.ToLower(c) : char.ToUpper(c);
+            }
+
+            return new string(result);
+        }
+
+        /// <summary>
         /// Reverses the characters in the specified string.
         /// </summary>
         /// /// <param name="text">The string to reverse.</param>

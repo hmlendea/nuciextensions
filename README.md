@@ -60,6 +60,8 @@ Install-Package NuciExtensions
 
 ## string
 
+  - InvertCase()
+    - Returns a new string that is a version of the original one where each lower case character is upper case, and vice-versa.
   - Reverse()
     - Returns a new string that is the reversed version of the original one
   - Repeat(int)
