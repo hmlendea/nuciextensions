@@ -136,7 +136,7 @@ namespace NuciExtensions
             {
                 UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(c);
 
-                if (!category.Equals(UnicodeCategory.NonSpacingMark))
+                if (category.NotEquals(UnicodeCategory.NonSpacingMark))
                 {
                     result += c;
                 }
