@@ -69,39 +69,39 @@ namespace NuciExtensions
         /// <param name="oldValue">The string to be replaced.</param>
         /// <param name="newValue">The string to replace the old value with. If null, it will be replaced with an empty string.</param>
         /// <returns>A new string with the first occurrence of the old value replaced by the new value.</returns>
-        /// <exception cref="NullReferenceException">Thrown if the source string is null.</exception>
         /// <exception cref="ArgumentException">Thrown if the old value is null or an empty string.</exception>
         public static string ReplaceFirst(this string source, string oldValue, string newValue)
         {
             if (source is null)
             {
-                throw new NullReferenceException();
+                throw new NullReferenceException("The source string cannot be null.");
             }
 
             ArgumentNullException.ThrowIfNull(oldValue);
 
-            if (oldValue.Equals(string.Empty))
+            if (string.IsNullOrEmpty(oldValue))
             {
-                throw new ArgumentException("String cannot be of zero length.");
+                throw new ArgumentException("String to replace cannot be null or empty.", nameof(oldValue));
             }
 
-            newValue ??= string.Empty;
-
-            if (source.Equals(string.Empty))
+            if (string.IsNullOrEmpty(source))
             {
                 return string.Empty;
             }
 
-            int loc = source.IndexOf(oldValue);
+            newValue ??= string.Empty;
 
-            if (loc < 0)
+            int index = source.IndexOf(oldValue, StringComparison.Ordinal);
+
+            if (index < 0)
             {
                 return source;
             }
 
-            return source
-                .Remove(loc, oldValue.Length)
-                .Insert(loc, newValue);
+            return string.Concat(
+                source.AsSpan(0, index),
+                newValue,
+                source.AsSpan(index + oldValue.Length));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace NuciExtensions
 
             Dictionary<string, string> customMappings = new()
             {
-                { "Ö", "OE" },
+                { "Ö", "Oe" },
                 { "Č", "Ch" },
                 { "Š", "Sh" },
                 { "Ř", "Rzh" },
@@ -136,7 +136,7 @@ namespace NuciExtensions
             {
                 UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(c);
 
-                if (category != UnicodeCategory.NonSpacingMark)
+                if (!category.Equals(UnicodeCategory.NonSpacingMark))
                 {
                     result += c;
                 }

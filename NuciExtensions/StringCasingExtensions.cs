@@ -13,7 +13,7 @@ namespace NuciExtensions
 
             for (int i = 0; i < chars.Length; i++)
             {
-                if (i == 0 || !char.IsLetterOrDigit(chars[i - 1]))
+                if (i.Equals(0) || !char.IsLetterOrDigit(chars[i - 1]))
                 {
                     chars[i] = char.ToUpper(chars[i]);
                 }
@@ -30,8 +30,8 @@ namespace NuciExtensions
         public static string ToSentenceCase(this string source)
         {
             char[] chars = source.ToCharArray();
-
             bool isNewSentence = true;
+
             for (int i = 0; i < source.Length; i++)
             {
                 if (isNewSentence && char.IsLetter(chars[i]))
@@ -39,7 +39,7 @@ namespace NuciExtensions
                     chars[i] = char.ToUpper(chars[i]);
                     isNewSentence = false;
                 }
-                else if (chars[i] == '.')
+                else if (chars[i].Equals('.'))
                 {
                     isNewSentence = true;
                 }

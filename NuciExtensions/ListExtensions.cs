@@ -24,7 +24,8 @@ namespace NuciExtensions
             {
                 throw new NullReferenceException();
             }
-            else if (list.Count == 0)
+
+            if (list.Count.Equals(0))
             {
                 return list;
             }
@@ -55,7 +56,7 @@ namespace NuciExtensions
         /// <exception cref="IndexOutOfRangeException">Thrown if the list is empty.</exception>
         public static T Pop<T>(this IList<T> source)
         {
-            if (source.Count == 0)
+            if (source.Count.Equals(0))
             {
                 throw new IndexOutOfRangeException("There are no elements in the list");
             }
