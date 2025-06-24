@@ -16,22 +16,22 @@ namespace NuciExtensions.UnitTests
             IList<int> actual = collection.Shuffle();
 
             Assert.That(
-                !actual[0].Equals(0) ||
-                !actual[1].Equals(1) ||
-                !actual[2].Equals(2) ||
-                !actual[3].Equals(3) ||
-                !actual[4].Equals(4) ||
-                !actual[5].Equals(5) ||
-                !actual[6].Equals(6) ||
-                !actual[7].Equals(7) ||
-                !actual[8].Equals(8) ||
-                !actual[9].Equals(9) ||
-                !actual[10].Equals(10) ||
-                !actual[11].Equals(11) ||
-                !actual[12].Equals(12) ||
-                !actual[13].Equals(13) ||
-                !actual[14].Equals(14) ||
-                !actual[15].Equals(15));
+                actual[0].NotEquals(0) ||
+                actual[1].NotEquals(1) ||
+                actual[2].NotEquals(2) ||
+                actual[3].NotEquals(3) ||
+                actual[4].NotEquals(4) ||
+                actual[5].NotEquals(5) ||
+                actual[6].NotEquals(6) ||
+                actual[7].NotEquals(7) ||
+                actual[8].NotEquals(8) ||
+                actual[9].NotEquals(9) ||
+                actual[10].NotEquals(10) ||
+                actual[11].NotEquals(11) ||
+                actual[12].NotEquals(12) ||
+                actual[13].NotEquals(13) ||
+                actual[14].NotEquals(14) ||
+                actual[15].NotEquals(15));
         }
 
         [Test]
