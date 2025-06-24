@@ -16,22 +16,22 @@ namespace NuciExtensions.UnitTests
             IList<int> actual = collection.Shuffle();
 
             Assert.That(
-                actual[0] != 0 ||
-                actual[1] != 1 ||
-                actual[2] != 2 ||
-                actual[3] != 3 ||
-                actual[4] != 4 ||
-                actual[5] != 5 ||
-                actual[6] != 6 ||
-                actual[7] != 7 ||
-                actual[8] != 8 ||
-                actual[9] != 9 ||
-                actual[10] != 10 ||
-                actual[11] != 11 ||
-                actual[12] != 12 ||
-                actual[13] != 13 ||
-                actual[14] != 14 ||
-                actual[15] != 15);
+                !actual[0].Equals(0) ||
+                !actual[1].Equals(1) ||
+                !actual[2].Equals(2) ||
+                !actual[3].Equals(3) ||
+                !actual[4].Equals(4) ||
+                !actual[5].Equals(5) ||
+                !actual[6].Equals(6) ||
+                !actual[7].Equals(7) ||
+                !actual[8].Equals(8) ||
+                !actual[9].Equals(9) ||
+                !actual[10].Equals(10) ||
+                !actual[11].Equals(11) ||
+                !actual[12].Equals(12) ||
+                !actual[13].Equals(13) ||
+                !actual[14].Equals(14) ||
+                !actual[15].Equals(15));
         }
 
         [Test]
@@ -67,10 +67,6 @@ namespace NuciExtensions.UnitTests
 
         [Test]
         public void Pop_ListIsEmpty_ThrowsIndexOutOfRangeException()
-        {
-            IList<int> collection = [];
-
-            Assert.Throws<IndexOutOfRangeException>(() => collection.Pop());
-        }
+            => Assert.Throws<IndexOutOfRangeException>(() => new List<int>().Pop());
     }
 }
