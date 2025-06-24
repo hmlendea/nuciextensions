@@ -58,6 +58,11 @@ Install-Package NuciExtensions
   - Pop()
     - Removes the last element from the list
 
+## Object
+
+  - NotEquals(object)
+    - Returns a boolean indicating whether the two objects are not equal.
+
 ## string
 
   - InvertCase()
