@@ -72,6 +72,11 @@ namespace NuciExtensions
         /// <exception cref="ArgumentException">Thrown if the old value is null or an empty string.</exception>
         public static string ReplaceFirst(this string source, string oldValue, string newValue)
         {
+            if (source is null)
+            {
+                throw new NullReferenceException("The source string cannot be null.");
+            }
+
             ArgumentNullException.ThrowIfNull(oldValue);
 
             if (string.IsNullOrEmpty(oldValue))
