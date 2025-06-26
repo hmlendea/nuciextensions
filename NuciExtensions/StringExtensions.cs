@@ -196,6 +196,15 @@ namespace NuciExtensions
         }
 
         /// <summary>
+        /// Truncates a string to a specified maximum length.
+        /// </summary>
+        /// <param name="value">The string to truncate.</param>
+        /// <param name="maxLength">The maximum length of the string after truncation.</param>
+        /// <returns>A new string that is truncated to the specified maximum length.</returns>
+        public static string Truncate(this string value, int maxLength)
+            => string.IsNullOrEmpty(value) ? value : value[..Math.Min(value.Length, maxLength)];
+
+        /// <summary>
         /// Deserializes a JSON string into an object of the specified type.
         /// </summary>
         /// <typeparam name="TObject">The type of the object to deserialize into.</typeparam>
