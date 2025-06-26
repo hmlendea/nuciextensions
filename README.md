@@ -94,5 +94,7 @@ Install-Package NuciExtensions
     - Returns a snake case version of the original string, with all letters in upper case
   - ToLowerSnakeCase()
     - Returns a snake case verison of the original string, with all letters in lower case
+  - Truncate(int)
+    - Returns a truncated version of the string of the specified maximum length.
   - FromJson<TObject>()
     - Deserialises the (JSON) string as a TObject object.

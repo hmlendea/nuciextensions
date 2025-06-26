@@ -116,6 +116,29 @@ namespace NuciExtensions.UnitTests
             => Assert.That("abcdefg".Reverse(), Is.EqualTo("gfedcba"));
 
         [Test]
+        [TestCase("")]
+        [TestCase(null)]
+        public void GivenANullOrEmptyString_WhenTruncating_ThenTheStringIsReturnedAsIs(string inputString)
+            => Assert.That(inputString.Truncate(5), Is.EqualTo(inputString));
+
+        [Test]
+        [TestCase("test", 5)]
+        [TestCase("blahblahblah", 25)]
+        public void GivenAString_WhenTruncatingToGreaterLength_ThenTheStringIsReturnedAsIs(
+            string inputString,
+            int maxLength)
+            => Assert.That(inputString.Truncate(maxLength), Is.EqualTo(inputString));
+
+        [Test]
+        [TestCase("test", 3, "tes")]
+        [TestCase("blahblahblah", 5, "blahb")]
+        public void GivenAString_WhenTruncatingToLesserLength_ThenTheTruncatedStringIsReturned(
+            string inputString,
+            int maxLength,
+            string expectedString)
+            => Assert.That(inputString.Truncate(maxLength), Is.EqualTo(expectedString));
+
+        [Test]
         public void GivenAJsonString_WhenCallingFromJson_ThenTheExpectedValueIsReturned()
         {
             string json = $"{{\"{nameof(DummyTestObject.StringProperty)}\":\"test\",\"{nameof(DummyTestObject.IntProperty)}\":1}}";
