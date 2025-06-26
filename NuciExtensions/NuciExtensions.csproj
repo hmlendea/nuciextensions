@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>NuciExtensions</RootNamespace>
-    <Version>5.2.0</Version>
+    <Version>5.3.0</Version>
     <Description>Useful extension methods</Description>
     <Authors>Horațiu Mlendea</Authors>
     <Copyright>Copyright 2025 © Horațiu Mlendea</Copyright>
