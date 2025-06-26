@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace NuciExtensions
@@ -193,5 +194,26 @@ namespace NuciExtensions
 
             return sentence.Trim();
         }
+
+        /// <summary>
+        /// Deserializes a JSON string into an object of the specified type.
+        /// </summary>
+        /// <typeparam name="TObject">The type of the object to deserialize into.</typeparam>
+        /// <param name="json">The JSON string to deserialize.</param>
+        /// <returns>An object of type <typeparamref name="TObject"/> represented by the JSON string.</returns>
+        /// <throws>JsonException if the JSON string is not valid or does not match the type.</throws>
+        public static TObject FromJson<TObject>(this string json)
+            => JsonSerializer.Deserialize<TObject>(json);
+
+        /// <summary>
+        /// Deserializes a JSON string into an object of the specified type.
+        /// </summary>
+        /// <typeparam name="TObject">The type of the object to deserialize into.</typeparam>
+        /// <param name="json">The JSON string to deserialize.</param>
+        /// <param name="options">Options to control the JSON deserialization.</param>
+        /// <returns>An object of type <typeparamref name="TObject"/> represented by the JSON string.</returns>
+        /// <throws>JsonException if the JSON string is not valid or does not match the type.</throws>
+        public static TObject FromJson<TObject>(this string json, JsonSerializerOptions options)
+            => JsonSerializer.Deserialize<TObject>(json, options);
     }
 }
