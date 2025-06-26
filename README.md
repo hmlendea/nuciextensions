@@ -62,6 +62,8 @@ Install-Package NuciExtensions
 
   - NotEquals(object)
     - Returns a boolean indicating whether the two objects are not equal.
+  - ToJson(object)
+    - Returns a JSON-serialised string of the object.
 
 ## string
 
@@ -92,3 +94,5 @@ Install-Package NuciExtensions
     - Returns a snake case version of the original string, with all letters in upper case
   - ToLowerSnakeCase()
     - Returns a snake case verison of the original string, with all letters in lower case
+  - FromJson<TObject>()
+    - Deserialises the (JSON) string as a TObject object.

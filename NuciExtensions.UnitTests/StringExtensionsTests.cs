@@ -1,5 +1,6 @@
 using System;
-
+using System.Text.Json;
+using NuciExtensions.UnitTests.Helpers;
 using NUnit.Framework;
 
 namespace NuciExtensions.UnitTests
@@ -113,5 +114,23 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void Reverse_ReturnsCorrectValue()
             => Assert.That("abcdefg".Reverse(), Is.EqualTo("gfedcba"));
+
+        [Test]
+        public void GivenAJsonString_WhenCallingFromJson_ThenTheExpectedValueIsReturned()
+        {
+            string json = $"{{\"{nameof(DummyTestObject.StringProperty)}\":\"test\",\"{nameof(DummyTestObject.IntProperty)}\":1}}";
+
+            DummyTestObject expectedObject = new()
+            {
+                StringProperty = "test",
+                IntProperty = 1
+            };
+
+            Assert.That(json.FromJson<DummyTestObject>(), Is.EqualTo(expectedObject));
+        }
+
+        [Test]
+        public void GivenANonJsonString_WhenCallingFromJson_ThenTheExpectedValueIsReturned()
+            => Assert.Throws<JsonException>(() => "not a json".FromJson<DummyTestObject>());
     }
 }

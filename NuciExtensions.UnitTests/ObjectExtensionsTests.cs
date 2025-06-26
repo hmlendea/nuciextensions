@@ -1,4 +1,7 @@
 using System;
+using System.Text.Json;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using NuciExtensions.UnitTests.Helpers;
 using NUnit.Framework;
 
 namespace NuciExtensions.UnitTests
@@ -25,5 +28,17 @@ namespace NuciExtensions.UnitTests
             object object1,
             object object2)
             => Assert.Throws<NullReferenceException>(() => object1.NotEquals(object2));
+
+        [Test]
+        public void GivenAnObject_WhenCallingToJson_ThenTheExpectedValueIsReturned()
+        {
+            DummyTestObject obj = new()
+            {
+                StringProperty = "test",
+                IntProperty = 1
+            };
+
+            Assert.That(obj.ToJson(), Is.EqualTo($"{{\"{nameof(DummyTestObject.StringProperty)}\":\"test\",\"{nameof(DummyTestObject.IntProperty)}\":1}}"));
+        }
     }
 }
