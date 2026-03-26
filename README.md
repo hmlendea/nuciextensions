@@ -4,7 +4,17 @@
 
 ## About
 
-.NET NuGet package with useful extension methods.
+NuciExtensions is a .NET NuGet package that provides small, focused extension methods for common tasks across core types.
+It currently includes helpers for:
+
+- `DateTime` (UNIX time conversion and elapsed UNIX time)
+- `IDictionary<TKey, TValue>` (add-or-update and safe value lookup)
+- `IEnumerable<T>` (random element selection, duplicate detection, emptiness checks)
+- `IList<T>` (shuffle and pop)
+- `Enum` (display name extraction via `DisplayAttribute`)
+- `string` (casing, normalization, splitting, truncation, JSON deserialization)
+- `object` (inequality helper and JSON serialization)
+- File path lookup in `PATH`
 
 ## Installation
 
@@ -40,8 +50,19 @@ Install-Package NuciExtensions
 
   - GetRandomElement()
     - Gets a random element from the collection
+  - GetRandomElement(Random)
+    - Gets a random element from the collection using the provided random source
   - GetDuplicates()
     - Returns a new collection containing the values of the original one that appear more than once
+  - IsEmpty()
+    - Checks whether the collection is empty
+
+### EnumerableExt
+
+  - IsNullOrEmpty(IEnumerable)
+    - Checks whether the collection is null or empty
+  - IsEmpty(IEnumerable)
+    - Checks whether the collection is empty
 
 ### Enum
 
@@ -66,6 +87,8 @@ Install-Package NuciExtensions
     - Returns a boolean indicating whether the two objects are not equal.
   - ToJson(object)
     - Returns a JSON-serialised string of the object.
+  - ToJson(object, JsonSerializerOptions)
+    - Returns a JSON-serialised string of the object using custom serializer options.
 
 ### string
 
@@ -81,8 +104,6 @@ Install-Package NuciExtensions
     - Returns a new string that is the original one with its diacritic characters replaced with basic latin characters
   - RemovePunctuation()
     - Returns a new string that is the original one with its punctuation characters removed
-  - Reverse()
-    - Returns a new string that is the original one with all of its characters reversed
   - ToTitleCase()
     - Returns a new string that is the original one with the first letter of each word in upper case, and the rest in lower case
   - ToSentenceCase()
@@ -100,6 +121,8 @@ Install-Package NuciExtensions
     - Returns a truncated version of the string of the specified maximum length.
   - FromJson<TObject>()
     - Deserialises the (JSON) string as a TObject object.
+  - FromJson<TObject>(JsonSerializerOptions)
+    - Deserialises the (JSON) string as a TObject object using custom serializer options.
 
 ## License
 
