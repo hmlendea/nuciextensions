@@ -2,9 +2,21 @@
 
 # NuciExtensions
 
-.NET NuGet package with useful extension methods.
+## About
 
-# Installation
+NuciExtensions is a .NET NuGet package that provides small, focused extension methods for common tasks across core types.
+It currently includes helpers for:
+
+- `DateTime` (UNIX time conversion and elapsed UNIX time)
+- `IDictionary<TKey, TValue>` (add-or-update and safe value lookup)
+- `IEnumerable<T>` (random element selection, duplicate detection, emptiness checks)
+- `IList<T>` (shuffle and pop)
+- `Enum` (display name extraction via `DisplayAttribute`)
+- `string` (casing, normalization, splitting, truncation, JSON deserialization)
+- `object` (inequality helper and JSON serialization)
+- File path lookup in `PATH`
+
+## Installation
 
 [![Get it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciExtensions)
 
@@ -18,54 +30,67 @@ dotnet add package NuciExtensions
 Install-Package NuciExtensions
 ```
 
-# Features
+## Features
 
-## DateTime
+### DateTime
 
   - GetElapsedUnixTime()
     - Gets the elapsed UTC time since January 1 1970
   - FromUnixTime()
     - Gets a DateTime object from a UNIX timestamp
 
-## IDictionary
+### IDictionary
 
   - AddOrUpdate(TKey, TValue)
     - Adds the specified pair to the dictionary, or updates the value if it already exists
   - TryGetValue(TKey)
     - Gets the value of the specified key if it exists, or the default value of TValue if it doesn't
 
-## IEnumerable
+### IEnumerable
 
   - GetRandomElement()
     - Gets a random element from the collection
+  - GetRandomElement(Random)
+    - Gets a random element from the collection using the provided random source
   - GetDuplicates()
     - Returns a new collection containing the values of the original one that appear more than once
+  - IsEmpty()
+    - Checks whether the collection is empty
 
-## Enum
+### EnumerableExt
+
+  - IsNullOrEmpty(IEnumerable)
+    - Checks whether the collection is null or empty
+  - IsEmpty(IEnumerable)
+    - Checks whether the collection is empty
+
+### Enum
 
   - GetDisplayName()
     - Gets the value of the DisplayAttribute if it is defined, or the name of the enumeration item if it doesn't
 
-## File
+### File
 
   - ExistsInPathVariable(string)
     - Checks whether a file exists in any of the PATH environment variable's directories
 
-## List
+### List
 
   - Shuffle()
     - Sorts the elements of the list randomly
   - Pop()
     - Removes the last element from the list
 
-## Object
+### Object
 
   - NotEquals(object)
     - Returns a boolean indicating whether the two objects are not equal.
   - ToJson(object)
     - Returns a JSON-serialised string of the object.
+  - ToJson(object, JsonSerializerOptions)
+    - Returns a JSON-serialised string of the object using custom serializer options.
 
-## string
+### string
 
   - InvertCase()
     - Returns a new string that is a version of the original one where each lower case character is upper case, and vice-versa.
@@ -79,8 +104,6 @@ Install-Package NuciExtensions
     - Returns a new string that is the original one with its diacritic characters replaced with basic latin characters
   - RemovePunctuation()
     - Returns a new string that is the original one with its punctuation characters removed
-  - Reverse()
-    - Returns a new string that is the original one with all of its characters reversed
   - ToTitleCase()
     - Returns a new string that is the original one with the first letter of each word in upper case, and the rest in lower case
   - ToSentenceCase()
@@ -98,3 +121,9 @@ Install-Package NuciExtensions
     - Returns a truncated version of the string of the specified maximum length.
   - FromJson<TObject>()
     - Deserialises the (JSON) string as a TObject object.
+  - FromJson<TObject>(JsonSerializerOptions)
+    - Deserialises the (JSON) string as a TObject object using custom serializer options.
+
+## License
+
+This project is licensed under the `GNU General Public License v3.0` or later. See [LICENSE](./LICENSE) for details.

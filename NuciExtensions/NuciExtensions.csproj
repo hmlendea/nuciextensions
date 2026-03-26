@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>NuciExtensions</RootNamespace>
-    <Version>5.3.0</Version>
+    <Version>5.3.1</Version>
     <Description>Useful extension methods</Description>
     <Authors>Horațiu Mlendea</Authors>
-    <Copyright>Copyright 2025 © Horațiu Mlendea</Copyright>
+    <Copyright>Copyright 2026 © Horațiu Mlendea</Copyright>
     <RepositoryUrl>https://github.com/hmlendea/nuciextensions</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <PackageTags>Extensions</PackageTags>
