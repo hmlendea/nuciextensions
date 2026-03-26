@@ -2,9 +2,11 @@
 
 # NuciExtensions
 
+## About
+
 .NET NuGet package with useful extension methods.
 
-# Installation
+## Installation
 
 [![Get it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciExtensions)
 
@@ -18,54 +20,54 @@ dotnet add package NuciExtensions
 Install-Package NuciExtensions
 ```
 
-# Features
+## Features
 
-## DateTime
+### DateTime
 
   - GetElapsedUnixTime()
     - Gets the elapsed UTC time since January 1 1970
   - FromUnixTime()
     - Gets a DateTime object from a UNIX timestamp
 
-## IDictionary
+### IDictionary
 
   - AddOrUpdate(TKey, TValue)
     - Adds the specified pair to the dictionary, or updates the value if it already exists
   - TryGetValue(TKey)
     - Gets the value of the specified key if it exists, or the default value of TValue if it doesn't
 
-## IEnumerable
+### IEnumerable
 
   - GetRandomElement()
     - Gets a random element from the collection
   - GetDuplicates()
     - Returns a new collection containing the values of the original one that appear more than once
 
-## Enum
+### Enum
 
   - GetDisplayName()
     - Gets the value of the DisplayAttribute if it is defined, or the name of the enumeration item if it doesn't
 
-## File
+### File
 
   - ExistsInPathVariable(string)
     - Checks whether a file exists in any of the PATH environment variable's directories
 
-## List
+### List
 
   - Shuffle()
     - Sorts the elements of the list randomly
   - Pop()
     - Removes the last element from the list
 
-## Object
+### Object
 
   - NotEquals(object)
     - Returns a boolean indicating whether the two objects are not equal.
   - ToJson(object)
     - Returns a JSON-serialised string of the object.
 
-## string
+### string
 
   - InvertCase()
     - Returns a new string that is a version of the original one where each lower case character is upper case, and vice-versa.
