@@ -4,20 +4,51 @@ using NUnit.Framework;
 
 namespace NuciExtensions.UnitTests
 {
-    public class EnumerableExtTests
+    [TestFixture]
+    public sealed class EnumerableExtTests
     {
         [Test]
-        public void IsEmpty_CollectionIsEmpty_ReturnsTrue()
-            => Assert.That(EnumerableExt.IsEmpty(new List<string>()));
+        public void GivenAnEmptyCollection_WhenCheckingWhetherItIsEmpty_ThenTrueIsReturned()
+        {
+            IEnumerable<string> collection = [];
+
+            Assert.That(EnumerableExt.IsEmpty(collection));
+        }
 
         [Test]
-        public void IsEmpty_CollectionIsNotEmpty_ReturnsFalse()
-            => Assert.That(
-                EnumerableExt.IsEmpty(["test"]),
+        public void GivenAPopulatedCollection_WhenCheckingWhetherItIsEmpty_ThenFalseIsReturned()
+        {
+            IEnumerable<string> collection = ["Minecraft"];
+
+            Assert.That(
+                EnumerableExt.IsEmpty(collection),
                 Is.False);
+        }
 
         [Test]
-        public void IsNullOrEmpty_CollectionIsNull_ReturnsTrue()
-            => Assert.That(EnumerableExt.IsNullOrEmpty((IEnumerable<string>)null));
+        public void GivenANullCollection_WhenCheckingWhetherItIsNullOrEmpty_ThenTrueIsReturned()
+        {
+            IEnumerable<string> collection = null!;
+
+            Assert.That(EnumerableExt.IsNullOrEmpty(collection));
+        }
+
+        [Test]
+        public void GivenAnEmptyCollection_WhenCheckingWhetherItIsNullOrEmpty_ThenTrueIsReturned()
+        {
+            IEnumerable<string> collection = [];
+
+            Assert.That(EnumerableExt.IsNullOrEmpty(collection));
+        }
+
+        [Test]
+        public void GivenAPopulatedCollection_WhenCheckingWhetherItIsNullOrEmpty_ThenFalseIsReturned()
+        {
+            IEnumerable<string> collection = ["Minecraft"];
+
+            Assert.That(
+                EnumerableExt.IsNullOrEmpty(collection),
+                Is.False);
+        }
     }
 }

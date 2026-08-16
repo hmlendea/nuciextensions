@@ -2,13 +2,13 @@ using System;
 
 namespace NuciExtensions.UnitTests.Helpers
 {
-    public class DummyTestObject : IEquatable<DummyTestObject>
+    public sealed class DummyTestObject : IEquatable<DummyTestObject>
     {
-        public string StringProperty { get; set; }
+        public string StringProperty { get; set; } = string.Empty;
 
         public int IntProperty { get; set; }
 
-        public bool Equals(DummyTestObject other)
+        public bool Equals(DummyTestObject? other)
         {
             if (other is null)
             {
@@ -16,11 +16,11 @@ namespace NuciExtensions.UnitTests.Helpers
             }
 
             return
-                StringProperty == other.StringProperty &&
+                string.Equals(StringProperty, other.StringProperty, StringComparison.Ordinal) &&
                 IntProperty == other.IntProperty;
         }
 
-        public override bool Equals(object obj) => Equals(obj as DummyTestObject);
+        public override bool Equals(object? obj) => Equals(obj as DummyTestObject);
 
         public override int GetHashCode() => HashCode.Combine(StringProperty, IntProperty);
     }
