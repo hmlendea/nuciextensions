@@ -5,7 +5,7 @@ using System.Linq;
 namespace NuciExtensions
 {
     /// <summary>
-    /// Enumerable extensions.
+    /// Provides extension methods for enumerable collections.
     /// </summary>
     public static class EnumerableExtensions
     {
@@ -64,7 +64,7 @@ namespace NuciExtensions
         }
 
         /// <summary>
-        /// Checks wether the collection is empty.
+        /// Checks whether the collection is empty.
         /// </summary>
         /// <param name="enumerable">The collection.</param>
         /// <returns>True if the collection is empty, false otherwise.</returns>

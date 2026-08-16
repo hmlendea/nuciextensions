@@ -6,7 +6,7 @@ using System.Reflection;
 namespace NuciExtensions
 {
     /// <summary>
-    /// Enumeration extensions.
+    /// Provides extension methods for enumeration operations.
     /// </summary>
     public static class EnumExtensions
     {

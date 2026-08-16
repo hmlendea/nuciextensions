@@ -11,7 +11,7 @@ namespace NuciExtensions
         /// <summary>
         /// Checks if a file exists in the system's PATH environment variable.
         /// </summary>
-        /// /// <param name="fileName">The name of the file to check.</param>
+        /// <param name="fileName">The name of the file to check.</param>
         /// <returns>True if the file exists in PATH, otherwise false.</returns>
         public static bool ExistsInPathVariable(string fileName)
         {

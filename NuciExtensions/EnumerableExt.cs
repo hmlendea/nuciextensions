@@ -1,26 +1,30 @@
+using System;
 using System.Collections.Generic;
 
 namespace NuciExtensions
 {
     /// <summary>
-    /// Enumerable extensions.
+    /// Provides extension methods for checking enumerable collection states.
     /// </summary>
     public static class EnumerableExt
     {
         /// <summary>
-        /// Checks wether the collection is null or empty.
+        /// Checks whether the collection is null or empty.
         /// </summary>
         /// <param name="enumerable">The collection.</param>
         /// <returns>True if the collection is null or empty, false otherwise.</returns>
         public static bool IsNullOrEmpty<T>(IEnumerable<T> enumerable)
-            => enumerable is null || IsEmpty(enumerable);
+            => enumerable is null || enumerable.IsEmpty();
 
         /// <summary>
-        /// Checks wether the collection is empty.
+        /// Checks whether the collection is empty.
         /// </summary>
         /// <param name="enumerable">The collection.</param>
         /// <returns>True if the collection is empty, false otherwise.</returns>
         public static bool IsEmpty<T>(IEnumerable<T> enumerable)
-            => enumerable.IsEmpty();
+        {
+            ArgumentNullException.ThrowIfNull(enumerable);
+            return enumerable.IsEmpty();
+        }
     }
 }
