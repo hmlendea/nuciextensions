@@ -1,12 +1,17 @@
+using System.Text;
+
 namespace NuciExtensions
 {
+    /// <summary>
+    /// Provides extension methods for string casing operations.
+    /// </summary>
     public static class StringCasingExtensions
     {
         /// <summary>
-        /// Gets the duplicated elements.
+        /// Converts the string to title case (each word starts with uppercase).
         /// </summary>
-        /// <param name="source">The collection.</param>
-        /// <returns>The duplicated elements.</returns>
+        /// <param name="source">The source string.</param>
+        /// <returns>A new string in title case.</returns>
         public static string ToTitleCase(this string source)
         {
             char[] chars = source.ToLower().ToCharArray();
@@ -29,6 +34,11 @@ namespace NuciExtensions
         /// <returns>A new string with the first letter of each sentence in uppercase.</returns>
         public static string ToSentenceCase(this string source)
         {
+            if (string.IsNullOrEmpty(source))
+            {
+                return source;
+            }
+
             char[] chars = source.ToCharArray();
             bool isNewSentence = true;
 
@@ -39,7 +49,7 @@ namespace NuciExtensions
                     chars[i] = char.ToUpper(chars[i]);
                     isNewSentence = false;
                 }
-                else if (chars[i].Equals('.'))
+                else if (chars[i] == '.')
                 {
                     isNewSentence = true;
                 }
@@ -75,26 +85,33 @@ namespace NuciExtensions
         /// <returns>A new string in snake case.</returns>
         public static string ToSnakeCase(this string source)
         {
-            string result = string.Empty;
+            if (string.IsNullOrEmpty(source))
+            {
+                return source;
+            }
+
+            StringBuilder result = new();
 
             foreach (char c in source)
             {
                 if (char.IsLetterOrDigit(c))
                 {
-                    result += c;
+                    result.Append(c);
                 }
                 else if (char.IsWhiteSpace(c))
                 {
-                    result += '_';
+                    result.Append('_');
                 }
             }
 
-            while (result.Contains("__"))
+            string output = result.ToString();
+
+            while (output.Contains("__"))
             {
-                result = result.Replace("__", "_");
+                output = output.Replace("__", "_");
             }
 
-            return result;
+            return output;
         }
     }
 }

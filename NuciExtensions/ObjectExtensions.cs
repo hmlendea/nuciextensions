@@ -2,13 +2,18 @@ using System.Text.Json;
 
 namespace NuciExtensions
 {
+    /// <summary>
+    /// Provides extension methods for general object operations.
+    /// </summary>
     public static class ObjectExtensions
     {
         /// <summary>
-        /// Inverts the case of each character in the specified string.
+        /// Determines whether the specified object is not equal to another object.
         /// </summary>
-        /// <param name="obj">The string whose case is to be inverted.</param>
-        /// <returns>A new string with each character's case inverted.</returns>
+        /// <typeparam name="TObject">The type of the objects.</typeparam>
+        /// <param name="self">The first object to compare.</param>
+        /// <param name="other">The second object to compare.</param>
+        /// <returns>True if the objects are not equal; otherwise, false.</returns>
         public static bool NotEquals<TObject>(this TObject self, TObject other)
             => !self.Equals(other);
 

@@ -13,10 +13,11 @@ namespace NuciExtensions
         static readonly DateTime Jan1st1970 = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary>
-        /// Converts a <see cref="DateTime"/> to a UNIX timestamp.
+        /// Converts a <see cref="DateTime"/> to a UNIX timestamp representing the elapsed time since the UNIX epoch.
         /// </summary>
         /// <param name="time">The date and time to convert.</param>
-        /// <returns>The UNIX timestamp as a double.</returns>
+        /// <returns>A TimeSpan representing the elapsed time since the UNIX epoch.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the date is before the UNIX epoch (January 1, 1970).</exception>
         public static TimeSpan GetElapsedUnixTime(DateTime time)
         {
             DateTime timeInUtc = new(

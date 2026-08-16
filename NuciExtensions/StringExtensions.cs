@@ -7,7 +7,10 @@ using System.Text.RegularExpressions;
 
 namespace NuciExtensions
 {
-    public  static class StringExtensions
+    /// <summary>
+    /// Provides extension methods for string operations.
+    /// </summary>
+    public static class StringExtensions
     {
         /// <summary>
         /// Inverts the case of each character in the specified string.
@@ -32,7 +35,7 @@ namespace NuciExtensions
         /// <summary>
         /// Reverses the characters in the specified string.
         /// </summary>
-        /// /// <param name="text">The string to reverse.</param>
+        /// <param name="text">The string to reverse.</param>
         /// <returns>A new string with the characters in reverse order.</returns>
         public static string Reverse(this string text)
         {
@@ -48,19 +51,24 @@ namespace NuciExtensions
         /// This method concatenates the string to itself the specified number of times.
         /// If the count is less than or equal to zero, an empty string is returned.
         /// </summary>
-        /// /// <param name="source">The string to repeat.</param>
+        /// <param name="source">The string to repeat.</param>
         /// <param name="count">The number of times to repeat the string.</param>
         /// <returns>A new string that is the result of repeating the source string the specified number of times.</returns>
         public static string Repeat(this string source, int count)
         {
-            string result = string.Empty;
+            if (count <= 0)
+            {
+                return string.Empty;
+            }
+
+            StringBuilder result = new();
 
             for (int i = 0; i < count; i++)
             {
-                result += source;
+                result.Append(source);
             }
 
-            return result;
+            return result.ToString();
         }
 
         /// <summary>
@@ -131,7 +139,7 @@ namespace NuciExtensions
             }
 
             string normalisedSource = firstPass.Normalize(NormalizationForm.FormD);
-            string result = string.Empty;
+            StringBuilder result = new();
 
             foreach (char c in normalisedSource)
             {
@@ -139,11 +147,11 @@ namespace NuciExtensions
 
                 if (category.NotEquals(UnicodeCategory.NonSpacingMark))
                 {
-                    result += c;
+                    result.Append(c);
                 }
             }
 
-            return result.Normalize(NormalizationForm.FormC);
+            return result.ToString().Normalize(NormalizationForm.FormC);
         }
 
         /// <summary>
@@ -153,17 +161,17 @@ namespace NuciExtensions
         /// <returns>A new string with punctuation characters removed.</returns>
         public static string RemovePunctuation(this string source)
         {
-            string result = string.Empty;
+            StringBuilder result = new();
 
             foreach (char c in source)
             {
                 if (!char.IsPunctuation(c))
                 {
-                    result += c;
+                    result.Append(c);
                 }
             }
 
-            return result;
+            return result.ToString();
         }
 
         /// <summary>
@@ -173,26 +181,37 @@ namespace NuciExtensions
         /// <returns>A new string formatted as a sentence.</returns>
         public static string ToSentence(this string source)
         {
-            string sentence = source[..1];
+            if (source is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            if (source.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(source));
+            }
+
+            StringBuilder sentence = new();
+            sentence.Append(source[0]);
             string charsToReplaceWithSpace = "_\t";
 
             for (int i = 1; i < source.Length; i++)
             {
                 if (source[i] >= 'A' && source[i] <= 'Z')
                 {
-                    sentence += $" {source[i]}";
+                    sentence.Append($" {source[i]}");
                 }
                 else if (charsToReplaceWithSpace.Contains(source[i]))
                 {
-                    sentence += ' ';
+                    sentence.Append(' ');
                 }
                 else
                 {
-                    sentence += source[i];
+                    sentence.Append(source[i]);
                 }
             }
 
-            return sentence.Trim();
+            return sentence.ToString().Trim();
         }
 
         /// <summary>
