@@ -121,6 +121,19 @@ var displayName = MyEnum.Value.GetDisplayName(); // Extracts DisplayAttribute va
 
 See the [architecture documentation](./ARCHITECTURE.md) for the system context, principal components, runtime flows, ownership boundaries, dependencies, constraints, and extension points.
 
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`docs/`](./docs/) directory:
+
+| Document | Description |
+|----------|-------------|
+| [Getting Started](./docs/getting-started.md) | Installation, basic usage, and common patterns |
+| [API Reference](./docs/api-reference.md) | Complete method reference for all 35 extension methods |
+| [Architecture](./docs/architecture.md) | Implementation-level architecture and design decisions |
+| [Testing](./docs/testing.md) | Test structure, conventions, and coverage requirements |
+| [Contributing](./docs/contributing.md) | Guidelines for contributing to the project |
+| [Extension Points](./docs/extension-points.md) | How to add new extension methods or classes |
+
 ## 🛠️ Development
 
 ### Requirements
