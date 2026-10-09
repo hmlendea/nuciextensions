@@ -42,12 +42,12 @@ namespace NuciExtensions
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <exception cref="ArgumentNullException">Thrown if the source dictionary or key is null.</exception>
-        public static TValue TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
+        public static TValue? TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
         {
             ArgumentNullException.ThrowIfNull(source);
             ArgumentNullException.ThrowIfNull(key);
 
-            source.TryGetValue(key, out TValue value);
+            source.TryGetValue(key, out TValue? value);
 
             return value;
         }

@@ -23,7 +23,7 @@ namespace NuciExtensions
                 return true;
             }
 
-            string values = Environment.GetEnvironmentVariable("PATH");
+            string? values = Environment.GetEnvironmentVariable("PATH");
 
             if (values is null)
             {

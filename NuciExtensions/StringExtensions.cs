@@ -246,7 +246,7 @@ namespace NuciExtensions
         /// <param name="json">The JSON string to deserialize.</param>
         /// <returns>An object of type <typeparamref name="TObject"/> represented by the JSON string.</returns>
         /// <throws>JsonException if the JSON string is not valid or does not match the type.</throws>
-        public static TObject FromJson<TObject>(this string json)
+        public static TObject? FromJson<TObject>(this string json)
             => JsonSerializer.Deserialize<TObject>(json);
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace NuciExtensions
         /// <param name="options">Options to control the JSON deserialization.</param>
         /// <returns>An object of type <typeparamref name="TObject"/> represented by the JSON string.</returns>
         /// <throws>JsonException if the JSON string is not valid or does not match the type.</throws>
-        public static TObject FromJson<TObject>(this string json, JsonSerializerOptions options)
+        public static TObject? FromJson<TObject>(this string json, JsonSerializerOptions options)
             => JsonSerializer.Deserialize<TObject>(json, options);
     }
 }
