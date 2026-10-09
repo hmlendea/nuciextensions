@@ -22,23 +22,23 @@ namespace NuciExtensions.UnitTests
                 Is.EqualTo(nameof(DummyDisplayEnum.ValueWithoutDisplayName)));
 
         [Test]
-        public void GivenANullEnumerationValue_WhenGettingTheDisplayName_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullEnumerationValue_WhenGettingTheDisplayName_ThenAnArgumentNullExceptionIsThrown()
         {
             Enum value = null!;
 
             Assert.That(
                 () => value.GetDisplayName(),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void GivenAnUndefinedEnumerationValue_WhenGettingTheDisplayName_ThenAnArgumentNullExceptionIsThrown()
+        public void GivenAnUndefinedEnumerationValue_WhenGettingTheDisplayName_ThenAnArgumentExceptionIsThrown()
         {
             DummyDisplayEnum value = (DummyDisplayEnum)613;
 
             Assert.That(
                 () => value.GetDisplayName(),
-                Throws.TypeOf<ArgumentNullException>());
+                Throws.TypeOf<ArgumentException>());
         }
     }
 }

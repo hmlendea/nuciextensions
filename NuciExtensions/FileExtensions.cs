@@ -13,18 +13,26 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="fileName">The name of the file to check.</param>
         /// <returns>True if the file exists in PATH, otherwise false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the fileName is null.</exception>
         public static bool ExistsInPathVariable(string fileName)
         {
+            ArgumentNullException.ThrowIfNull(fileName);
+
             if (File.Exists(fileName))
             {
                 return true;
             }
 
-            var values = Environment.GetEnvironmentVariable("PATH");
+            string? values = Environment.GetEnvironmentVariable("PATH");
 
-            foreach (var path in values.Split(Path.PathSeparator))
+            if (values is null)
             {
-                var fullPath = Path.Combine(path, fileName);
+                return false;
+            }
+
+            foreach (string path in values.Split(Path.PathSeparator))
+            {
+                string fullPath = Path.Combine(path, fileName);
 
                 if (File.Exists(fullPath))
                 {

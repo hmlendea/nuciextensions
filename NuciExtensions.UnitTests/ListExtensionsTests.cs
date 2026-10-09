@@ -30,13 +30,13 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
-        public void GivenANullList_WhenShuffling_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullList_WhenShuffling_ThenAnArgumentNullExceptionIsThrown()
         {
             IList<int> collection = null!;
 
             Assert.That(
                 () => collection.Shuffle(),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -77,23 +77,23 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
-        public void GivenAnEmptyList_WhenPopping_ThenAnIndexOutOfRangeExceptionIsThrown()
+        public void GivenAnEmptyList_WhenPopping_ThenAnInvalidOperationExceptionIsThrown()
         {
             IList<int> collection = [];
 
             Assert.That(
                 () => collection.Pop(),
-                Throws.TypeOf<IndexOutOfRangeException>());
+                Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
-        public void GivenANullList_WhenPopping_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullList_WhenPopping_ThenAnArgumentNullExceptionIsThrown()
         {
             IList<int> collection = null!;
 
             Assert.That(
                 () => collection.Pop(),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
     }
 }

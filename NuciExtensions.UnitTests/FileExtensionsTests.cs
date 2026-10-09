@@ -71,14 +71,14 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
-        public void GivenANullPathVariable_WhenCheckingForAMissingFile_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullPathVariable_WhenCheckingForAMissingFile_ThenFalseIsReturned()
         {
             string fileName = Path.GetRandomFileName();
             Environment.SetEnvironmentVariable("PATH", null);
 
             Assert.That(
-                () => FileExtensions.ExistsInPathVariable(fileName),
-                Throws.TypeOf<NullReferenceException>());
+                FileExtensions.ExistsInPathVariable(fileName),
+                Is.False);
         }
 
         [Test]

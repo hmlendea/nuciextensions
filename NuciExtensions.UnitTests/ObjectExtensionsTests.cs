@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 
 using NUnit.Framework;
@@ -21,22 +20,13 @@ namespace NuciExtensions.UnitTests
         [TestCase("Minecraft", "Minecraft", false)]
         [TestCase("Minecraft", "Terraria", true)]
         [TestCase("Minecraft", null, true)]
+        [TestCase(null, "Minecraft", true)]
+        [TestCase(null, null, false)]
         public void GivenAnObject_WhenCallingNotEquals_ThenTheExpectedValueIsReturned(
-            object object1,
-            object object2,
+            object? object1,
+            object? object2,
             bool expected)
             => Assert.That(object1.NotEquals(object2), Is.EqualTo(expected));
-
-        [Test]
-        [TestCase(null, null)]
-        [TestCase(null, "Minecraft")]
-        [TestCase(null, 4)]
-        public void GivenANullObject_WhenCallingNotEquals_ThenANullReferenceExceptionIsThrown(
-            object object1,
-            object object2)
-            => Assert.That(
-                () => object1.NotEquals(object2),
-                Throws.TypeOf<NullReferenceException>());
 
         [Test]
         public void GivenAnObject_WhenCallingToJson_ThenTheExpectedValueIsReturned()

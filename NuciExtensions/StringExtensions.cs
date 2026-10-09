@@ -17,16 +17,27 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="text">The string whose case is to be inverted.</param>
         /// <returns>A new string with each character's case inverted.</returns>
-        public static string InvertCase(this string text)
+        public static string InvertCase(this string? text)
         {
-            if (string.IsNullOrEmpty(text)) return text;
+            if (string.IsNullOrEmpty(text))
+            {
+                return text!;
+            }
 
-            var result = new char[text.Length];
+            char[] result = new char[text.Length];
 
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
-                result[i] = char.IsUpper(c) ? char.ToLower(c) : char.ToUpper(c);
+
+                if (char.IsUpper(c))
+                {
+                    result[i] = char.ToLower(c);
+                }
+                else
+                {
+                    result[i] = char.ToUpper(c);
+                }
             }
 
             return new string(result);
@@ -37,8 +48,11 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="text">The string to reverse.</param>
         /// <returns>A new string with the characters in reverse order.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the string is null.</exception>
         public static string Reverse(this string text)
         {
+            ArgumentNullException.ThrowIfNull(text);
+
             char[] stringChars = text.ToCharArray();
 
             Array.Reverse(stringChars);
@@ -54,9 +68,9 @@ namespace NuciExtensions
         /// <param name="source">The string to repeat.</param>
         /// <param name="count">The number of times to repeat the string.</param>
         /// <returns>A new string that is the result of repeating the source string the specified number of times.</returns>
-        public static string Repeat(this string source, int count)
+        public static string Repeat(this string? source, int count)
         {
-            if (count <= 0)
+            if (count <= 0 || source is null)
             {
                 return string.Empty;
             }
@@ -78,14 +92,11 @@ namespace NuciExtensions
         /// <param name="oldValue">The string to be replaced.</param>
         /// <param name="newValue">The string to replace the old value with. If null, it will be replaced with an empty string.</param>
         /// <returns>A new string with the first occurrence of the old value replaced by the new value.</returns>
-        /// <exception cref="ArgumentException">Thrown if the old value is null or an empty string.</exception>
-        public static string ReplaceFirst(this string source, string oldValue, string newValue)
+        /// <exception cref="ArgumentNullException">Thrown if source or oldValue is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if the old value is an empty string.</exception>
+        public static string ReplaceFirst(this string source, string oldValue, string? newValue)
         {
-            if (source is null)
-            {
-                throw new NullReferenceException("The source string cannot be null.");
-            }
-
+            ArgumentNullException.ThrowIfNull(source);
             ArgumentNullException.ThrowIfNull(oldValue);
 
             if (string.IsNullOrEmpty(oldValue))
@@ -118,8 +129,11 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="source">The source string from which to remove diacritics.</param>
         /// <returns>A new string with diacritics removed.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         public static string RemoveDiacritics(this string source)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             string firstPass = source;
 
             Dictionary<string, string> customMappings = new()
@@ -159,8 +173,11 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="source">The source string from which to remove punctuation.</param>
         /// <returns>A new string with punctuation characters removed.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         public static string RemovePunctuation(this string source)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             StringBuilder result = new();
 
             foreach (char c in source)
@@ -179,12 +196,11 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="source">The source string to convert.</param>
         /// <returns>A new string formatted as a sentence.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the source string is empty.</exception>
         public static string ToSentence(this string source)
         {
-            if (source is null)
-            {
-                throw new NullReferenceException();
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (source.Length == 0)
             {
@@ -230,7 +246,7 @@ namespace NuciExtensions
         /// <param name="json">The JSON string to deserialize.</param>
         /// <returns>An object of type <typeparamref name="TObject"/> represented by the JSON string.</returns>
         /// <throws>JsonException if the JSON string is not valid or does not match the type.</throws>
-        public static TObject FromJson<TObject>(this string json)
+        public static TObject? FromJson<TObject>(this string json)
             => JsonSerializer.Deserialize<TObject>(json);
 
         /// <summary>
@@ -241,7 +257,7 @@ namespace NuciExtensions
         /// <param name="options">Options to control the JSON deserialization.</param>
         /// <returns>An object of type <typeparamref name="TObject"/> represented by the JSON string.</returns>
         /// <throws>JsonException if the JSON string is not valid or does not match the type.</throws>
-        public static TObject FromJson<TObject>(this string json, JsonSerializerOptions options)
+        public static TObject? FromJson<TObject>(this string json, JsonSerializerOptions options)
             => JsonSerializer.Deserialize<TObject>(json, options);
     }
 }

@@ -44,8 +44,11 @@ namespace NuciExtensions
         /// <param name="unixTimestamp">The UNIX timestamp as a string.</param>
         /// <returns>The corresponding <see cref="DateTime"/> in UTC.</returns>
         /// <exception cref="ArgumentException">Thrown if the string is not a valid UNIX timestamp.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if the string is null.</exception>
         public static DateTime FromUnixTime(string unixTimestamp)
         {
+            ArgumentNullException.ThrowIfNull(unixTimestamp);
+
             if (!double.TryParse(unixTimestamp, out double unixTime))
             {
                 throw new ArgumentException("The specified string is not a valid UNIX timestamp");

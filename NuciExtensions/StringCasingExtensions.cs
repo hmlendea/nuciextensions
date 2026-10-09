@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
 namespace NuciExtensions
@@ -12,8 +13,11 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="source">The source string.</param>
         /// <returns>A new string in title case.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         public static string ToTitleCase(this string source)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             char[] chars = source.ToLower().ToCharArray();
 
             for (int i = 0; i < chars.Length; i++)
@@ -32,8 +36,11 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="source">The source string.</param>
         /// <returns>A new string with the first letter of each sentence in uppercase.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         public static string ToSentenceCase(this string source)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             if (string.IsNullOrEmpty(source))
             {
                 return source;
@@ -65,6 +72,7 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="source">The source string.</param>
         /// <returns>A new string in upper snake case.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         public static string ToUpperSnakeCase(this string source)
             => source.ToSnakeCase().ToUpper();
 
@@ -75,6 +83,7 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="source">The source string.</param>
         /// <returns>A new string in lower snake case.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         public static string ToLowerSnakeCase(this string source)
             => source.ToSnakeCase().ToLower();
 
@@ -83,8 +92,11 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="source">The source string.</param>
         /// <returns>A new string in snake case.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         public static string ToSnakeCase(this string source)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             if (string.IsNullOrEmpty(source))
             {
                 return source;

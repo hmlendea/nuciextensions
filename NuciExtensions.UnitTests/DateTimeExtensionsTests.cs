@@ -38,6 +38,12 @@ namespace NuciExtensions.UnitTests
                 Throws.TypeOf<ArgumentException>());
 
         [Test]
+        public void GivenANullUnixTimeString_WhenConvertingFromUnixTime_ThenAnArgumentNullExceptionIsThrown()
+            => Assert.That(
+                () => DateTimeExtensions.FromUnixTime(null!),
+                Throws.TypeOf<ArgumentNullException>());
+
+        [Test]
         public void GivenAValidUnixTimeNumber_WhenConvertingFromUnixTime_ThenTheCorrectDateIsReturned()
         {
             DateTime expected = new(2251, 12, 9, 20, 3, 51);

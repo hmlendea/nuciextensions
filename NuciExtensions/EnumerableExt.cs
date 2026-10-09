@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NuciExtensions
 {
@@ -13,18 +14,20 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="enumerable">The collection.</param>
         /// <returns>True if the collection is null or empty, false otherwise.</returns>
-        public static bool IsNullOrEmpty<T>(IEnumerable<T> enumerable)
-            => enumerable is null || enumerable.IsEmpty();
+        public static bool IsNullOrEmpty<T>(IEnumerable<T>? enumerable)
+            => enumerable is null || !enumerable.Any();
 
         /// <summary>
         /// Checks whether the collection is empty.
         /// </summary>
         /// <param name="enumerable">The collection.</param>
         /// <returns>True if the collection is empty, false otherwise.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the enumerable is null.</exception>
         public static bool IsEmpty<T>(IEnumerable<T> enumerable)
         {
             ArgumentNullException.ThrowIfNull(enumerable);
-            return enumerable.IsEmpty();
+
+            return !enumerable.Any();
         }
     }
 }
