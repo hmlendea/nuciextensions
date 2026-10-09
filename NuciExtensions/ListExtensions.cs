@@ -9,28 +9,25 @@ namespace NuciExtensions
     /// </summary>
     public static class ListExtensions
     {
-        static Random random;
+        static readonly Lazy<Random> lazyRandom = new(() => new Random());
 
         /// <summary>
         /// Shuffles the elements of the specified list.
         /// </summary>
         /// <param name="list">The list to shuffle.</param>
         /// <returns>A new list containing the shuffled elements.</returns>
-        /// <exception cref="NullReferenceException">Thrown if the list is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if the list is null.</exception>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         public static IList<T> Shuffle<T>(this IList<T> list)
         {
-            if (list is null)
-            {
-                throw new NullReferenceException();
-            }
+            ArgumentNullException.ThrowIfNull(list);
 
             if (list.Count == 0)
             {
                 return list;
             }
 
-            random ??= new Random();
+            Random random = lazyRandom.Value;
 
             List<T> clone = [.. list];
             List<T> result = [];
@@ -53,12 +50,15 @@ namespace NuciExtensions
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <param name="source">The list from which to remove the last element.</param>
         /// <returns>The last element of the list.</returns>
-        /// <exception cref="IndexOutOfRangeException">Thrown if the list is empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if the source list is null.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the list is empty.</exception>
         public static T Pop<T>(this IList<T> source)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             if (source.Count == 0)
             {
-                throw new IndexOutOfRangeException("There are no elements in the list");
+                throw new InvalidOperationException("There are no elements in the list");
             }
 
             int index = source.Count - 1;
