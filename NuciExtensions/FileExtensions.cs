@@ -30,7 +30,7 @@ namespace NuciExtensions
                 return false;
             }
 
-            foreach (var path in values.Split(Path.PathSeparator))
+            foreach (string path in values.Split(Path.PathSeparator))
             {
                 string fullPath = Path.Combine(path, fileName);
 
