@@ -207,6 +207,10 @@ If you find this project useful, consider [funding it](https://hmlendea.go.ro/fu
 
 [![Donate](https://raw.githubusercontent.com/hmlendea/readme-assets/master/donate_generic.png)](https://hmlendea.go.ro/fund.html)
 
+## 🔒 Privacy
+
+NuciExtensions is a .NET library with no runtime data collection, telemetry, or external integrations. See [PRIVACY.md](./PRIVACY.md) for details.
+
 ## 📄 License
 
 This project is being distributed under the `GNU General Public License v3.0 or later`.
