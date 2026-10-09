@@ -20,9 +20,11 @@ namespace NuciExtensions
         /// <exception cref="InvalidOperationException">Thrown if the enumerable is empty.</exception>
         public static T GetRandomElement<T>(this IEnumerable<T> enumerable)
         {
-            if (EnumerableExt.IsNullOrEmpty(enumerable))
+            ArgumentNullException.ThrowIfNull(enumerable);
+
+            if (!enumerable.Any())
             {
-                throw new InvalidOperationException("Cannot get a random element from a null or empty collection.");
+                throw new InvalidOperationException("Cannot get a random element from an empty collection.");
             }
 
             Random random = lazyRandom.Value;
@@ -40,12 +42,13 @@ namespace NuciExtensions
         /// <exception cref="InvalidOperationException">Thrown if the enumerable is empty.</exception>
         public static T GetRandomElement<T>(this IEnumerable<T> enumerable, Random random)
         {
-            if (EnumerableExt.IsNullOrEmpty(enumerable))
-            {
-                throw new InvalidOperationException("Cannot get a random element from a null or empty collection.");
-            }
-
+            ArgumentNullException.ThrowIfNull(enumerable);
             ArgumentNullException.ThrowIfNull(random);
+
+            if (!enumerable.Any())
+            {
+                throw new InvalidOperationException("Cannot get a random element from an empty collection.");
+            }
 
             return enumerable.ElementAt(random.Next(enumerable.Count()));
         }
