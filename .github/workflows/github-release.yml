@@ -13,7 +13,7 @@ jobs:
       contents: write
 
     env:
-      NUGET_PACKAGE_NAME: NuciAPI.Middleware.ExceptionHandling
+      NUGET_PACKAGE_NAME: NuciExtensions
 
     steps:
     - uses: actions/checkout@v6
