@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -23,6 +24,16 @@ namespace NuciExtensions.UnitTests
             Assert.That(
                 EnumerableExt.IsEmpty(collection),
                 Is.False);
+        }
+
+        [Test]
+        public void GivenANullCollection_WhenCheckingWhetherItIsEmpty_ThenAnArgumentNullExceptionIsThrown()
+        {
+            IEnumerable<string> collection = null!;
+
+            Assert.That(
+                () => EnumerableExt.IsEmpty(collection),
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]

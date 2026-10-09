@@ -29,56 +29,56 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
-        public void GivenANullCollection_WhenGettingARandomElement_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullCollection_WhenGettingARandomElement_ThenAnArgumentNullExceptionIsThrown()
         {
             IEnumerable<string> collection = null!;
 
             Assert.That(
                 () => collection.GetRandomElement(),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void GivenAnEmptyCollection_WhenGettingARandomElement_ThenANullReferenceExceptionIsThrown()
+        public void GivenAnEmptyCollection_WhenGettingARandomElement_ThenAnInvalidOperationExceptionIsThrown()
         {
             IEnumerable<string> collection = [];
 
             Assert.That(
                 () => collection.GetRandomElement(),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
-        public void GivenANullCollectionAndRandom_WhenGettingARandomElement_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullCollectionAndRandom_WhenGettingARandomElement_ThenAnArgumentNullExceptionIsThrown()
         {
             IEnumerable<string> collection = null!;
             Random random = new(613);
 
             Assert.That(
                 () => collection.GetRandomElement(random),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void GivenAnEmptyCollectionAndRandom_WhenGettingARandomElement_ThenANullReferenceExceptionIsThrown()
+        public void GivenAnEmptyCollectionAndRandom_WhenGettingARandomElement_ThenAnInvalidOperationExceptionIsThrown()
         {
             IEnumerable<string> collection = [];
             Random random = new(613);
 
             Assert.That(
                 () => collection.GetRandomElement(random),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
-        public void GivenANullRandom_WhenGettingARandomElement_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullRandom_WhenGettingARandomElement_ThenAnArgumentNullExceptionIsThrown()
         {
             IEnumerable<string> collection = ["Dark Souls III"];
             Random random = null!;
 
             Assert.That(
                 () => collection.GetRandomElement(random),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -108,13 +108,13 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
-        public void GivenANullCollection_WhenGettingDuplicates_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullCollection_WhenGettingDuplicates_ThenAnArgumentNullExceptionIsThrown()
         {
             IEnumerable<string> collection = null!;
 
             Assert.That(
                 () => collection.GetDuplicates().ToArray(),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
     }
 }

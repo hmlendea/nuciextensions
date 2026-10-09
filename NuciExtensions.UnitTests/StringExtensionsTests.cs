@@ -40,13 +40,13 @@ namespace NuciExtensions.UnitTests
             => Assert.That(text.Reverse(), Is.EqualTo(expectedText));
 
         [Test]
-        public void GivenANullString_WhenReversing_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullString_WhenReversing_ThenAnArgumentNullExceptionIsThrown()
         {
             string text = null!;
 
             Assert.That(
                 () => text.Reverse(),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
-        public void GivenANullSource_WhenReplacingTheFirstValue_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullSource_WhenReplacingTheFirstValue_ThenAnArgumentNullExceptionIsThrown()
         {
             string source = null!;
             string oldValue = "Minecraft";
@@ -78,7 +78,7 @@ namespace NuciExtensions.UnitTests
 
             Assert.That(
                 () => source.ReplaceFirst(oldValue, newValue),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -174,6 +174,16 @@ namespace NuciExtensions.UnitTests
             => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
 
         [Test]
+        public void GivenANullString_WhenEliminatingDiacritics_ThenAnArgumentNullExceptionIsThrown()
+        {
+            string input = null!;
+
+            Assert.That(
+                () => input.RemoveDiacritics(),
+                Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
         [TestCase("", "")]
         [TestCase("Minecraft", "Minecraft")]
         [TestCase(
@@ -185,13 +195,13 @@ namespace NuciExtensions.UnitTests
             => Assert.That(input.RemovePunctuation(), Is.EqualTo(expected));
 
         [Test]
-        public void GivenANullString_WhenEliminatingPunctuation_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullString_WhenEliminatingPunctuation_ThenAnArgumentNullExceptionIsThrown()
         {
             string input = null!;
 
             Assert.That(
                 () => input.RemovePunctuation(),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -210,13 +220,13 @@ namespace NuciExtensions.UnitTests
                 Throws.TypeOf<ArgumentOutOfRangeException>());
 
         [Test]
-        public void GivenANullString_WhenConvertingToASentence_ThenANullReferenceExceptionIsThrown()
+        public void GivenANullString_WhenConvertingToASentence_ThenAnArgumentNullExceptionIsThrown()
         {
             string input = null!;
 
             Assert.That(
                 () => input.ToSentence(),
-                Throws.TypeOf<NullReferenceException>());
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
