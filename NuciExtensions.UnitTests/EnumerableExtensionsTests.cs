@@ -116,5 +116,25 @@ namespace NuciExtensions.UnitTests
                 () => collection.GetDuplicates().ToArray(),
                 Throws.TypeOf<ArgumentNullException>());
         }
+
+        [Test]
+        public void GivenAnEmptyCollection_WhenCheckingWhetherItIsEmpty_ThenTrueIsReturned()
+            => Assert.That(Array.Empty<string>().IsEmpty());
+
+        [Test]
+        public void GivenAPopulatedCollection_WhenCheckingWhetherItIsEmpty_ThenFalseIsReturned()
+            => Assert.That(
+                new[] { "Minecraft" }.IsEmpty(),
+                Is.False);
+
+        [Test]
+        public void GivenANullCollection_WhenCheckingWhetherItIsEmpty_ThenAnArgumentNullExceptionIsThrown()
+        {
+            IEnumerable<string> collection = null!;
+
+            Assert.That(
+                () => collection.IsEmpty(),
+                Throws.TypeOf<ArgumentNullException>());
+        }
     }
 }

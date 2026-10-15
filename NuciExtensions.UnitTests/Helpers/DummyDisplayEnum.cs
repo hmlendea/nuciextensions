@@ -7,6 +7,9 @@ namespace NuciExtensions.UnitTests.Helpers
         [Display(Name = "Praise the Sun!")]
         ValueWithDisplayName,
 
+        [Display]
+        ValueWithEmptyDisplayName,
+
         ValueWithoutDisplayName,
     }
 }
