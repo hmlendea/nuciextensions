@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="NuciExtensions\NuciExtensions.csproj" />
+  <Project Path="NuciExtensions.UnitTests\NuciExtensions.UnitTests.csproj" />
+</Solution>
