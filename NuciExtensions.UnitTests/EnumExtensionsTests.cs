@@ -22,6 +22,12 @@ namespace NuciExtensions.UnitTests
                 Is.EqualTo(nameof(DummyDisplayEnum.ValueWithoutDisplayName)));
 
         [Test]
+        public void GivenAnEnumerationValueWithAnEmptyDisplayName_WhenGettingTheDisplayName_ThenTheValueNameIsReturned()
+            => Assert.That(
+                DummyDisplayEnum.ValueWithEmptyDisplayName.GetDisplayName(),
+                Is.EqualTo(nameof(DummyDisplayEnum.ValueWithEmptyDisplayName)));
+
+        [Test]
         public void GivenANullEnumerationValue_WhenGettingTheDisplayName_ThenAnArgumentNullExceptionIsThrown()
         {
             Enum value = null!;

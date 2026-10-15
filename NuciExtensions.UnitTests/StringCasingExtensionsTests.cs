@@ -39,5 +39,35 @@ namespace NuciExtensions.UnitTests
         [TestCase("Praise the Sun!", "praise_the_sun")]
         public void GivenAString_WhenConvertingToLowerSnakeCase_ThenEveryWordIsLowercaseAndSeparatedByUnderscore(string text, string expectedResult)
             => Assert.That(text.ToLowerSnakeCase(), Is.EqualTo(expectedResult));
+
+        [Test]
+        public void GivenANullString_WhenConvertingToTitleCase_ThenAnArgumentNullExceptionIsThrown()
+            => Assert.That(
+                () => ((string)null!).ToTitleCase(),
+                Throws.TypeOf<System.ArgumentNullException>());
+
+        [Test]
+        public void GivenANullString_WhenConvertingToSentenceCase_ThenAnArgumentNullExceptionIsThrown()
+            => Assert.That(
+                () => ((string)null!).ToSentenceCase(),
+                Throws.TypeOf<System.ArgumentNullException>());
+
+        [Test]
+        public void GivenANullString_WhenConvertingToSnakeCase_ThenAnArgumentNullExceptionIsThrown()
+            => Assert.That(
+                () => ((string)null!).ToSnakeCase(),
+                Throws.TypeOf<System.ArgumentNullException>());
+
+        [Test]
+        public void GivenANullString_WhenConvertingToUpperSnakeCase_ThenAnArgumentNullExceptionIsThrown()
+            => Assert.That(
+                () => ((string)null!).ToUpperSnakeCase(),
+                Throws.TypeOf<System.ArgumentNullException>());
+
+        [Test]
+        public void GivenANullString_WhenConvertingToLowerSnakeCase_ThenAnArgumentNullExceptionIsThrown()
+            => Assert.That(
+                () => ((string)null!).ToLowerSnakeCase(),
+                Throws.TypeOf<System.ArgumentNullException>());
     }
 }
