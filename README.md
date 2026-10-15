@@ -192,12 +192,16 @@ Current coverage: **100% line coverage** (293 lines) and **100% branch coverage*
 You are welcome to submit any suggestion, feedback, or modification to this project.
 
 When doing so, please:
+- Maintain cross-platform compatibility
 - Preserve the existing public contract unless a breaking change is intentional
 - Submit focused pull requests that conform to the existing code style
 - Maintain your branch synchronised with `master`
 - Revise the documentation when functionality changes
 - Properly test all modifications, including edge cases and error conditions
-- Add tests for additional or modified functionality
+- Include tests for additional or modified functionality
+- Raise a new [issue](https://github.com/hmlendea/nuciextensions/issues) for problems or suggestions
+
+See the [contributing guidelines](./CONTRIBUTING.md) for details on how to report issues, suggest enhancements, and submit changes.
 
 ## 💝 Project Engagement
 
