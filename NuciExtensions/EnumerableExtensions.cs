@@ -9,7 +9,7 @@ namespace NuciExtensions
     /// </summary>
     public static class EnumerableExtensions
     {
-        static readonly Lazy<Random> lazyRandom = new(() => new Random());
+        private static readonly Lazy<Random> lazyRandom = new(() => new Random());
 
         /// <summary>
         /// Gets a random element.

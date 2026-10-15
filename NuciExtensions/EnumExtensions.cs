@@ -35,7 +35,12 @@ namespace NuciExtensions
 
             if (displayAttribute is not null)
             {
-                return displayAttribute.GetName() ?? value.ToString();
+                string? name = displayAttribute.GetName();
+
+                if (name is not null)
+                {
+                    return name;
+                }
             }
 
             return value.ToString();
