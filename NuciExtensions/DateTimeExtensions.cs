@@ -10,7 +10,7 @@ namespace NuciExtensions
         /// <summary>
         /// The UNIX epoch start date, January 1st, 1970, at midnight UTC.
         /// </summary>
-        static readonly DateTime Jan1st1970 = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime Jan1st1970 = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary>
         /// Converts a <see cref="DateTime"/> to a UNIX timestamp representing the elapsed time since the UNIX epoch.

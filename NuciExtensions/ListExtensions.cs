@@ -9,7 +9,7 @@ namespace NuciExtensions
     /// </summary>
     public static class ListExtensions
     {
-        static readonly Lazy<Random> lazyRandom = new(() => new Random());
+        private static readonly Lazy<Random> lazyRandom = new(() => new Random());
 
         /// <summary>
         /// Shuffles the elements of the specified list.

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace NuciExtensions.UnitTests
 {
     [TestFixture]
-    public class EnumerableExtensionsTests
+    public sealed class EnumerableExtensionsTests
     {
         [Test]
         public void GivenAPopulatedCollection_WhenGettingARandomElement_ThenAnElementFromTheCollectionIsReturned()
