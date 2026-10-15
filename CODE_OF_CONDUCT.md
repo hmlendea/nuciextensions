@@ -46,7 +46,7 @@ This code applies to repositories, issue trackers, pull requests, discussions, c
 
 ## 📣 Reporting Concerns
 
-Report conduct concerns to the repository maintainers via [GitHub Security Advisories](https://github.com/hmlendea/nuciextensions/security/advisories) or by opening a private issue. Provide sufficient context for the maintainers to comprehend what happened, when it happened, where it happened, and what response you are seeking. Do not include information that is unnecessary for reviewing the concern.
+Report conduct concerns to the repository maintainers. Provide sufficient context for the maintainers to comprehend what happened, when it happened, where it happened, and what response you are seeking. Do not include information that is unnecessary for reviewing the concern.
 
 Reports will be treated respectfully and shared only with people who require the information to review or respond. Confidentiality cannot be guaranteed where disclosure is required to protect someone or comply with legislation.
 
