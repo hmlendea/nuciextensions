@@ -96,7 +96,7 @@ dotnet test NuciExtensions.UnitTests/NuciExtensions.UnitTests.csproj
 
 ## 📋 Code of Conduct
 
-This project does not currently have a formal Code of Conduct. Contributors are expected to interact respectfully and professionally.
+This project follows the [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ## 🔒 Security
 
