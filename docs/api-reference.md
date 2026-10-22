@@ -621,7 +621,9 @@ Converts UNIX timestamp string to DateTime (UTC).
 
 **Returns:** `DateTime` — UTC DateTime
 
-**Exceptions:** `ArgumentException` if string is not a valid number
+**Exceptions:** 
+- `ArgumentException` if string is not a valid number
+- `ArgumentOutOfRangeException` if timestamp is negative
 
 **Example:**
 ```csharp
@@ -643,6 +645,8 @@ Converts UNIX timestamp (double) to DateTime (UTC).
 | `unixTime` | `double` | Timestamp as seconds since epoch |
 
 **Returns:** `DateTime` — UTC DateTime
+
+**Exceptions:** `ArgumentOutOfRangeException` if timestamp is negative
 
 **Example:**
 ```csharp
