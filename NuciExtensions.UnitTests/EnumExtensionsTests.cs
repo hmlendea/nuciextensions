@@ -30,7 +30,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullEnumerationValue_WhenGettingTheDisplayName_ThenAnArgumentNullExceptionIsThrown()
         {
-            Enum value = null!;
+            Enum value = null;
 
             Assert.That(
                 () => value.GetDisplayName(),

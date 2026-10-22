@@ -40,7 +40,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullDictionary_WhenAddingOrUpdating_ThenAnArgumentNullExceptionIsThrown()
         {
-            IDictionary<string, string> dictionary = null!;
+            IDictionary<string, string> dictionary = null;
 
             Assert.That(
                 () => dictionary.AddOrUpdate("Minecraft", "Dark Souls III"),
@@ -51,7 +51,7 @@ namespace NuciExtensions.UnitTests
         public void GivenANullKey_WhenAddingOrUpdating_ThenAnArgumentNullExceptionIsThrown()
         {
             IDictionary<string, string> dictionary = new Dictionary<string, string>();
-            string key = null!;
+            string key = null;
 
             Assert.That(
                 () => dictionary.AddOrUpdate(key, "Dark Souls III"),
@@ -61,7 +61,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullDictionary_WhenGettingAValue_ThenAnArgumentNullExceptionIsThrown()
         {
-            IDictionary<string, string> dictionary = null!;
+            IDictionary<string, string> dictionary = null;
 
             Assert.That(
                 () => dictionary.TryGetValue("Minecraft"),
@@ -72,7 +72,7 @@ namespace NuciExtensions.UnitTests
         public void GivenANullKey_WhenGettingAValue_ThenAnArgumentNullExceptionIsThrown()
         {
             IDictionary<string, string> dictionary = new Dictionary<string, string>();
-            string key = null!;
+            string key = null;
 
             Assert.That(
                 () => dictionary.TryGetValue(key),

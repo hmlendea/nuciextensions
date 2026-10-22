@@ -42,7 +42,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullString_WhenReversing_ThenAnArgumentNullExceptionIsThrown()
         {
-            string text = null!;
+            string text = null;
 
             Assert.That(
                 () => text.Reverse(),
@@ -64,7 +64,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullStringAndPositiveCount_WhenRepeating_ThenAnEmptyStringIsReturned()
         {
-            string text = null!;
+            string text = null;
 
             Assert.That(text.Repeat(4), Is.Empty);
         }
@@ -72,7 +72,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullSource_WhenReplacingTheFirstValue_ThenAnArgumentNullExceptionIsThrown()
         {
-            string source = null!;
+            string source = null;
             string oldValue = "Minecraft";
             string newValue = "Terraria";
 
@@ -96,7 +96,7 @@ namespace NuciExtensions.UnitTests
         public void GivenANullOldValue_WhenReplacingTheFirstValue_ThenAnArgumentNullExceptionIsThrown()
         {
             string source = "Praise the Sun! Praise the Sun!";
-            string oldValue = null!;
+            string oldValue = null;
             string newValue = "Jolly cooperation!";
 
             Assert.That(
@@ -121,7 +121,7 @@ namespace NuciExtensions.UnitTests
         {
             string source = "Praise the Sun! Praise the Sun!";
             string oldValue = "Praise the Sun!";
-            string newValue = null!;
+            string newValue = null;
             string expected = " Praise the Sun!";
 
             Assert.That(source.ReplaceFirst(oldValue, newValue), Is.EqualTo(expected));
@@ -176,7 +176,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullString_WhenEliminatingDiacritics_ThenAnArgumentNullExceptionIsThrown()
         {
-            string input = null!;
+            string input = null;
 
             Assert.That(
                 () => input.RemoveDiacritics(),
@@ -197,7 +197,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullString_WhenEliminatingPunctuation_ThenAnArgumentNullExceptionIsThrown()
         {
-            string input = null!;
+            string input = null;
 
             Assert.That(
                 () => input.RemovePunctuation(),
@@ -222,7 +222,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullString_WhenConvertingToASentence_ThenAnArgumentNullExceptionIsThrown()
         {
-            string input = null!;
+            string input = null;
 
             Assert.That(
                 () => input.ToSentence(),
@@ -302,7 +302,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullJsonString_WhenDeserialising_ThenAnArgumentNullExceptionIsThrown()
         {
-            string json = null!;
+            string json = null;
 
             Assert.That(
                 () => json.FromJson<DummyTestObject>(),

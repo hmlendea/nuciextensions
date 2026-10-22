@@ -61,7 +61,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullObject_WhenCallingToJson_ThenTheJsonNullLiteralIsReturned()
         {
-            DummyTestObject dummyObject = null!;
+            DummyTestObject dummyObject = null;
 
             Assert.That(dummyObject.ToJson(), Is.EqualTo("null"));
         }
@@ -69,7 +69,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullObjectAndCustomOptions_WhenCallingToJson_ThenTheJsonNullLiteralIsReturned()
         {
-            DummyTestObject dummyObject = null!;
+            DummyTestObject dummyObject = null;
 
             Assert.That(dummyObject.ToJson(jsonOptions), Is.EqualTo("null"));
         }

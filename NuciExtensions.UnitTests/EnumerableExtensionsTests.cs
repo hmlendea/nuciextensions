@@ -31,7 +31,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullCollection_WhenGettingARandomElement_ThenAnArgumentNullExceptionIsThrown()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
 
             Assert.That(
                 () => collection.GetRandomElement(),
@@ -51,7 +51,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullCollectionAndRandom_WhenGettingARandomElement_ThenAnArgumentNullExceptionIsThrown()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
             Random random = new(613);
 
             Assert.That(
@@ -74,7 +74,7 @@ namespace NuciExtensions.UnitTests
         public void GivenANullRandom_WhenGettingARandomElement_ThenAnArgumentNullExceptionIsThrown()
         {
             IEnumerable<string> collection = ["Dark Souls III"];
-            Random random = null!;
+            Random random = null;
 
             Assert.That(
                 () => collection.GetRandomElement(random),
@@ -110,7 +110,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullCollection_WhenGettingDuplicates_ThenAnArgumentNullExceptionIsThrown()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
 
             Assert.That(
                 () => collection.GetDuplicates().ToArray(),
@@ -130,7 +130,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullCollection_WhenCheckingWhetherItIsEmpty_ThenAnArgumentNullExceptionIsThrown()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
 
             Assert.That(
                 () => collection.IsEmpty(),

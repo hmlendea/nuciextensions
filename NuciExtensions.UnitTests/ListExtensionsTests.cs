@@ -32,7 +32,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullList_WhenShuffling_ThenAnArgumentNullExceptionIsThrown()
         {
-            IList<int> collection = null!;
+            IList<int> collection = null;
 
             Assert.That(
                 () => collection.Shuffle(),
@@ -89,7 +89,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullList_WhenPopping_ThenAnArgumentNullExceptionIsThrown()
         {
-            IList<int> collection = null!;
+            IList<int> collection = null;
 
             Assert.That(
                 () => collection.Pop(),

@@ -29,7 +29,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullCollection_WhenCheckingWhetherItIsEmpty_ThenAnArgumentNullExceptionIsThrown()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
 
             Assert.That(
                 () => EnumerableExt.IsEmpty(collection),
@@ -39,7 +39,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullCollection_WhenCheckingWhetherItIsNullOrEmpty_ThenTrueIsReturned()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
 
             Assert.That(EnumerableExt.IsNullOrEmpty(collection));
         }

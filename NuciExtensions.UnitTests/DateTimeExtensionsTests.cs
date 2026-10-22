@@ -51,7 +51,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullUnixTimeString_WhenConvertingFromUnixTime_ThenAnArgumentNullExceptionIsThrown()
             => Assert.That(
-                () => DateTimeExtensions.FromUnixTime(null!),
+                () => DateTimeExtensions.FromUnixTime(null),
                 Throws.TypeOf<ArgumentNullException>());
 
         [TestCase(8897112231, 2251, 12, 9, 20, 3, 51)]

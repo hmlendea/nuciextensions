@@ -6,16 +6,15 @@ using NUnit.Framework;
 namespace NuciExtensions.UnitTests
 {
     [TestFixture]
-    [NonParallelizable]
     public sealed class FileExtensionsTests
     {
-        private string originalPathVariable = null!;
-        private DirectoryInfo temporaryDirectory = null!;
+        private string originalPathVariable;
+        private DirectoryInfo temporaryDirectory;
 
         [SetUp]
         public void SetUp()
         {
-            originalPathVariable = Environment.GetEnvironmentVariable("PATH")!;
+            originalPathVariable = Environment.GetEnvironmentVariable("PATH");
             temporaryDirectory = Directory.CreateTempSubdirectory();
             Environment.SetEnvironmentVariable("PATH", temporaryDirectory.FullName);
         }
@@ -23,8 +22,17 @@ namespace NuciExtensions.UnitTests
         [TearDown]
         public void TearDown()
         {
-            Environment.SetEnvironmentVariable("PATH", originalPathVariable);
-            temporaryDirectory.Delete(true);
+            try
+            {
+                Environment.SetEnvironmentVariable("PATH", originalPathVariable);
+            }
+            finally
+            {
+                if (temporaryDirectory.Exists)
+                {
+                    temporaryDirectory.Delete(true);
+                }
+            }
         }
 
         [Test]
@@ -84,7 +92,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullFileName_WhenCheckingWhetherItExists_ThenAnArgumentNullExceptionIsThrown()
         {
-            string fileName = null!;
+            string fileName = null;
 
             Assert.That(
                 () => FileExtensions.ExistsInPathVariable(fileName),
