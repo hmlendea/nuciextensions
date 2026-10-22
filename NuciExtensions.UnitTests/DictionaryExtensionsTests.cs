@@ -25,6 +25,20 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        [TestCase("key1", "value1", "updated1")]
+        [TestCase("key2", "value2", "updated2")]
+        [TestCase("unicode café", "original", "updated")]
+        [TestCase("123", "456", "789")]
+        [TestCase("", "empty", "notempty")]
+        public void GivenAnExistingKey_WhenAddingOrUpdating_ThenTheValueIsUpdated_Parameterized(
+            string key, string initialValue, string updatedValue)
+        {
+            Dictionary<string, string> dictionary = new() { { key, initialValue } };
+            dictionary.AddOrUpdate(key, updatedValue);
+            AssertThatDictionaryPairExists(dictionary, key, updatedValue);
+        }
+
+        [Test]
         public void GivenAMissingKey_WhenAddingOrUpdating_ThenThePairIsAdded()
         {
             string testKey = "Minecraft";
@@ -35,6 +49,20 @@ namespace NuciExtensions.UnitTests
             dictionary.AddOrUpdate(testKey, testValue);
 
             AssertThatDictionaryPairExists(dictionary, testKey, testValue);
+        }
+
+        [Test]
+        [TestCase("newkey", "newvalue")]
+        [TestCase("unicode café", "value")]
+        [TestCase("123", "456")]
+        [TestCase("", "empty")]
+        [TestCase("key with spaces", "value")]
+        public void GivenAMissingKey_WhenAddingOrUpdating_ThenThePairIsAdded_Parameterized(
+            string key, string value)
+        {
+            Dictionary<string, string> dictionary = [];
+            dictionary.AddOrUpdate(key, value);
+            AssertThatDictionaryPairExists(dictionary, key, value);
         }
 
         [Test]
@@ -88,6 +116,18 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        [TestCase("missing1")]
+        [TestCase("missing2")]
+        [TestCase("unicode café")]
+        [TestCase("123")]
+        [TestCase("")]
+        public void GivenAMissingKey_WhenGettingAValue_ThenNullIsReturned_Parameterized(string key)
+        {
+            IDictionary<string, string> dictionary = new Dictionary<string, string>();
+            Assert.That(dictionary.TryGetValue(key), Is.Null);
+        }
+
+        [Test]
         public void GivenAnExistingKey_WhenGettingAValue_ThenTheAssociatedValueIsReturned()
         {
             IDictionary<string, string> dictionary = new Dictionary<string, string>
@@ -98,6 +138,19 @@ namespace NuciExtensions.UnitTests
             Assert.That(
                 dictionary.TryGetValue("Minecraft"),
                 Is.EqualTo("Dark Souls III"));
+        }
+
+        [Test]
+        [TestCase("key1", "value1")]
+        [TestCase("key2", "value2")]
+        [TestCase("unicode café", "value")]
+        [TestCase("123", "456")]
+        [TestCase("", "empty")]
+        public void GivenAnExistingKey_WhenGettingAValue_ThenTheAssociatedValueIsReturned_Parameterized(
+            string key, string value)
+        {
+            IDictionary<string, string> dictionary = new Dictionary<string, string> { { key, value } };
+            Assert.That(dictionary.TryGetValue(key), Is.EqualTo(value));
         }
 
         private static void AssertThatDictionaryPairExists<TKey, TValue>(

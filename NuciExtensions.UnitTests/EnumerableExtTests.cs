@@ -16,6 +16,21 @@ namespace NuciExtensions.UnitTests
             Assert.That(EnumerableExt.IsEmpty(collection));
         }
 
+        [TestCaseSource(nameof(IsEmptyTestCases))]
+        public void GivenACollection_WhenCheckingWhetherItIsEmpty_ThenReturnsExpectedResult_Parameterized(
+            IEnumerable<string> collection, bool expected)
+        {
+            Assert.That(EnumerableExt.IsEmpty(collection), Is.EqualTo(expected));
+        }
+
+        private static IEnumerable<TestCaseData> IsEmptyTestCases()
+        {
+            yield return new TestCaseData(Array.Empty<string>(), true).SetName("EmptyArray");
+            yield return new TestCaseData(new[] { "a" }, false).SetName("SingleElement");
+            yield return new TestCaseData(new[] { "a", "b", "c" }, false).SetName("MultipleElements");
+            yield return new TestCaseData(new[] { "unicode café" }, false).SetName("UnicodeElement");
+        }
+
         [Test]
         public void GivenAPopulatedCollection_WhenCheckingWhetherItIsEmpty_ThenFalseIsReturned()
         {
@@ -60,6 +75,22 @@ namespace NuciExtensions.UnitTests
             Assert.That(
                 EnumerableExt.IsNullOrEmpty(collection),
                 Is.False);
+        }
+
+        [TestCaseSource(nameof(IsNullOrEmptyTestCases))]
+        public void GivenACollection_WhenCheckingWhetherItIsNullOrEmpty_ThenReturnsExpectedResult_Parameterized(
+            IEnumerable<string> collection, bool expected)
+        {
+            Assert.That(EnumerableExt.IsNullOrEmpty(collection), Is.EqualTo(expected));
+        }
+
+        private static IEnumerable<TestCaseData> IsNullOrEmptyTestCases()
+        {
+            yield return new TestCaseData(null, true).SetName("NullCollection");
+            yield return new TestCaseData(Array.Empty<string>(), true).SetName("EmptyArray");
+            yield return new TestCaseData(new[] { "a" }, false).SetName("SingleElement");
+            yield return new TestCaseData(new[] { "a", "b" }, false).SetName("TwoElements");
+            yield return new TestCaseData(new[] { "unicode café" }, false).SetName("UnicodeElement");
         }
     }
 }

@@ -20,6 +20,20 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        [TestCase(new[] { 1, 2, 3, 4, 5 })]
+        [TestCase(new[] { 10, 20, 30 })]
+        [TestCase(new[] { 100 })]
+        [TestCase(new[] { -1, -2, -3, -4 })]
+        [TestCase(new[] { 1, 1, 2, 2, 3, 3 })]
+        public void GivenAPopulatedList_WhenShuffling_ThenTheSameElementsAreReturned_Parameterized(int[] collection)
+        {
+            var list = new List<int>(collection);
+            var shuffled = list.Shuffle();
+            Assert.That(shuffled, Is.EquivalentTo(list));
+            Assert.That(shuffled, Is.Not.SameAs(list));
+        }
+
+        [Test]
         public void GivenAPopulatedList_WhenShuffling_ThenTheCountIsPreserved()
         {
             IList<int> collection = [4, 8, 16, 32, 42, 48, 64, 96];
@@ -27,6 +41,19 @@ namespace NuciExtensions.UnitTests
             IList<int> shuffledCollection = collection.Shuffle();
 
             Assert.That(shuffledCollection, Has.Count.EqualTo(collection.Count));
+        }
+
+        [Test]
+        [TestCase(new[] { 1, 2, 3, 4, 5 })]
+        [TestCase(new[] { 10, 20, 30 })]
+        [TestCase(new[] { 100 })]
+        [TestCase(new[] { -1, -2, -3, -4 })]
+        [TestCase(new[] { 1, 1, 2, 2, 3, 3 })]
+        public void GivenAPopulatedList_WhenShuffling_ThenTheCountIsPreserved_Parameterized(int[] collection)
+        {
+            var list = new List<int>(collection);
+            var shuffled = list.Shuffle();
+            Assert.That(shuffled, Has.Count.EqualTo(list.Count));
         }
 
         [Test]
@@ -67,6 +94,20 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        [TestCase(new[] { 1, 2, 3 }, 3, new[] { 1, 2 })]
+        [TestCase(new[] { 10, 20 }, 20, new[] { 10 })]
+        [TestCase(new[] { 100 }, 100, new int[] { })]
+        [TestCase(new[] { -1, -2, -3 }, -3, new[] { -1, -2 })]
+        public void GivenAPopulatedList_WhenPopping_ThenTheLastElementIsRemoved_Parameterized(
+            int[] initial, int expectedPopped, int[] expectedRemaining)
+        {
+            var list = new List<int>(initial);
+            int popped = list.Pop();
+            Assert.That(popped, Is.EqualTo(expectedPopped));
+            Assert.That(list, Is.EqualTo(expectedRemaining));
+        }
+
+        [Test]
         public void GivenAPopulatedList_WhenPopping_ThenTheLastElementIsReturned()
         {
             IList<int> collection = [4, 8, 16, 42];
@@ -74,6 +115,19 @@ namespace NuciExtensions.UnitTests
             int poppedElement = collection.Pop();
 
             Assert.That(poppedElement, Is.EqualTo(42));
+        }
+
+        [Test]
+        [TestCase(new[] { 1, 2, 3 }, 3)]
+        [TestCase(new[] { 10, 20 }, 20)]
+        [TestCase(new[] { 100 }, 100)]
+        [TestCase(new[] { -1, -2, -3 }, -3)]
+        public void GivenAPopulatedList_WhenPopping_ThenTheLastElementIsReturned_Parameterized(
+            int[] initial, int expectedPopped)
+        {
+            var list = new List<int>(initial);
+            int popped = list.Pop();
+            Assert.That(popped, Is.EqualTo(expectedPopped));
         }
 
         [Test]

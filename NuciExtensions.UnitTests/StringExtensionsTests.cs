@@ -19,6 +19,13 @@ namespace NuciExtensions.UnitTests
         [TestCase("Praise the Sun!", "pRAISE THE sUN!")]
         [TestCase("This was a triumph", "tHIS WAS A TRIUMPH")]
         [TestCase("e=mc²", "E=MC²")]
+        [TestCase("Hello World", "hELLO wORLD")]
+        [TestCase("UPPERCASE", "uppercase")]
+        [TestCase("lowercase", "LOWERCASE")]
+        [TestCase("MiXeD CaSe", "mIxEd cAsE")]
+        [TestCase("123ABC", "123abc")]
+        [TestCase("!@#$%", "!@#$%")]
+        [TestCase("café", "CAFÉ")]
         public void GivenAString_WhenInvertingTheCase_ThenTheOppositeCaseIsReturned(
             string text,
             string expectedText)
@@ -34,6 +41,11 @@ namespace NuciExtensions.UnitTests
         [TestCase("", "")]
         [TestCase("4", "4")]
         [TestCase("Praise the Sun!", "!nuS eht esiarP")]
+        [TestCase("Hello", "olleH")]
+        [TestCase("racecar", "racecar")]
+        [TestCase("12345", "54321")]
+        [TestCase("a", "a")]
+        [TestCase("café", "éfac")]
         public void GivenAString_WhenReversing_ThenTheCharactersAreReturnedInReverseOrder(
             string text,
             string expectedText)
@@ -54,6 +66,18 @@ namespace NuciExtensions.UnitTests
             => Assert.That(
                 "Praise the Sun!".Repeat(4),
                 Is.EqualTo("Praise the Sun!Praise the Sun!Praise the Sun!Praise the Sun!"));
+
+        [Test]
+        [TestCase("test", 1, "test")]
+        [TestCase("a", 5, "aaaaa")]
+        [TestCase("ab", 3, "ababab")]
+        [TestCase("🎮", 2, "🎮🎮")]
+        [TestCase("hello ", 3, "hello hello hello ")]
+        public void GivenAStringAndPositiveCount_WhenRepeating_ThenTheRepeatedStringIsReturned_Parameterized(
+            string text,
+            int count,
+            string expected)
+            => Assert.That(text.Repeat(count), Is.EqualTo(expected));
 
         [Test]
         [TestCase(0)]
@@ -161,6 +185,19 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        [TestCase("hello world hello", "hello", "hi", "hi world hello")]
+        [TestCase("test", "test", "replaced", "replaced")]
+        [TestCase("aaaa", "aa", "b", "baa")]
+        [TestCase("unicode café", "café", "coffee", "unicode coffee")]
+        [TestCase("case sensitive", "Case", "different", "case sensitive")]
+        public void GivenMatchingValues_WhenReplacingTheFirstValue_ThenOnlyTheFirstValueIsReplaced_Parameterized(
+            string source,
+            string oldValue,
+            string newValue,
+            string expected)
+            => Assert.That(source.ReplaceFirst(oldValue, newValue), Is.EqualTo(expected));
+
+        [Test]
         [TestCase("Alžir is the serbo-croatian name for Algiers", "Alzhir is the serbo-croatian name for Algiers")]
         [TestCase("Horațiu says héllo", "Horatiu says hello")]
         [TestCase("Šimšat", "Shimshat")]
@@ -168,6 +205,15 @@ namespace NuciExtensions.UnitTests
         [TestCase("STŘEDNÍ AMERIKA", "STRZHEDNI AMERIKA")]
         [TestCase("", "")]
         [TestCase("Minecraft", "Minecraft")]
+        [TestCase("café", "cafe")]
+        [TestCase("naïve", "naive")]
+        [TestCase("résumé", "resume")]
+        [TestCase("piñata", "pinata")]
+        [TestCase("über", "uber")]
+        [TestCase("façade", "facade")]
+        [TestCase("Ångström", "Angstroem")]
+        [TestCase("Ελληνικά", "Ελληνικα")]
+        [TestCase("日本語", "日本語")]
         public void GivenAString_WhenEliminatingDiacritics_ThenTheTransliteratedStringIsReturned(
             string input,
             string expected)
@@ -189,6 +235,13 @@ namespace NuciExtensions.UnitTests
         [TestCase(
             "Chuck Norris doesn't do push-ups. He pushes the Earth down.",
             "Chuck Norris doesnt do pushups He pushes the Earth down")]
+        [TestCase("Hello, World!", "Hello World")]
+        [TestCase("test...", "test")]
+        [TestCase("a.b.c", "abc")]
+        [TestCase("!@#$%^&*()", "$^")]
+        [TestCase("café!", "café")]
+        [TestCase("日本語。", "日本語")]
+        [TestCase("  spaces  ", "  spaces  ")]
         public void GivenAString_WhenEliminatingPunctuation_ThenOnlyNonPunctuationCharactersAreReturned(
             string input,
             string expected)
@@ -208,6 +261,12 @@ namespace NuciExtensions.UnitTests
         [TestCase("4", "4")]
         [TestCase("PraiseTheSun_today\tforever", "Praise The Sun today forever")]
         [TestCase("\tpraise the sun!\t", "praise the sun!")]
+        [TestCase("hello world", "hello world")]
+        [TestCase("HELLO WORLD", "H E L L O  W O R L D")]
+        [TestCase("already Sentence.", "already  Sentence.")]
+        [TestCase("multiple words here", "multiple words here")]
+        [TestCase("café", "café")]
+        [TestCase("123", "123")]
         public void GivenAString_WhenConvertingToASentence_ThenTheFormattedSentenceIsReturned(
             string input,
             string expected)
@@ -246,6 +305,9 @@ namespace NuciExtensions.UnitTests
         [Test]
         [TestCase("Minecraft", 4, "Mine")]
         [TestCase("Praise the Sun!", 8, "Praise t")]
+        [TestCase("Hello", 3, "Hel")]
+        [TestCase("a", 1, "a")]
+        [TestCase("unicode café", 6, "unicod")]
         public void GivenAStringAndRestrictedMaximumLength_WhenTruncating_ThenTheTruncatedStringIsReturned(
             string inputString,
             int maximumLength,
@@ -291,6 +353,17 @@ namespace NuciExtensions.UnitTests
             Assert.That(
                 json.FromJson<DummyTestObject>(jsonOptions),
                 Is.EqualTo(expectedObject));
+        }
+
+        [Test]
+        [TestCase("{\"stringProperty\":\"test\",\"intProperty\":123}")]
+        [TestCase("{\"stringProperty\":\"\",\"intProperty\":0}")]
+        [TestCase("{\"stringProperty\":\"unicode café\",\"intProperty\":-1}")]
+        [TestCase("{\"stringProperty\":\"🎮\",\"intProperty\":42}")]
+        public void GivenAJsonString_WhenDeserialising_ThenTheExpectedObjectIsReturned_Parameterized(string json)
+        {
+            var result = json.FromJson<DummyTestObject>();
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]

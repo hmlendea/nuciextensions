@@ -19,6 +19,11 @@ namespace NuciExtensions.UnitTests
         [TestCase("UPPERCASE", "Uppercase")]
         [TestCase("lowercase", "Lowercase")]
         [TestCase("MiXeD CaSe", "Mixed Case")]
+        [TestCase("already Title Case", "Already Title Case")]
+        [TestCase("with-numbers 123", "With-Numbers 123")]
+        [TestCase("special_chars!", "Special_Chars!")]
+        [TestCase("unicode café", "Unicode Café")]
+        [TestCase("tabs\tand\nnewlines", "Tabs\tAnd\nNewlines")]
         public void GivenAString_WhenConvertingToTitleCase_ThenEveryWordIsCapitalised(string text, string expectedResult)
             => Assert.That(text.ToTitleCase(), Is.EqualTo(expectedResult));
 
@@ -33,6 +38,11 @@ namespace NuciExtensions.UnitTests
         [TestCase("UPPERCASE SENTENCE.", "UPPERCASE SENTENCE.")]
         [TestCase("  leading space.", "  Leading space.")]
         [TestCase("trailing space.  ", "Trailing space.  ")]
+        [TestCase("hello! world?", "Hello! world?")]
+        [TestCase("multiple... ellipsis", "Multiple... Ellipsis")]
+        [TestCase("japanese。 sentence。", "Japanese。 sentence。")]
+        [TestCase("already. Sentence.", "Already. Sentence.")]
+        [TestCase("UPPERCASE! LOWERCASE?", "UPPERCASE! LOWERCASE?")]
         public void GivenAString_WhenConvertingToSentenceCase_ThenEverySentenceIsCapitalised(
             string text,
             string expectedResult)
@@ -48,6 +58,15 @@ namespace NuciExtensions.UnitTests
         [TestCase("HELLO WORLD", "HELLO_WORLD")]
         [TestCase("UPPERCASE", "UPPERCASE")]
         [TestCase("lowercase", "lowercase")]
+        [TestCase("hello-world", "helloworld")]
+        [TestCase("hello.world", "helloworld")]
+        [TestCase("  spaces  ", "_spaces_")]
+        [TestCase("multiple___underscores", "multipleunderscores")]
+        [TestCase("PascalCase", "PascalCase")]
+        [TestCase("camelCase", "camelCase")]
+        [TestCase("XMLHttpRequest", "XMLHttpRequest")]
+        [TestCase("snake_case", "snakecase")]
+        [TestCase("kebab-case", "kebabcase")]
         public void GivenAString_WhenConvertingToSnakeCase_ThenEveryWordIsSeparatedByUnderscore(string text, string expectedResult)
             => Assert.That(text.ToSnakeCase(), Is.EqualTo(expectedResult));
 
@@ -58,6 +77,15 @@ namespace NuciExtensions.UnitTests
         [TestCase("helloWorld", "HELLOWORLD")]
         [TestCase("UPPERCASE", "UPPERCASE")]
         [TestCase("lowercase", "LOWERCASE")]
+        [TestCase("hello-world", "HELLOWORLD")]
+        [TestCase("hello.world", "HELLOWORLD")]
+        [TestCase("  spaces  ", "_SPACES_")]
+        [TestCase("multiple___underscores", "MULTIPLEUNDERSCORES")]
+        [TestCase("PascalCase", "PASCALCASE")]
+        [TestCase("camelCase", "CAMELCASE")]
+        [TestCase("XMLHttpRequest", "XMLHTTPREQUEST")]
+        [TestCase("snake_case", "SNAKECASE")]
+        [TestCase("kebab-case", "KEBABCASE")]
         public void GivenAString_WhenConvertingToUpperSnakeCase_ThenEveryWordIsUppercaseAndSeparatedByUnderscore(string text, string expectedResult)
             => Assert.That(text.ToUpperSnakeCase(), Is.EqualTo(expectedResult));
 
@@ -68,6 +96,15 @@ namespace NuciExtensions.UnitTests
         [TestCase("helloWorld", "helloworld")]
         [TestCase("UPPERCASE", "uppercase")]
         [TestCase("lowercase", "lowercase")]
+        [TestCase("hello-world", "helloworld")]
+        [TestCase("hello.world", "helloworld")]
+        [TestCase("  spaces  ", "_spaces_")]
+        [TestCase("multiple___underscores", "multipleunderscores")]
+        [TestCase("PascalCase", "pascalcase")]
+        [TestCase("camelCase", "camelcase")]
+        [TestCase("XMLHttpRequest", "xmlhttprequest")]
+        [TestCase("snake_case", "snakecase")]
+        [TestCase("kebab-case", "kebabcase")]
         public void GivenAString_WhenConvertingToLowerSnakeCase_ThenEveryWordIsLowercaseAndSeparatedByUnderscore(string text, string expectedResult)
             => Assert.That(text.ToLowerSnakeCase(), Is.EqualTo(expectedResult));
 
