@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 using NUnit.Framework;
 
@@ -32,6 +33,15 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        public void GivenAValidUnixTimeStringWithDecimal_WhenConvertingFromUnixTime_ThenTheCorrectDateIsReturned()
+        {
+            DateTime expected = new(1970, 1, 1, 0, 0, 1, 500);
+            DateTime actual = DateTimeExtensions.FromUnixTime("1.5");
+
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void GivenAnInvalidUnixTimeString_WhenConvertingFromUnixTime_ThenAnArgumentExceptionIsThrown()
             => Assert.That(
                 () => DateTimeExtensions.FromUnixTime("Praise the Sun!"),
@@ -51,5 +61,17 @@ namespace NuciExtensions.UnitTests
 
             Assert.That(actual, Is.EqualTo(expected));
         }
+
+        [Test]
+        public void GivenANegativeUnixTimeNumber_WhenConvertingFromUnixTime_ThenAnArgumentOutOfRangeExceptionIsThrown()
+            => Assert.That(
+                () => DateTimeExtensions.FromUnixTime(-1),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+
+        [Test]
+        public void GivenANegativeUnixTimeString_WhenConvertingFromUnixTime_ThenAnArgumentOutOfRangeExceptionIsThrown()
+            => Assert.That(
+                () => DateTimeExtensions.FromUnixTime("-1"),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
     }
 }

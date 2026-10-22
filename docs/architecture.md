@@ -338,6 +338,7 @@ NuciExtensions (Package)
 | Null argument (explicit check) | `ArgumentNullException` | ReplaceFirst (oldValue), TryGetValue (key) |
 | Empty string (semantic error) | `ArgumentOutOfRangeException` | ToSentence, Truncate (negative) |
 | Invalid format | `ArgumentException` | FromUnixTime (string) |
+| Negative timestamp | `ArgumentOutOfRangeException` | FromUnixTime (string, double) |
 | Before epoch | `ArgumentOutOfRangeException` | GetElapsedUnixTime |
 | Empty collection | `NullReferenceException` | GetRandomElement, Pop |
 | Invalid JSON | `JsonException` | FromJson |

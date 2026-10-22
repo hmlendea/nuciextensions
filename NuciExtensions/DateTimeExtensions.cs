@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace NuciExtensions
 {
@@ -49,7 +50,7 @@ namespace NuciExtensions
         {
             ArgumentNullException.ThrowIfNull(unixTimestamp);
 
-            if (!double.TryParse(unixTimestamp, out double unixTime))
+            if (!double.TryParse(unixTimestamp, NumberStyles.Float, CultureInfo.InvariantCulture, out double unixTime))
             {
                 throw new ArgumentException("The specified string is not a valid UNIX timestamp");
             }
@@ -62,6 +63,15 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="unixTime">The UNIX timestamp as a double.</param>
         /// <returns>The corresponding <see cref="DateTime"/> in UTC.</returns>
-        public static DateTime FromUnixTime(double unixTime) => Jan1st1970.AddSeconds(unixTime);
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the timestamp is negative (before UNIX epoch).</exception>
+        public static DateTime FromUnixTime(double unixTime)
+        {
+            if (unixTime < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(unixTime), "UNIX timestamp cannot be negative");
+            }
+
+            return Jan1st1970.AddSeconds(unixTime);
+        }
     }
 }
