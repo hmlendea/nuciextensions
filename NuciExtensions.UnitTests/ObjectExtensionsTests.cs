@@ -45,6 +45,17 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        [TestCase("{\"StringProperty\":\"test\",\"IntProperty\":123}")]
+        [TestCase("{\"StringProperty\":\"\",\"IntProperty\":0}")]
+        [TestCase("{\"StringProperty\":\"unicode caf\\u00E9\",\"IntProperty\":-1}")]
+        [TestCase("{\"StringProperty\":\"\\uD83C\\uDFAE\",\"IntProperty\":42}")]
+        public void GivenAnObject_WhenCallingToJson_ThenTheExpectedValueIsReturned_Parameterized(string expectedJson)
+        {
+            var dummyObject = expectedJson.FromJson<DummyTestObject>();
+            Assert.That(dummyObject.ToJson(), Is.EqualTo(expectedJson));
+        }
+
+        [Test]
         public void GivenAnObjectAndCustomOptions_WhenCallingToJson_ThenTheConfiguredJsonIsReturned()
         {
             DummyTestObject dummyObject = new()
@@ -61,7 +72,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullObject_WhenCallingToJson_ThenTheJsonNullLiteralIsReturned()
         {
-            DummyTestObject dummyObject = null!;
+            DummyTestObject dummyObject = null;
 
             Assert.That(dummyObject.ToJson(), Is.EqualTo("null"));
         }
@@ -69,7 +80,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullObjectAndCustomOptions_WhenCallingToJson_ThenTheJsonNullLiteralIsReturned()
         {
-            DummyTestObject dummyObject = null!;
+            DummyTestObject dummyObject = null;
 
             Assert.That(dummyObject.ToJson(jsonOptions), Is.EqualTo("null"));
         }

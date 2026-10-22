@@ -19,6 +19,19 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        [TestCase(new[] { "a", "b", "c" }, 42)]
+        [TestCase(new[] { "x", "y" }, 123)]
+        [TestCase(new[] { "single" }, 999)]
+        [TestCase(new[] { "unicode café", "test" }, 456)]
+        public void GivenAPopulatedCollectionAndSeededRandom_WhenGettingARandomElement_ThenAnElementFromTheCollectionIsReturned_Parameterized(
+            string[] collection, int seed)
+        {
+            var random = new Random(seed);
+            string randomElement = collection.GetRandomElement(random);
+            Assert.That(collection, Does.Contain(randomElement));
+        }
+
+        [Test]
         public void GivenAPopulatedCollectionAndSeededRandom_WhenGettingARandomElement_ThenTheExpectedElementIsReturned()
         {
             IEnumerable<string> collection = ["Dark Souls III", "Minecraft", "Terraria"];
@@ -31,7 +44,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullCollection_WhenGettingARandomElement_ThenAnArgumentNullExceptionIsThrown()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
 
             Assert.That(
                 () => collection.GetRandomElement(),
@@ -51,7 +64,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullCollectionAndRandom_WhenGettingARandomElement_ThenAnArgumentNullExceptionIsThrown()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
             Random random = new(613);
 
             Assert.That(
@@ -74,7 +87,7 @@ namespace NuciExtensions.UnitTests
         public void GivenANullRandom_WhenGettingARandomElement_ThenAnArgumentNullExceptionIsThrown()
         {
             IEnumerable<string> collection = ["Dark Souls III"];
-            Random random = null!;
+            Random random = null;
 
             Assert.That(
                 () => collection.GetRandomElement(random),
@@ -108,9 +121,21 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        [TestCase(new[] { "a", "b", "a", "c", "b" }, new[] { "a", "b" })]
+        [TestCase(new[] { "x", "x", "x" }, new[] { "x" })]
+        [TestCase(new[] { "a", "b", "c" }, new string[] { })]
+        [TestCase(new[] { "unicode café", "test", "unicode café" }, new[] { "unicode café" })]
+        [TestCase(new string[] { }, new string[] { })]
+        public void GivenACollectionWithDuplicates_WhenGettingDuplicates_ThenEachDuplicateIsReturnedOnceInOrder_Parameterized(
+            string[] collection, string[] expected)
+        {
+            Assert.That(collection.GetDuplicates(), Is.EqualTo(expected));
+        }
+
+        [Test]
         public void GivenANullCollection_WhenGettingDuplicates_ThenAnArgumentNullExceptionIsThrown()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
 
             Assert.That(
                 () => collection.GetDuplicates().ToArray(),
@@ -130,7 +155,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullCollection_WhenCheckingWhetherItIsEmpty_ThenAnArgumentNullExceptionIsThrown()
         {
-            IEnumerable<string> collection = null!;
+            IEnumerable<string> collection = null;
 
             Assert.That(
                 () => collection.IsEmpty(),

@@ -16,6 +16,14 @@ namespace NuciExtensions.UnitTests
                 Is.EqualTo("Praise the Sun!"));
 
         [Test]
+        [TestCase(DummyDisplayEnum.ValueWithDisplayName, "Praise the Sun!")]
+        [TestCase(DummyDisplayEnum.ValueWithoutDisplayName, nameof(DummyDisplayEnum.ValueWithoutDisplayName))]
+        [TestCase(DummyDisplayEnum.ValueWithEmptyDisplayName, nameof(DummyDisplayEnum.ValueWithEmptyDisplayName))]
+        public void GivenAnEnumerationValue_WhenGettingTheDisplayName_ThenTheExpectedNameIsReturned_Parameterized(
+            DummyDisplayEnum value, string expected)
+            => Assert.That(value.GetDisplayName(), Is.EqualTo(expected));
+
+        [Test]
         public void GivenAnEnumerationValueWithoutADisplayName_WhenGettingTheDisplayName_ThenTheValueNameIsReturned()
             => Assert.That(
                 DummyDisplayEnum.ValueWithoutDisplayName.GetDisplayName(),
@@ -30,7 +38,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullEnumerationValue_WhenGettingTheDisplayName_ThenAnArgumentNullExceptionIsThrown()
         {
-            Enum value = null!;
+            Enum value = null;
 
             Assert.That(
                 () => value.GetDisplayName(),

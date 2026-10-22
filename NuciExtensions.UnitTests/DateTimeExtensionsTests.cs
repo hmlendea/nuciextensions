@@ -31,6 +31,14 @@ namespace NuciExtensions.UnitTests
         [TestCase("0.123", 1970, 1, 1, 0, 0, 0, 123)]
         [TestCase("0.456", 1970, 1, 1, 0, 0, 0, 456)]
         [TestCase("253402300799", 9999, 12, 31, 23, 59, 59)]
+        [TestCase("86400", 1970, 1, 2, 0, 0, 0)]
+        [TestCase("3600", 1970, 1, 1, 1, 0, 0)]
+        [TestCase("60", 1970, 1, 1, 0, 1, 0)]
+        [TestCase("1000000000", 2001, 9, 9, 1, 46, 40)]
+        [TestCase("1609459200", 2021, 1, 1, 0, 0, 0)]
+        [TestCase("1704067200", 2024, 1, 1, 0, 0, 0)]
+        [TestCase("1.5e2", 1970, 1, 1, 0, 2, 30)]
+        [TestCase("1E3", 1970, 1, 1, 0, 16, 40)]
         public void GivenValidUnixTimeString_WhenConvertingFromUnixTime_ThenReturnsCorrectDate(
             string input, int year, int month, int day, int hour, int minute, int second, int millisecond = 0)
         {
@@ -51,7 +59,7 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullUnixTimeString_WhenConvertingFromUnixTime_ThenAnArgumentNullExceptionIsThrown()
             => Assert.That(
-                () => DateTimeExtensions.FromUnixTime(null!),
+                () => DateTimeExtensions.FromUnixTime(null),
                 Throws.TypeOf<ArgumentNullException>());
 
         [TestCase(8897112231, 2251, 12, 9, 20, 3, 51)]
@@ -59,6 +67,16 @@ namespace NuciExtensions.UnitTests
         [TestCase(0.123, 1970, 1, 1, 0, 0, 0, 123)]
         [TestCase(0.456, 1970, 1, 1, 0, 0, 0, 456)]
         [TestCase(253402300799, 9999, 12, 31, 23, 59, 59)]
+        [TestCase(86400, 1970, 1, 2, 0, 0, 0)]
+        [TestCase(3600, 1970, 1, 1, 1, 0, 0)]
+        [TestCase(60, 1970, 1, 1, 0, 1, 0)]
+        [TestCase(1000000000, 2001, 9, 9, 1, 46, 40)]
+        [TestCase(1609459200, 2021, 1, 1, 0, 0, 0)]
+        [TestCase(1704067200, 2024, 1, 1, 0, 0, 0)]
+        [TestCase(1.5e2, 1970, 1, 1, 0, 2, 30)]
+        [TestCase(1E3, 1970, 1, 1, 0, 16, 40)]
+        [TestCase(0.001, 1970, 1, 1, 0, 0, 0, 1)]
+        [TestCase(0.999, 1970, 1, 1, 0, 0, 0, 999)]
         public void GivenValidUnixTimeNumber_WhenConvertingFromUnixTime_ThenReturnsCorrectDate(
             double input, int year, int month, int day, int hour, int minute, int second, int millisecond = 0)
         {
@@ -71,6 +89,11 @@ namespace NuciExtensions.UnitTests
         [TestCase(-1)]
         [TestCase(-0.001)]
         [TestCase(-86400)]
+        [TestCase(-3600)]
+        [TestCase(-60)]
+        [TestCase(-1000000000)]
+        [TestCase(-1.5)]
+        [TestCase(-0.0001)]
         public void GivenNegativeUnixTimeNumber_WhenConvertingFromUnixTime_ThenThrowsArgumentOutOfRangeException(double input)
             => Assert.That(
                 () => DateTimeExtensions.FromUnixTime(input),
@@ -79,6 +102,11 @@ namespace NuciExtensions.UnitTests
         [TestCase("-1")]
         [TestCase("-0.001")]
         [TestCase("-86400")]
+        [TestCase("-3600")]
+        [TestCase("-60")]
+        [TestCase("-1000000000")]
+        [TestCase("-1.5")]
+        [TestCase("-0.0001")]
         public void GivenNegativeUnixTimeString_WhenConvertingFromUnixTime_ThenThrowsArgumentOutOfRangeException(string input)
             => Assert.That(
                 () => DateTimeExtensions.FromUnixTime(input),
