@@ -194,6 +194,7 @@ Both workflows run on `ubuntu-latest` with .NET 10.0.
 |---------|------|---------|
 | `NuciExtensions` | .NET Library | Public API with all extension classes |
 | `NuciExtensions.UnitTests` | .NET Test Project | Comprehensive unit tests (118 tests, 100% coverage) |
+| `NuciExtensions.ArchitectureTests` | .NET Architecture Test Project | Architecture fitness rules and source-file convention tests |
 
 ### Directories
 
@@ -202,6 +203,7 @@ Both workflows run on `ubuntu-latest` with .NET 10.0.
 | `NuciExtensions/` | Extension method classes, one per domain (DateTime, String, Dictionary, etc.) |
 | `NuciExtensions.UnitTests/` | Unit tests following `Given[x]_When[y]_Then[z]` naming convention |
 | `NuciExtensions.UnitTests/Helpers/` | Test helpers (dummy objects and enumerations) |
+| `NuciExtensions.ArchitectureTests/` | Architecture/fitness rules and source-file convention tests |
 
 ## 🤝 Contributing
 
