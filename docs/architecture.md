@@ -456,6 +456,13 @@ dotnet pack NuciExtensions/NuciExtensions.csproj -c Release
 5. Test with coverage collection
 6. Verify 100% coverage (fails if below)
 
+`.github/workflows/security.yml`:
+1. Checkout
+2. Setup .NET 10.0
+3. Restore
+4. Check for vulnerable packages (`dotnet list package --vulnerable --include-transitive`)
+5. CodeQL analysis (C#)
+
 ---
 
 ## Quality Attributes
