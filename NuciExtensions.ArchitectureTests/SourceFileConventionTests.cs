@@ -30,7 +30,7 @@ namespace NuciExtensions.ArchitectureTests
 
             Assert.That(sourceFiles, Is.Not.Empty, "No eligible production source files were found.");
 
-            List<string> violations = new();
+            List<string> violations = [];
 
             foreach (string sourceFile in sourceFiles)
             {
@@ -68,7 +68,7 @@ namespace NuciExtensions.ArchitectureTests
 
             Assert.That(sourceFiles, Is.Not.Empty, "No eligible production source files were found.");
 
-            List<string> violations = new();
+            List<string> violations = [];
 
             foreach (string sourceFile in sourceFiles)
             {
