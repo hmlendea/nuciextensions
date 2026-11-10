@@ -1,4 +1,8 @@
-[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/fund.html) [![Build Status](https://github.com/hmlendea/nuciextensions/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nuciextensions/actions/workflows/dotnet.yml) [![Latest Release](https://img.shields.io/github/v/release/hmlendea/nuciextensions)](https://github.com/hmlendea/nuciextensions/releases/latest) [![NuGet](https://img.shields.io/nuget/v/NuciExtensions)](https://nuget.org/packages/NuciExtensions)
+[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/fund.html)
+[![Build Status](https://github.com/hmlendea/nuciextensions/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nuciextensions/actions/workflows/dotnet.yml)
+[![Security Scan](https://github.com/hmlendea/nuciextensions/actions/workflows/security.yml/badge.svg)](https://github.com/hmlendea/nuciextensions/actions/workflows/security.yml)
+[![Latest Release](https://img.shields.io/github/v/release/hmlendea/nuciextensions)](https://github.com/hmlendea/nuciextensions/releases/latest)
+[![NuGet](https://img.shields.io/nuget/v/NuciExtensions)](https://nuget.org/packages/NuciExtensions)
 
 # NuciExtensions
 
@@ -11,6 +15,7 @@ NuciExtensions is a .NET NuGet package that provides small, focused extension me
 - [Usage](#-usage)
 - [Architecture](#️-architecture)
 - [Development](#️-development)
+- [GitHub Actions](#️-github-actions)
 - [Project Structure](#️-project-structure)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -169,6 +174,17 @@ dotnet test NuciExtensions.sln --nologo --collect:"XPlat Code Coverage" --result
 ```
 
 Current coverage: **100% line coverage** (293 lines) and **100% branch coverage** (108 branches) across 118 unit tests.
+
+## ⚙️ GitHub Actions
+
+This project uses the following GitHub Actions workflows:
+
+| Workflow | Purpose | Trigger |
+|----------|---------|---------|
+| [dotnet.yml](.github/workflows/dotnet.yml) | Build, test, and verify 100% coverage | Push/PR to `master` |
+| [security.yml](.github/workflows/security.yml) | Vulnerable package scan + CodeQL analysis | Push/PR to `master`, weekly schedule |
+
+Both workflows run on `ubuntu-latest` with .NET 10.0.
 
 ## 🗂️ Project Structure
 
