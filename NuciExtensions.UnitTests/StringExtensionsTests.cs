@@ -315,6 +315,78 @@ namespace NuciExtensions.UnitTests
             => Assert.That(inputString.Truncate(maximumLength), Is.EqualTo(expectedString));
 
         [Test]
+        [TestCase("🎮", 1, "")]
+        [TestCase("🎮", 2, "🎮")]
+        [TestCase("🎮", 3, "🎮")]
+        [TestCase("a🎮", 1, "a")]
+        [TestCase("a🎮", 2, "a")]
+        [TestCase("a🎮", 3, "a🎮")]
+        [TestCase("🎮a", 1, "")]
+        [TestCase("🎮a", 2, "🎮")]
+        [TestCase("🎮a", 3, "🎮a")]
+        [TestCase("𝔘𝔫𝔦", 1, "")]
+        [TestCase("𝔘𝔫𝔦", 2, "𝔘")]
+        [TestCase("𝔘𝔫𝔦", 3, "𝔘")]
+        [TestCase("𝔘𝔫𝔦", 4, "𝔘𝔫")]
+        [TestCase("𝔘𝔫𝔦", 5, "𝔘𝔫")]
+        [TestCase("𝔘𝔫𝔦", 6, "𝔘𝔫𝔦")]
+        public void GivenAStringWithSurrogatePairsAndARestrictedMaximumLength_WhenTruncating_ThenNoUnpairedSurrogateIsProduced(
+            string inputString,
+            int maximumLength,
+            string expectedString)
+        {
+            string result = inputString.Truncate(maximumLength);
+
+            Assert.That(result, Is.EqualTo(expectedString));
+            Assert.That(
+                result.Length == 0 || !char.IsHighSurrogate(result[^1]),
+                Is.True,
+                "The truncated result must not end with an unpaired high surrogate.");
+        }
+
+        [Test]
+        [TestCase("🎮", 1)]
+        [TestCase("🎮", 3)]
+        [TestCase("a🎮", 1)]
+        [TestCase("a🎮", 2)]
+        [TestCase("🎮a", 1)]
+        [TestCase("🎮a", 2)]
+        [TestCase("𝔘𝔫𝔦", 1)]
+        [TestCase("𝔘𝔫𝔦", 2)]
+        [TestCase("𝔘𝔫𝔦", 3)]
+        [TestCase("𝔘𝔫𝔦", 4)]
+        [TestCase("𝔘𝔫𝔦", 5)]
+        [TestCase("𝔘𝔫𝔦", 6)]
+        public void GivenAStringWithSurrogatePairs_WhenTruncating_ThenTheResultNeverEndsWithAnUnpairedSurrogate(
+            string inputString,
+            int maximumLength)
+        {
+            string result = inputString.Truncate(maximumLength);
+
+            Assert.That(
+                result.Length == 0 || !char.IsHighSurrogate(result[^1]),
+                Is.True,
+                "The truncated result must not end with an unpaired high surrogate.");
+
+            Assert.That(
+                result.Length <= maximumLength,
+                Is.True,
+                "The truncated result must not exceed the maximum length.");
+        }
+
+        [Test]
+        public void GivenAnEmojiAtTheLimit_WhenTruncating_ThenTheWholeEmojiIsReturned()
+            => Assert.That("🎮".Truncate(2), Is.EqualTo("🎮"));
+
+        [Test]
+        public void GivenAnEmojiAfterTheLimit_WhenTruncating_ThenTheEmojiIsDroppedEntirely()
+            => Assert.That("ab🎮".Truncate(2), Is.EqualTo("ab"));
+
+        [Test]
+        public void GivenAStringWithSurrogatePairs_WhenTruncatingToZero_ThenAnEmptyStringIsReturned()
+            => Assert.That("🎮🎮".Truncate(0), Is.Empty);
+
+        [Test]
         public void GivenAStringAndZeroMaximumLength_WhenTruncating_ThenAnEmptyStringIsReturned()
             => Assert.That("Minecraft".Truncate(0), Is.Empty);
 

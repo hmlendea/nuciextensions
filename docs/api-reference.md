@@ -202,18 +202,22 @@ public static string Truncate(this string value, int maxLength)
 
 Truncates a string to a maximum length.
 
+The length is counted in UTF-16 code units, but the cut never splits a surrogate pair. If the boundary falls between the halves of a surrogate pair, the whole character that would have been split is dropped, so the result never ends with an unpaired surrogate and may be shorter than `maxLength` by one code unit.
+
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `value` | `string` | String to truncate |
 | `maxLength` | `int` | Maximum length |
 
-**Returns:** `string` — Truncated string (or original if shorter)
+**Returns:** `string` — Truncated string (or original if shorter). Never ends with an unpaired surrogate.
 
 **Exceptions:** `ArgumentOutOfRangeException` if `maxLength` < 0
 
 **Example:**
 ```csharp
 "Hello world".Truncate(5); // "Hello"
+"🎮".Truncate(1);          // ""    (the pair is not split)
+"a🎮".Truncate(2);         // "a"   (the pair is not split)
 ```
 
 ---

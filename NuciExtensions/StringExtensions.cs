@@ -232,10 +232,15 @@ namespace NuciExtensions
 
         /// <summary>
         /// Truncates a string to a specified maximum length.
+        /// The length is measured in UTF-16 code units, but the cut never splits
+        /// a surrogate pair: if the boundary falls between the two halves of a
+        /// surrogate pair, the preceding whole character is dropped instead, so
+        /// the result never ends with an unpaired surrogate.
         /// </summary>
         /// <param name="value">The string to truncate.</param>
         /// <param name="maxLength">The maximum length of the string after truncation.</param>
         /// <returns>A new string that is truncated to the specified maximum length.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="maxLength"/> is negative.</exception>
         public static string Truncate(this string value, int maxLength)
         {
             if (string.IsNullOrEmpty(value))
@@ -243,7 +248,21 @@ namespace NuciExtensions
                 return value;
             }
 
-            return value[..Math.Min(value.Length, maxLength)];
+            ArgumentOutOfRangeException.ThrowIfNegative(maxLength);
+
+            if (value.Length <= maxLength)
+            {
+                return value;
+            }
+
+            int cutLength = maxLength;
+
+            if (cutLength > 0 && char.IsHighSurrogate(value[cutLength - 1]))
+            {
+                cutLength--;
+            }
+
+            return value[..cutLength];
         }
 
         /// <summary>
