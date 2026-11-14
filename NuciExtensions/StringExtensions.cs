@@ -227,11 +227,21 @@ namespace NuciExtensions
 
         /// <summary>
         /// Converts a string to a sentence format.
+        /// Underscores and tabs are replaced with spaces, a space is inserted before
+        /// each interior ASCII uppercase letter, and runs of consecutive spaces are
+        /// collapsed into a single space. Leading and trailing whitespace is removed.
         /// </summary>
         /// <param name="source">The source string to convert.</param>
         /// <returns>A new string formatted as a sentence.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the source string is empty.</exception>
+        /// <remarks>
+        /// Interior uppercase letters are preserved and a space is inserted before each
+        /// of them, so "already Sentence." keeps its capital letter. Underscores and tabs
+        /// are transliterated to spaces for every character, including the first, and
+        /// every emitted space is collapsed into an adjacent one, so the trimmed result
+        /// never contains two consecutive spaces and never begins or ends with a space.
+        /// </remarks>
         public static string ToSentence(this string source)
         {
             ArgumentNullException.ThrowIfNull(source);
@@ -242,22 +252,24 @@ namespace NuciExtensions
             }
 
             StringBuilder sentence = new();
-            sentence.Append(source[0]);
             string charsToReplaceWithSpace = "_\t";
 
-            for (int i = 1; i < source.Length; i++)
+            for (int i = 0; i < source.Length; i++)
             {
-                if (source[i] >= 'A' && source[i] <= 'Z')
+                char character = source[i];
+
+                if (i > 0 && character >= 'A' && character <= 'Z')
                 {
-                    sentence.Append($" {source[i]}");
+                    AppendCollapsingSpaces(sentence, ' ');
+                    AppendCollapsingSpaces(sentence, character);
                 }
-                else if (charsToReplaceWithSpace.Contains(source[i]))
+                else if (charsToReplaceWithSpace.Contains(character))
                 {
-                    sentence.Append(' ');
+                    AppendCollapsingSpaces(sentence, ' ');
                 }
                 else
                 {
-                    sentence.Append(source[i]);
+                    AppendCollapsingSpaces(sentence, character);
                 }
             }
 
@@ -322,6 +334,16 @@ namespace NuciExtensions
         /// <throws>JsonException if the JSON string is not valid or does not match the type.</throws>
         public static TObject? FromJson<TObject>(this string json, JsonSerializerOptions options)
             => JsonSerializer.Deserialize<TObject>(json, options);
+
+        private static void AppendCollapsingSpaces(StringBuilder builder, char character)
+        {
+            if (char.Equals(character, ' ') && builder.Length > 0 && char.Equals(builder[^1], ' '))
+            {
+                return;
+            }
+
+            builder.Append(character);
+        }
 
         private static string TransliterateCustomMappings(string source)
         {

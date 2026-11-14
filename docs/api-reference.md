@@ -205,7 +205,7 @@ Removes all punctuation characters from the string.
 public static string ToSentence(this string source)
 ```
 
-Converts a string to sentence format (capitalizes first letter, replaces underscores/tabs with spaces).
+Converts a string to sentence format: underscores and tabs are replaced with spaces, a space is inserted before every interior ASCII uppercase letter, runs of consecutive spaces are collapsed into a single space, and the result is trimmed.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -213,13 +213,23 @@ Converts a string to sentence format (capitalizes first letter, replaces undersc
 
 **Returns:** `string` — Formatted sentence
 
+**Behaviour:**
+- Every underscore (`_`) and tab (`\t`) is transliterated to a space, including in the first and last position.
+- A space is inserted before each interior ASCII uppercase letter (`A`–`Z`); the uppercase letter itself is preserved.
+- Two or more consecutive spaces never appear in the result, regardless of whether they came from the input or from the transliteration.
+- Leading and trailing spaces are removed.
+
 **Exceptions:**
-- `NullReferenceException` if `source` is null
+- `ArgumentNullException` if `source` is null
 - `ArgumentOutOfRangeException` if `source` is empty
 
 **Example:**
 ```csharp
-"hello_world".ToSentence(); // "Hello world"
+"hello_world".ToSentence();       // "Hello world"
+"PraiseTheSun_today\tforever".ToSentence(); // "Praise The Sun today forever"
+"HELLO WORLD".ToSentence();       // "H E L L O W O R L D"
+"already  Sentence.".ToSentence(); // "already Sentence."
+"_x".ToSentence();                // "x"
 ```
 
 ---

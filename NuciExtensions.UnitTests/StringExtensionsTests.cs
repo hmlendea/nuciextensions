@@ -33,12 +33,12 @@ namespace NuciExtensions.UnitTests
 
         [Test]
         [TestCase("")]
-        public void GivenAnEmptyString_WhenInvertingTheCase_ThenTheEmptyStringIsReturned(string? text)
-            => Assert.That(text!.InvertCase(), Is.EqualTo(text));
+        public void GivenAnEmptyString_WhenInvertingTheCase_ThenTheEmptyStringIsReturned(string text)
+            => Assert.That(text.InvertCase(), Is.EqualTo(text));
 
         [Test]
         public void GivenANullString_WhenInvertingTheCase_ThenNullIsReturned()
-            => Assert.That(((string)null).InvertCase(), Is.Null);
+            => Assert.That(((string?)null).InvertCase(), Is.Null);
 
         [Test]
         [TestCase("", "")]
@@ -514,12 +514,86 @@ namespace NuciExtensions.UnitTests
         [TestCase("PraiseTheSun_today\tforever", "Praise The Sun today forever")]
         [TestCase("\tpraise the sun!\t", "praise the sun!")]
         [TestCase("hello world", "hello world")]
-        [TestCase("HELLO WORLD", "H E L L O  W O R L D")]
-        [TestCase("already Sentence.", "already  Sentence.")]
+        [TestCase("HELLO WORLD", "H E L L O W O R L D")]
+        [TestCase("already Sentence.", "already Sentence.")]
         [TestCase("multiple words here", "multiple words here")]
         [TestCase("café", "café")]
         [TestCase("123", "123")]
         public void GivenAString_WhenConvertingToASentence_ThenTheFormattedSentenceIsReturned(
+            string input,
+            string expected)
+            => Assert.That(input.ToSentence(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("_x", "x")]
+        [TestCase("x_", "x")]
+        [TestCase("a\t\tb", "a b")]
+        [TestCase("a  b", "a b")]
+        [TestCase("a__b", "a b")]
+        [TestCase("a \t b", "a b")]
+        [TestCase("_\t_", "")]
+        [TestCase("\t\t", "")]
+        [TestCase("   ", "")]
+        [TestCase("  x  ", "x")]
+        [TestCase("a_b\tc d", "a b c d")]
+        [TestCase("_Praise\t_the_Sun_", "Praise the Sun")]
+        [TestCase("A B", "A B")]
+        [TestCase("AB", "A B")]
+        [TestCase("aB", "a B")]
+        [TestCase("a b C", "a b C")]
+        [TestCase("x\t\t\tY", "x Y")]
+        [TestCase("already  Sentence.", "already Sentence.")]
+        public void GivenAStringWithRepeatedOrAdjacentSeparators_WhenConvertingToASentence_ThenConsecutiveSpacesAreCollapsed(
+            string input,
+            string expected)
+            => Assert.That(input.ToSentence(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("4")]
+        [TestCase("PraiseTheSun_today\tforever")]
+        [TestCase("\tpraise the sun!\t")]
+        [TestCase("hello world")]
+        [TestCase("HELLO WORLD")]
+        [TestCase("already Sentence.")]
+        [TestCase("multiple words here")]
+        [TestCase("café")]
+        [TestCase("123")]
+        [TestCase("_x")]
+        [TestCase("x_")]
+        [TestCase("a\t\tb")]
+        [TestCase("a  b")]
+        [TestCase("a__b")]
+        [TestCase("_Praise\t_the_Sun_")]
+        public void GivenAString_WhenConvertingToASentence_ThenNoTwoConsecutiveSpacesAreEmitted(string input)
+            => Assert.That(input.ToSentence(), Does.Not.Contain("  "));
+
+        [Test]
+        [TestCase("4")]
+        [TestCase("PraiseTheSun_today\tforever")]
+        [TestCase("\tpraise the sun!\t")]
+        [TestCase("hello world")]
+        [TestCase("HELLO WORLD")]
+        [TestCase("already Sentence.")]
+        [TestCase("_x")]
+        [TestCase("x_")]
+        [TestCase("a\t\tb")]
+        [TestCase("a  b")]
+        [TestCase("_Praise\t_the_Sun_")]
+        public void GivenAString_WhenConvertingToASentence_ThenTheResultIsTrimmed(string input)
+        {
+            string result = input.ToSentence();
+
+            Assert.That(result, Is.EqualTo(result.Trim()));
+            Assert.That(result.StartsWith(' '), Is.False);
+            Assert.That(result.EndsWith(' '), Is.False);
+        }
+
+        [Test]
+        [TestCase("a Sentence", "a Sentence")]
+        [TestCase("already Sentence.", "already Sentence.")]
+        [TestCase("x Y z", "x Y z")]
+        [TestCase("_Inner_Capitals_Here", "Inner Capitals Here")]
+        public void GivenAStringWithInteriorCapitals_WhenConvertingToASentence_ThenTheCapitalsArePreserved(
             string input,
             string expected)
             => Assert.That(input.ToSentence(), Is.EqualTo(expected));
@@ -542,16 +616,14 @@ namespace NuciExtensions.UnitTests
 
         [Test]
         [TestCase("")]
-        public void GivenAnEmptyString_WhenTruncating_ThenTheStringIsReturnedAsIs(string? inputString)
+        public void GivenAnEmptyString_WhenTruncating_ThenTheStringIsReturnedAsIs(string inputString)
             => Assert.That(inputString.Truncate(4), Is.EqualTo(inputString));
 
         [Test]
         public void GivenANullString_WhenTruncating_ThenAnArgumentNullExceptionIsThrown()
         {
-            string inputString = null;
-
             Assert.That(
-                () => inputString.Truncate(4),
+                () => ((string)null).Truncate(4),
                 Throws.TypeOf<ArgumentNullException>()
                     .With.Property(nameof(ArgumentNullException.ParamName))
                     .EqualTo("value"));
