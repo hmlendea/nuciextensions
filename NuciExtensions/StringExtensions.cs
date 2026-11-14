@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace NuciExtensions
 {
@@ -12,6 +11,15 @@ namespace NuciExtensions
     /// </summary>
     public static class StringExtensions
     {
+        private static readonly Dictionary<char, string> CustomMappings = new()
+        {
+            { 'Ö', "Oe" },
+            { 'Č', "Ch" },
+            { 'Š', "Sh" },
+            { 'Ř', "Rzh" },
+            { 'Ž', "Zh" },
+        };
+
         /// <summary>
         /// Inverts the case of each character in the specified string.
         /// </summary>
@@ -157,33 +165,28 @@ namespace NuciExtensions
 
         /// <summary>
         /// Removes diacritics from the specified string.
+        /// Characters in the custom mapping table are transliterated to their
+        /// German-style or Czech-style digraph equivalents; every other character
+        /// is decomposed and its non-spacing marks are removed.
         /// </summary>
         /// <param name="source">The source string from which to remove diacritics.</param>
         /// <returns>A new string with diacritics removed.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
+        /// <remarks>
+        /// Each mapped character is replaced by a digraph whose casing follows its
+        /// casing context. A lowercase character yields the lowercase digraph. An
+        /// uppercase character yields the uppercase digraph when the adjacent letter
+        /// is uppercase, and the title-case digraph otherwise, where the adjacent
+        /// letter is the following character when it is a letter, otherwise the
+        /// preceding character when it is a letter. The input is traversed once and
+        /// the case conversion is culture-invariant; no regular expressions are used.
+        /// </remarks>
         public static string RemoveDiacritics(this string source)
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            string firstPass = source;
-
-            Dictionary<string, string> customMappings = new()
-            {
-                { "Ö", "Oe" },
-                { "Č", "Ch" },
-                { "Š", "Sh" },
-                { "Ř", "Rzh" },
-                { "Ž", "Zh" },
-            };
-
-            foreach (var customMapping in customMappings)
-            {
-                firstPass = Regex.Replace(firstPass, "([\\p{Lu}])" + customMapping.Key, "$1" + customMapping.Value.ToUpper());
-                firstPass = Regex.Replace(firstPass, customMapping.Key + @"([^\p{Lu}])", customMapping.Value + "$1");
-                firstPass = Regex.Replace(firstPass, customMapping.Key.ToLower(), customMapping.Value.ToLower());
-            }
-
-            string normalisedSource = firstPass.Normalize(NormalizationForm.FormD);
+            string transliterated = TransliterateCustomMappings(source);
+            string normalisedSource = transliterated.Normalize(NormalizationForm.FormD);
             StringBuilder result = new();
 
             foreach (char c in normalisedSource)
@@ -316,5 +319,73 @@ namespace NuciExtensions
         /// <throws>JsonException if the JSON string is not valid or does not match the type.</throws>
         public static TObject? FromJson<TObject>(this string json, JsonSerializerOptions options)
             => JsonSerializer.Deserialize<TObject>(json, options);
+
+        private static string TransliterateCustomMappings(string source)
+        {
+            StringBuilder result = new(source.Length);
+
+            for (int i = 0; i < source.Length; i++)
+            {
+                string? replacement = GetCustomMappingReplacement(source, i);
+
+                if (replacement is null)
+                {
+                    result.Append(source[i]);
+                }
+                else
+                {
+                    result.Append(replacement);
+                }
+            }
+
+            return result.ToString();
+        }
+
+        private static string? GetCustomMappingReplacement(string source, int index)
+        {
+            char character = source[index];
+            char uppercaseCharacter = char.ToUpperInvariant(character);
+
+            if (!CustomMappings.ContainsKey(uppercaseCharacter))
+            {
+                return null;
+            }
+
+            string mapping = CustomMappings[uppercaseCharacter];
+
+            if (char.IsLower(character))
+            {
+                return mapping.ToLowerInvariant();
+            }
+
+            if (IsInUpperCaseContext(source, index))
+            {
+                return mapping.ToUpperInvariant();
+            }
+
+            return mapping;
+        }
+
+        private static bool IsInUpperCaseContext(string source, int index)
+        {
+            char? adjacentLetter = GetAdjacentLetter(source, index);
+
+            return adjacentLetter is not null && char.IsUpper(adjacentLetter.Value);
+        }
+
+        private static char? GetAdjacentLetter(string source, int index)
+        {
+            if (index + 1 < source.Length && char.IsLetter(source[index + 1]))
+            {
+                return source[index + 1];
+            }
+
+            if (index > 0 && char.IsLetter(source[index - 1]))
+            {
+                return source[index - 1];
+            }
+
+            return null;
+        }
     }
 }

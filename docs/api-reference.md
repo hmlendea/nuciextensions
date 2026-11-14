@@ -140,13 +140,38 @@ Removes diacritics (accents) from the string with custom mappings for special ch
 
 **Returns:** `string` — String with diacritics removed
 
-**Custom Mappings:**
-- `Ö` → `Oe`, `Č` → `Ch`, `Š` → `Sh`, `Ř` → `Rzh`, `Ž` → `Zh`
+**Exceptions:** `ArgumentNullException` if `source` is null
 
-**Example:**
+**Custom Mappings:**
+
+Each mapped character is replaced by a digraph whose casing follows its context. The character is matched case-insensitively; the casing of the produced digraph depends on the case of the mapped character and of the adjacent letter.
+
+| Mapped Character | Digraph | Lowercase Result | Title-Case Result | Uppercase Result |
+|------------------|---------|------------------|-------------------|------------------|
+| `Ö` | `Oe` | `oe` | `Oe` | `OE` |
+| `Č` | `Ch` | `ch` | `Ch` | `CH` |
+| `Š` | `Sh` | `sh` | `Sh` | `SH` |
+| `Ř` | `Rzh` | `rzh` | `Rzh` | `RZH` |
+| `Ž` | `Zh` | `zh` | `Zh` | `ZH` |
+
+**Casing Rule:**
+- A lowercase mapped character always produces the lowercase digraph.
+- An uppercase mapped character produces the uppercase digraph when the adjacent letter is uppercase, and the title-case digraph otherwise.
+- The adjacent letter is the following character when it is a letter, otherwise the preceding character when it is a letter.
+- Case conversion is culture-invariant; the Turkish dotless-i behaviour is not applied.
+
+**Complexity:** A single pass over the input. No regular expressions are constructed or evaluated.
+
+**Examples:**
 ```csharp
 "Horațiu".RemoveDiacritics(); // "Horatiu"
 "Šimšat".RemoveDiacritics();  // "Shimshat"
+"Ångström".RemoveDiacritics(); // "Angstroem"
+"Žižek".RemoveDiacritics();   // "Zhizhek"
+"ŽIŽEK".RemoveDiacritics();   // "ZHIZHEK"
+"Ö".RemoveDiacritics();       // "Oe"
+"ö".RemoveDiacritics();       // "oe"
+"OÖ".RemoveDiacritics();      // "OOE"
 ```
 
 ---

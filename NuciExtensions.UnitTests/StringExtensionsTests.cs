@@ -358,6 +358,117 @@ namespace NuciExtensions.UnitTests
             => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
 
         [Test]
+        [TestCase("Ö", "Oe")]
+        [TestCase("ö", "oe")]
+        [TestCase("OÖ", "OOE")]
+        [TestCase("ÖO", "OEO")]
+        [TestCase("MÖ", "MOE")]
+        [TestCase("mö", "moe")]
+        [TestCase("OÖ!", "OOE!")]
+        [TestCase("aÖ!", "aOe!")]
+        [TestCase("!Ö", "!Oe")]
+        [TestCase("Ö!", "Oe!")]
+        public void GivenAnOWithUmlaut_WhenEliminatingDiacritics_ThenTheCaseOfTheDigraphFollowsItsContext(
+            string input,
+            string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("Č", "Ch")]
+        [TestCase("č", "ch")]
+        [TestCase("ČAS", "CHAS")]
+        [TestCase("Čas", "Chas")]
+        [TestCase("čas", "chas")]
+        [TestCase("aČ", "aCh")]
+        [TestCase("Ča", "Cha")]
+        public void GivenACWithCaron_WhenEliminatingDiacritics_ThenTheCaseOfTheDigraphFollowsItsContext(
+            string input,
+            string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("Š", "Sh")]
+        [TestCase("š", "sh")]
+        [TestCase("ŠKODA", "SHKODA")]
+        [TestCase("Škoda", "Shkoda")]
+        [TestCase("škoda", "shkoda")]
+        [TestCase("aŠ", "aSh")]
+        [TestCase("Ša", "Sha")]
+        public void GivenAnSWithCaron_WhenEliminatingDiacritics_ThenTheCaseOfTheDigraphFollowsItsContext(
+            string input,
+            string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("Ř", "Rzh")]
+        [TestCase("ř", "rzh")]
+        [TestCase("ŘEKA", "RZHEKA")]
+        [TestCase("Řeka", "Rzheka")]
+        [TestCase("řeka", "rzheka")]
+        [TestCase("aŘ", "aRzh")]
+        [TestCase("Řa", "Rzha")]
+        public void GivenAnRWithCaron_WhenEliminatingDiacritics_ThenTheCaseOfTheDigraphFollowsItsContext(
+            string input,
+            string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("Ž", "Zh")]
+        [TestCase("ž", "zh")]
+        [TestCase("ŽIŽEK", "ZHIZHEK")]
+        [TestCase("Žižek", "Zhizhek")]
+        [TestCase("žižek", "zhizhek")]
+        [TestCase("aŽ", "aZh")]
+        [TestCase("Ža", "Zha")]
+        public void GivenAZWithCaron_WhenEliminatingDiacritics_ThenTheCaseOfTheDigraphFollowsItsContext(
+            string input,
+            string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("ČŠŘŽÖ", "CHSHRZHZHOE")]
+        [TestCase("čšřžö", "chshrzhzhoe")]
+        [TestCase("ČŠŘŽÖ ČŠŘŽÖ", "CHSHRZHZHOE CHSHRZHZHOE")]
+        public void GivenEveryMappedCharacter_WhenEliminatingDiacritics_ThenEachOneIsTransliteratedConsistently(
+            string input,
+            string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("Ö", "Oe")]
+        [TestCase("Č", "Ch")]
+        [TestCase("Š", "Sh")]
+        [TestCase("Ř", "Rzh")]
+        [TestCase("Ž", "Zh")]
+        public void GivenAnIsolatedUppercaseMappedCharacter_WhenEliminatingDiacritics_ThenTheTitleCaseDigraphIsReturned(
+            string input,
+            string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("ö", "oe")]
+        [TestCase("č", "ch")]
+        [TestCase("š", "sh")]
+        [TestCase("ř", "rzh")]
+        [TestCase("ž", "zh")]
+        public void GivenAnIsolatedLowercaseMappedCharacter_WhenEliminatingDiacritics_ThenTheLowercaseDigraphIsReturned(
+            string input,
+            string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
+        [SetCulture("tr-TR")]
+        [TestCase("ŽIŽEK", "ZHIZHEK")]
+        [TestCase("Žižek", "Zhizhek")]
+        [TestCase("ö", "oe")]
+        [TestCase("Ö", "Oe")]
+        [TestCase("IÖ", "IOE")]
+        public void GivenATurkishCulture_WhenEliminatingDiacritics_ThenTheMappingIsCultureInvariant(
+            string input,
+            string expected)
+            => Assert.That(input.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
         public void GivenANullString_WhenEliminatingDiacritics_ThenAnArgumentNullExceptionIsThrown()
         {
             string input = null;
