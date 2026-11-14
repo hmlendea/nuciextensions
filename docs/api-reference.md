@@ -89,7 +89,7 @@ Repeats the string a specified number of times.
 
 **Returns:** `string` — Concatenated result, or empty string if count ≤ 0
 
-**Exceptions:** None (returns empty if source is null)
+**Exceptions:** `ArgumentOutOfRangeException` if the result length (`source.Length * count`) exceeds `Array.MaxLength`; null `source` or a non-positive `count` returns an empty string
 
 **Example:**
 ```csharp

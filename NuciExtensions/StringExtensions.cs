@@ -107,14 +107,35 @@ namespace NuciExtensions
         /// <param name="source">The string to repeat.</param>
         /// <param name="count">The number of times to repeat the string.</param>
         /// <returns>A new string that is the result of repeating the source string the specified number of times.</returns>
+        /// <remarks>
+        /// The result length is <c>source.Length * count</c> and is computed with a
+        /// widened multiplication, so it cannot overflow. It must not exceed
+        /// <see cref="Array.MaxLength"/> characters, which is the largest length the
+        /// runtime supports for an array-backed string. The result builder is
+        /// pre-allocated with the exact result length, so the successful path does
+        /// not grow or reallocate its buffer.
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the requested result length exceeds <see cref="Array.MaxLength"/> characters.
+        /// </exception>
         public static string Repeat(this string? source, int count)
         {
-            if (count <= 0 || source is null)
+            if (count <= 0 || source is null || source.Length == 0)
             {
                 return string.Empty;
             }
 
-            StringBuilder result = new();
+            long resultLength = (long)source.Length * count;
+
+            if (resultLength > Array.MaxLength)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(count),
+                    count,
+                    $"Repeating the string {count} times would produce a string of {resultLength} characters, which exceeds the maximum supported length of {Array.MaxLength} characters.");
+            }
+
+            StringBuilder result = new((int)resultLength);
 
             for (int i = 0; i < count; i++)
             {

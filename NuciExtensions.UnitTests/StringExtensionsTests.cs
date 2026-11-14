@@ -235,6 +235,154 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        public void GivenASingleCharacterStringAndMaximumCount_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrown()
+            => Assert.That(
+                () => "x".Repeat(int.MaxValue),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("count"));
+
+        [Test]
+        [TestCase("ab", int.MaxValue)]
+        [TestCase("Praise the Sun!", int.MaxValue)]
+        [TestCase("zzzzzzzzzz", int.MaxValue)]
+        [TestCase("ab", 1073741796)]
+        [TestCase("abc", 715827883)]
+        public void GivenAStringAndACountWhoseProductExceedsTheMaximumLength_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrown(
+            string text,
+            int count)
+            => Assert.That(
+                () => text.Repeat(count),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("count"));
+
+        [Test]
+        [TestCase("ab", int.MaxValue)]
+        [TestCase("Praise the Sun!", int.MaxValue)]
+        [TestCase("abc", 715827883)]
+        public void GivenAStringAndACountWhoseProductExceedsTheMaximumLength_WhenRepeating_ThenTheExceptionMessageStatesTheRequestedLength(
+            string text,
+            int count)
+        {
+            long expectedLength = (long)text.Length * count;
+
+            Assert.That(
+                () => text.Repeat(count),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Message.Contains(expectedLength.ToString()));
+        }
+
+        [Test]
+        [TestCase("ab", int.MaxValue)]
+        [TestCase("abc", 715827883)]
+        public void GivenAStringAndACountWhoseProductExceedsTheMaximumLength_WhenRepeating_ThenTheExceptionReportsTheOffendingCount(
+            string text,
+            int count)
+            => Assert.That(
+                () => text.Repeat(count),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ActualValue))
+                    .EqualTo(count));
+
+        [Test]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(1000)]
+        [TestCase(100000)]
+        public void GivenAnEmptyStringAndAnyPositiveCount_WhenRepeating_ThenAnEmptyStringIsReturnedWithoutThrowing(
+            int count)
+            => Assert.That(string.Empty.Repeat(count), Is.Empty);
+
+        [Test]
+        public void GivenAnEmptyStringAndMaximumCount_WhenRepeating_ThenAnEmptyStringIsReturnedWithoutThrowing()
+            => Assert.That(string.Empty.Repeat(int.MaxValue), Is.Empty);
+
+        [Test]
+        public void GivenANullStringAndMaximumCount_WhenRepeating_ThenAnEmptyStringIsReturnedWithoutThrowing()
+        {
+            string text = null;
+
+            Assert.That(text.Repeat(int.MaxValue), Is.Empty);
+        }
+
+        [Test]
+        [TestCase("a", 100000)]
+        [TestCase("ab", 50000)]
+        [TestCase("Praise the Sun!", 100000)]
+        public void GivenAStringAndALargeAcceptedCount_WhenRepeating_ThenTheResultLengthIsTheExactProduct(
+            string text,
+            int count)
+            => Assert.That(
+                text.Repeat(count).Length,
+                Is.EqualTo((long)text.Length * count));
+
+        [Test]
+        [TestCase("a", 100000, "a")]
+        [TestCase("ab", 50000, "ab")]
+        [TestCase("xyz", 4096, "xyz")]
+        public void GivenAStringAndALargeAcceptedCount_WhenRepeating_ThenTheResultIsTheSourceConcatenatedRepeatedly(
+            string text,
+            int count,
+            string unit)
+        {
+            string result = text.Repeat(count);
+
+            Assert.That(result, Is.EqualTo(string.Concat(System.Linq.Enumerable.Repeat(unit, count))));
+            Assert.That(result.StartsWith(unit, StringComparison.Ordinal), Is.True);
+            Assert.That(result.EndsWith(unit, StringComparison.Ordinal), Is.True);
+        }
+
+        [Test]
+        public void GivenAStringAndALargeAcceptedCount_WhenRepeating_ThenTheResultIsAnExactMultipleOfTheSource()
+        {
+            string text = "Praise the Sun!";
+
+            string result = text.Repeat(1000);
+
+            Assert.That(result.Length % text.Length, Is.EqualTo(0));
+
+            for (int i = 0; i < result.Length; i += text.Length)
+            {
+                Assert.That(result.Substring(i, text.Length), Is.EqualTo(text));
+            }
+        }
+
+        [Test]
+        public void GivenACountOfOne_WhenRepeating_ThenAStringWithTheSameContentIsReturned()
+        {
+            string text = "Praise the Sun!";
+
+            string result = text.Repeat(1);
+
+            Assert.That(result, Is.EqualTo(text));
+        }
+
+        [Test]
+        [TestCase("🎮", 1000)]
+        [TestCase("🎮🎯", 500)]
+        public void GivenAStringContainingSurrogatePairsAndALargeAcceptedCount_WhenRepeating_ThenNoUnpairedSurrogateIsProduced(
+            string text,
+            int count)
+        {
+            string result = text.Repeat(count);
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                if (char.IsHighSurrogate(result[i]))
+                {
+                    Assert.That(i + 1, Is.LessThan(result.Length));
+                    Assert.That(char.IsLowSurrogate(result[i + 1]), Is.True);
+                    i++;
+                }
+                else
+                {
+                    Assert.That(char.IsLowSurrogate(result[i]), Is.False);
+                }
+            }
+        }
+
+        [Test]
         public void GivenANullSource_WhenReplacingTheFirstValue_ThenAnArgumentNullExceptionIsThrown()
         {
             string source = null;
