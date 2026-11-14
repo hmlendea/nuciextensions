@@ -54,17 +54,22 @@ public static string Reverse(this string text)
 
 Reverses the characters in the string.
 
+Reversal is performed by Unicode code point, so the two halves of a surrogate pair always remain adjacent: no unpaired surrogate is produced, and `Reverse().Reverse()` returns the original string.
+
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `text` | `string` | The string to reverse |
 
 **Returns:** `string` — A new string with characters in reverse order
 
-**Exceptions:** `NullReferenceException` if `text` is null
+**Exceptions:** `ArgumentNullException` if `text` is null
+
+**Limitation:** Combining-mark sequences are not reordered as grapheme clusters; a base character followed by combining marks ends up preceded by those marks in the result. Grapheme-cluster segmentation is not performed.
 
 **Example:**
 ```csharp
 "hello".Reverse(); // "olleh"
+"a🎮b".Reverse(); // "b🎮a"
 ```
 
 ---
@@ -625,7 +630,7 @@ Converts UNIX timestamp string to DateTime (UTC).
 
 **Returns:** `DateTime` — UTC DateTime
 
-**Exceptions:** 
+**Exceptions:**
 - `ArgumentException` if string is not a valid number
 - `ArgumentOutOfRangeException` if timestamp is negative
 

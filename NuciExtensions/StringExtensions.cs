@@ -45,19 +45,50 @@ namespace NuciExtensions
 
         /// <summary>
         /// Reverses the characters in the specified string.
+        /// The reversal is performed by Unicode code point, so the two halves of a
+        /// surrogate pair always remain adjacent and no unpaired surrogate is produced.
         /// </summary>
         /// <param name="text">The string to reverse.</param>
         /// <returns>A new string with the characters in reverse order.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the string is null.</exception>
+        /// <remarks>
+        /// Combining-mark sequences are reversed as part of the reversed sequence,
+        /// so a base character followed by its combining marks ends up preceded by
+        /// those marks in the result. Grapheme-cluster segmentation is not performed.
+        /// </remarks>
         public static string Reverse(this string text)
         {
             ArgumentNullException.ThrowIfNull(text);
 
-            char[] stringChars = text.ToCharArray();
+            if (text.Length < 2)
+            {
+                return text;
+            }
 
-            Array.Reverse(stringChars);
+            char[] reversedChars = new char[text.Length];
+            int writeIndex = 0;
+            int readIndex = text.Length - 1;
 
-            return new string(stringChars);
+            while (readIndex >= 0)
+            {
+                if (char.IsLowSurrogate(text[readIndex]) &&
+                    readIndex > 0 &&
+                    char.IsHighSurrogate(text[readIndex - 1]))
+                {
+                    reversedChars[writeIndex] = text[readIndex - 1];
+                    reversedChars[writeIndex + 1] = text[readIndex];
+                    writeIndex += 2;
+                    readIndex -= 2;
+                }
+                else
+                {
+                    reversedChars[writeIndex] = text[readIndex];
+                    writeIndex++;
+                    readIndex--;
+                }
+            }
+
+            return new string(reversedChars);
         }
 
         /// <summary>

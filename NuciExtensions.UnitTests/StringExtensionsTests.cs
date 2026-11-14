@@ -62,6 +62,144 @@ namespace NuciExtensions.UnitTests
         }
 
         [Test]
+        [TestCase("a🎮b", "b🎮a")]
+        [TestCase("🎮", "🎮")]
+        [TestCase("🎮🎯", "🎯🎮")]
+        [TestCase("ab🎮", "🎮ba")]
+        [TestCase("🎮ab", "ba🎮")]
+        [TestCase("𝕬𝕭", "𝕭𝕬")]
+        [TestCase("日本語", "語本日")]
+        [TestCase("𐍈𐍉𐍊", "𐍊𐍉𐍈")]
+        [TestCase("a𝕬b𝕭c", "c𝕭b𝕬a")]
+        [TestCase("Praise the Sun! 🎮", "🎮 !nuS eht esiarP")]
+        [TestCase("x🎮y🎯z", "z🎯y🎮x")]
+        public void GivenAStringContainingSurrogatePairs_WhenReversing_ThenTheSurrogatePairsStayIntact(
+            string text,
+            string expectedText)
+            => Assert.That(text.Reverse(), Is.EqualTo(expectedText));
+
+        [Test]
+        [TestCase("a🎮b")]
+        [TestCase("🎮")]
+        [TestCase("🎮🎯")]
+        [TestCase("𝕬𝕭")]
+        [TestCase("𐍈𐍉𐍊")]
+        [TestCase("Praise the Sun! 🎮")]
+        [TestCase("x🎮y🎯z")]
+        public void GivenAStringContainingSurrogatePairs_WhenReversing_ThenTheResultHasNoUnpairedSurrogates(string text)
+        {
+            string result = text.Reverse();
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                if (char.IsHighSurrogate(result[i]))
+                {
+                    Assert.That(i + 1, Is.LessThan(result.Length));
+                    Assert.That(char.IsLowSurrogate(result[i + 1]), Is.True);
+                    i++;
+                }
+                else
+                {
+                    Assert.That(char.IsLowSurrogate(result[i]), Is.False);
+                }
+            }
+        }
+
+        [Test]
+        [TestCase("a🎮b")]
+        [TestCase("🎮")]
+        [TestCase("🎮🎯")]
+        [TestCase("𝕬𝕭")]
+        [TestCase("𐍈𐍉𐍊")]
+        [TestCase("Praise the Sun! 🎮")]
+        [TestCase("x🎮y🎯z")]
+        [TestCase("café")]
+        [TestCase("Hello")]
+        [TestCase("")]
+        public void GivenAString_WhenReversingTwice_ThenTheOriginalStringIsReturned(string text)
+            => Assert.That(text.Reverse().Reverse(), Is.EqualTo(text));
+
+        [Test]
+        [TestCase("a🎮b")]
+        [TestCase("🎮🎯")]
+        [TestCase("𝕬𝕭")]
+        [TestCase("𐍈𐍉𐍊")]
+        [TestCase("x🎮y🎯z")]
+        public void GivenAStringContainingSurrogatePairs_WhenReversing_ThenTheLengthIsPreserved(string text)
+            => Assert.That(text.Reverse().Length, Is.EqualTo(text.Length));
+
+        [Test]
+        public void GivenACombiningMarkSequence_WhenReversing_ThenTheCombiningMarkIsNotReorderedWithItsBase()
+        {
+            string text = "e\u0301x";
+
+            string result = text.Reverse();
+
+            Assert.That(result.Length, Is.EqualTo(text.Length));
+            Assert.That(result, Is.EqualTo("x\u0301e"));
+        }
+
+        [Test]
+        public void GivenAStringWithUnpairedHighSurrogateAtTheStart_WhenReversing_ThenTheSurrogateIsPreserved()
+        {
+            string text = "\uD800ab";
+
+            string result = text.Reverse();
+
+            Assert.That(result, Is.EqualTo("ba\uD800"));
+            Assert.That(result.Length, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void GivenAStringWithUnpairedLowSurrogateAtTheStart_WhenReversing_ThenTheSurrogateIsPreserved()
+        {
+            string text = "\uDC00ab";
+
+            string result = text.Reverse();
+
+            Assert.That(result, Is.EqualTo("ba\uDC00"));
+            Assert.That(result.Length, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void GivenAStringWithUnpairedSurrogatesInTheMiddle_WhenReversing_ThenTheSurrogatesArePreserved()
+        {
+            string text = "a\uD800b\uDC00c";
+
+            string result = text.Reverse();
+
+            Assert.That(result, Is.EqualTo("c\uDC00b\uD800a"));
+        }
+
+        [Test]
+        [TestCase("hello")]
+        [TestCase("café")]
+        [TestCase("🎮🎯🕹️")]
+        [TestCase("𝕬𝕭𝕮")]
+        [TestCase("a🎮b🎯c")]
+        public void GivenAString_WhenReversing_ThenTheResultOnlyContainsCharactersFromTheInput(string text)
+        {
+            string result = text.Reverse();
+
+            System.Collections.Generic.Dictionary<char, int> inputChars = new();
+
+            foreach (char c in text)
+            {
+                inputChars[c] = inputChars.TryGetValue(c, out int existingCount)
+                    ? existingCount + 1
+                    : 1;
+            }
+
+            foreach (char c in result)
+            {
+                Assert.That(inputChars.ContainsKey(c), Is.True);
+                inputChars[c]--;
+            }
+
+            Assert.That(inputChars.Values, Is.All.EqualTo(0));
+        }
+
+        [Test]
         public void GivenAStringAndPositiveCount_WhenRepeating_ThenTheRepeatedStringIsReturned()
             => Assert.That(
                 "Praise the Sun!".Repeat(4),
