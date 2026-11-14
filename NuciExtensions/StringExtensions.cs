@@ -25,6 +25,11 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="text">The string whose case is to be inverted. If null or empty, it is returned unchanged.</param>
         /// <returns>A new string with each character's case inverted, null when <paramref name="text"/> is null, or the empty string when it is empty.</returns>
+        /// <remarks>
+        /// The case is inverted per UTF-16 code unit. Surrogate halves are not upper
+        /// or lower case, so they are copied unchanged and a surrogate pair always
+        /// stays adjacent.
+        /// </remarks>
         public static string? InvertCase(this string? text)
         {
             if (string.IsNullOrEmpty(text))

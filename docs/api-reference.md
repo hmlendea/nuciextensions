@@ -37,11 +37,14 @@ Inverts the case of each character in the string.
 
 **Returns:** `string?` — A new string with each character's case inverted, or null when text is null, or the empty string when it is empty.
 
+**Behaviour:** The case is inverted per UTF-16 code unit. Surrogate halves are neither upper nor lower case, so they are copied unchanged and a surrogate pair always stays adjacent.
+
 **Exceptions:** None (null and empty input are returned unchanged)
 
 **Example:**
 ```csharp
 "Hello".InvertCase(); // "hELLO"
+"a🎮b".InvertCase(); // "A🎮B"
 ```
 
 ---
@@ -77,23 +80,27 @@ Reversal is performed by Unicode code point, so the two halves of a surrogate pa
 ### Repeat
 
 ```csharp
-public static string Repeat(this string source, int count)
+public static string Repeat(this string? source, int count)
 ```
 
 Repeats the string a specified number of times.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `source` | `string` | The string to repeat |
+| `source` | `string?` | The string to repeat. A null source yields an empty string. |
 | `count` | `int` | Number of repetitions |
 
-**Returns:** `string` — Concatenated result, or empty string if count ≤ 0
+**Returns:** `string` — Concatenated result. Never null; an empty string is returned when `source` is null or empty, or when `count` ≤ 0.
 
-**Exceptions:** `ArgumentOutOfRangeException` if the result length (`source.Length * count`) exceeds `Array.MaxLength`; null `source` or a non-positive `count` returns an empty string
+**Exceptions:** `ArgumentOutOfRangeException` if the result length (`source.Length * count`) exceeds `Array.MaxLength`; a null or empty `source`, or a non-positive `count`, returns an empty string without throwing
+
+**Limit:** `Array.MaxLength` (2 147 483 591 characters) is the largest array-backed string length the runtime supports. The length is computed with a widened multiplication, so the check cannot itself overflow, and the result builder is pre-allocated with the exact length.
 
 **Example:**
 ```csharp
 "ab".Repeat(3); // "ababab"
+"ab".Repeat(0); // ""
+((string?)null).Repeat(3); // ""
 ```
 
 ---
@@ -101,23 +108,23 @@ Repeats the string a specified number of times.
 ### ReplaceFirst
 
 ```csharp
-public static string ReplaceFirst(this string source, string oldValue, string newValue)
+public static string ReplaceFirst(this string source, string oldValue, string? newValue)
 ```
 
 Replaces the first occurrence of `oldValue` with `newValue`.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `source` | `string` | Source string |
+| `source` | `string` | Source string. Nullable-annotated as non-null; a null value throws. |
 | `oldValue` | `string` | String to replace (cannot be null/empty) |
-| `newValue` | `string` | Replacement string (null treated as empty) |
+| `newValue` | `string?` | Replacement string (null treated as empty) |
 
-**Returns:** `string` — New string with first occurrence replaced
+**Returns:** `string` — New string with the first occurrence replaced. Never null; an empty string is returned when `source` is empty.
 
 **Exceptions:**
-- `NullReferenceException` if `source` is null
-- `ArgumentNullException` if `oldValue` is null
-- `ArgumentException` if `oldValue` is empty
+- `ArgumentNullException` if `source` is null (parameter name `source`)
+- `ArgumentNullException` if `oldValue` is null (parameter name `oldValue`)
+- `ArgumentException` if `oldValue` is empty (parameter name `oldValue`)
 
 **Example:**
 ```csharp
@@ -188,9 +195,9 @@ Removes all punctuation characters from the string.
 |-----------|------|-------------|
 | `source` | `string` | Source string |
 
-**Returns:** `string` — String without punctuation
+**Returns:** `string` — String without punctuation. Never null. Surrogate halves are not punctuation, so a surrogate pair always stays adjacent.
 
-**Exceptions:** `NullReferenceException` if `source` is null
+**Exceptions:** `ArgumentNullException` if `source` is null (parameter name `source`)
 
 **Example:**
 ```csharp
@@ -252,8 +259,10 @@ The length is counted in UTF-16 code units, but the cut never splits a surrogate
 **Returns:** `string` — Truncated string (or original if shorter). Never ends with an unpaired surrogate.
 
 **Exceptions:**
-- `ArgumentNullException` if `value` is null
-- `ArgumentOutOfRangeException` if `maxLength` is negative
+- `ArgumentNullException` if `value` is null (parameter name `value`)
+- `ArgumentOutOfRangeException` if `maxLength` is negative (parameter name `maxLength`)
+
+**Note:** An empty `value` is returned unchanged before `maxLength` is validated, so `string.Empty.Truncate(-1)` returns an empty string rather than throwing.
 
 **Example:**
 ```csharp
@@ -267,20 +276,20 @@ The length is counted in UTF-16 code units, but the cut never splits a surrogate
 ### FromJson (Deserialization)
 
 ```csharp
-public static TObject FromJson<TObject>(this string json)
-public static TObject FromJson<TObject>(this string json, JsonSerializerOptions options)
+public static TObject? FromJson<TObject>(this string json)
+public static TObject? FromJson<TObject>(this string json, JsonSerializerOptions options)
 ```
 
 Deserializes a JSON string to an object.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `json` | `string` | JSON string |
-| `options` | `JsonSerializerOptions` | Optional serialization options |
+| `json` | `string` | JSON string. Nullable-annotated as non-null; a null value throws. |
+| `options` | `JsonSerializerOptions` | Serialization options |
 
-**Returns:** `TObject` — Deserialized object
+**Returns:** `TObject?` — The deserialized object, or null when the JSON literal is `null` or when `TObject` is a reference type
 
-**Exceptions:** `JsonException` on invalid JSON; `ArgumentNullException` if json is null
+**Exceptions:** `JsonException` on invalid JSON; `ArgumentNullException` if `json` is null (parameter name `json`, on both overloads)
 
 **Example:**
 ```csharp

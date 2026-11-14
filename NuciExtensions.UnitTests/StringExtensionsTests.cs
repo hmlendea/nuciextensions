@@ -936,5 +936,284 @@ namespace NuciExtensions.UnitTests
                 () => json.FromJson<DummyTestObject>(),
                 Throws.TypeOf<ArgumentNullException>());
         }
+
+        [Test]
+        public void GivenANullJsonString_WhenDeserialisingWithOptions_ThenAnArgumentNullExceptionIsThrown()
+        {
+            string? json = null;
+
+            Assert.That(
+                () => json!.FromJson<DummyTestObject>(jsonOptions),
+                Throws.TypeOf<ArgumentNullException>()
+                    .With.Property(nameof(ArgumentNullException.ParamName))
+                    .EqualTo("json"));
+        }
+
+        [Test]
+        [TestCase("null")]
+        public void GivenAJsonLiteralNull_WhenDeserialising_ThenNullIsReturned(string json)
+            => Assert.That(json.FromJson<object>(), Is.Null);
+
+        [Test]
+        [TestCase("")]
+        [TestCase("{")]
+        [TestCase("Praise the Sun!")]
+        public void GivenAMalformedJsonString_WhenDeserialising_ThenAJsonExceptionIsThrown(string json)
+            => Assert.That(
+                () => json.FromJson<DummyTestObject>(),
+                Throws.TypeOf<JsonException>());
+
+        [Test]
+        public void GivenANullString_WhenReversing_ThenTheExceptionNamesTheTextParameter()
+            => Assert.That(
+                () => ((string?)null)!.Reverse(),
+                Throws.TypeOf<ArgumentNullException>()
+                    .With.Property(nameof(ArgumentNullException.ParamName))
+                    .EqualTo("text"));
+
+        [Test]
+        public void GivenANullString_WhenEliminatingDiacritics_ThenTheExceptionNamesTheSourceParameter()
+            => Assert.That(
+                () => ((string?)null)!.RemoveDiacritics(),
+                Throws.TypeOf<ArgumentNullException>()
+                    .With.Property(nameof(ArgumentNullException.ParamName))
+                    .EqualTo("source"));
+
+        [Test]
+        public void GivenANullString_WhenEliminatingPunctuation_ThenTheExceptionNamesTheSourceParameter()
+            => Assert.That(
+                () => ((string?)null)!.RemovePunctuation(),
+                Throws.TypeOf<ArgumentNullException>()
+                    .With.Property(nameof(ArgumentNullException.ParamName))
+                    .EqualTo("source"));
+
+        [Test]
+        public void GivenANullSource_WhenReplacingTheFirstValue_ThenTheExceptionNamesTheSourceParameter()
+            => Assert.That(
+                () => ((string?)null)!.ReplaceFirst("Praise the Sun!", "Jolly cooperation!"),
+                Throws.TypeOf<ArgumentNullException>()
+                    .With.Property(nameof(ArgumentNullException.ParamName))
+                    .EqualTo("source"));
+
+        [Test]
+        public void GivenANullOldValue_WhenReplacingTheFirstValue_ThenTheExceptionNamesTheOldValueParameter()
+            => Assert.That(
+                () => "Praise the Sun!".ReplaceFirst((string?)null!, "Jolly cooperation!"),
+                Throws.TypeOf<ArgumentNullException>()
+                    .With.Property(nameof(ArgumentNullException.ParamName))
+                    .EqualTo("oldValue"));
+
+        [Test]
+        public void GivenAnEmptyOldValue_WhenReplacingTheFirstValue_ThenTheExceptionNamesTheOldValueParameter()
+            => Assert.That(
+                () => "Praise the Sun!".ReplaceFirst(string.Empty, "Jolly cooperation!"),
+                Throws.TypeOf<ArgumentException>()
+                    .With.Property(nameof(ArgumentException.ParamName))
+                    .EqualTo("oldValue"));
+
+        [Test]
+        public void GivenANullString_WhenConvertingToASentence_ThenTheExceptionNamesTheSourceParameter()
+            => Assert.That(
+                () => ((string?)null)!.ToSentence(),
+                Throws.TypeOf<ArgumentNullException>()
+                    .With.Property(nameof(ArgumentNullException.ParamName))
+                    .EqualTo("source"));
+
+        [Test]
+        public void GivenAnEmptyString_WhenConvertingToASentence_ThenTheExceptionNamesTheSourceParameter()
+            => Assert.That(
+                () => string.Empty.ToSentence(),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("source"));
+
+        [Test]
+        public void GivenANegativeMaximumLength_WhenTruncating_ThenTheExceptionNamesTheMaximumLengthParameter()
+            => Assert.That(
+                () => "Minecraft".Truncate(-4),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("maxLength"));
+
+        [Test]
+        public void GivenANullJsonString_WhenDeserialising_ThenTheExceptionNamesTheJsonParameter()
+            => Assert.That(
+                () => ((string?)null)!.FromJson<DummyTestObject>(),
+                Throws.TypeOf<ArgumentNullException>()
+                    .With.Property(nameof(ArgumentNullException.ParamName))
+                    .EqualTo("json"));
+
+        [Test]
+        [TestCase("Praise the Sun!")]
+        [TestCase("")]
+        [TestCase("café")]
+        [TestCase("🎮")]
+        [TestCase("日本語")]
+        public void GivenAString_WhenReversing_ThenTheResultIsNeverNull(string text)
+            => Assert.That(text.Reverse(), Is.Not.Null);
+
+        [Test]
+        [TestCase("Praise the Sun!")]
+        [TestCase("")]
+        [TestCase("café")]
+        [TestCase("🎮")]
+        [TestCase("日本語")]
+        public void GivenAString_WhenEliminatingDiacritics_ThenTheResultIsNeverNull(string text)
+            => Assert.That(text.RemoveDiacritics(), Is.Not.Null);
+
+        [Test]
+        [TestCase("Praise the Sun!")]
+        [TestCase("")]
+        [TestCase("café")]
+        [TestCase("🎮")]
+        [TestCase("日本語")]
+        public void GivenAString_WhenEliminatingPunctuation_ThenTheResultIsNeverNull(string text)
+            => Assert.That(text.RemovePunctuation(), Is.Not.Null);
+
+        [Test]
+        [TestCase("Praise the Sun!")]
+        [TestCase("café")]
+        [TestCase("🎮")]
+        [TestCase("日本語")]
+        public void GivenAString_WhenConvertingToASentence_ThenTheResultIsNeverNull(string text)
+            => Assert.That(text.ToSentence(), Is.Not.Null);
+
+        [Test]
+        [TestCase("Praise the Sun!")]
+        [TestCase("")]
+        [TestCase("café")]
+        [TestCase("🎮")]
+        [TestCase("日本語")]
+        public void GivenAString_WhenTruncating_ThenTheResultIsNeverNull(string text)
+            => Assert.That(text.Truncate(4), Is.Not.Null);
+
+        [Test]
+        [TestCase("Praise the Sun!", "Sun", "Moon")]
+        [TestCase("", "Sun", "Moon")]
+        [TestCase("Minecraft", "craft", "")]
+        public void GivenAString_WhenReplacingTheFirstValue_ThenTheResultIsNeverNull(
+            string source,
+            string oldValue,
+            string newValue)
+            => Assert.That(source.ReplaceFirst(oldValue, newValue), Is.Not.Null);
+
+        [Test]
+        [TestCase("a🎮b", "A🎮B")]
+        [TestCase("🎮", "🎮")]
+        [TestCase("🎮🎯", "🎮🎯")]
+        [TestCase("日本語", "日本語")]
+        [TestCase("𐍈𐍉𐍊", "𐍈𐍉𐍊")]
+        [TestCase("a🎮b🎯c", "A🎮B🎯C")]
+        public void GivenAStringContainingSurrogatePairs_WhenInvertingTheCase_ThenTheSurrogatePairsStayIntact(
+            string text,
+            string expected)
+        {
+            string? result = text.InvertCase();
+
+            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result!.Length, Is.EqualTo(text.Length));
+        }
+
+        [Test]
+        [TestCase("\uD800ab", "\uD800AB")]
+        [TestCase("ab\uDC00", "AB\uDC00")]
+        [TestCase("a\uD800b", "A\uD800B")]
+        public void GivenAStringWithUnpairedSurrogates_WhenInvertingTheCase_ThenTheSurrogatesArePreserved(
+            string text,
+            string expected)
+            => Assert.That(text.InvertCase(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("🎮!", "🎮")]
+        [TestCase("a🎮b.", "a🎮b")]
+        [TestCase("𐍈…", "𐍈")]
+        [TestCase("🎮", "🎮")]
+        public void GivenAStringContainingSurrogatePairs_WhenEliminatingPunctuation_ThenTheSurrogatePairsStayIntact(
+            string text,
+            string expected)
+            => Assert.That(text.RemovePunctuation(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("a\uD800b.", "a\uD800b")]
+        [TestCase("\uD800!", "\uD800")]
+        public void GivenAStringWithUnpairedSurrogates_WhenEliminatingPunctuation_ThenTheSurrogatesArePreserved(
+            string text,
+            string expected)
+            => Assert.That(text.RemovePunctuation(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("🎮Žižek", "🎮Zhizhek")]
+        [TestCase("Č🎮Š", "Ch🎮Sh")]
+        [TestCase("A🎯Ö", "A🎯Oe")]
+        [TestCase("Ö🎯", "Oe🎯")]
+        [TestCase("🎯Ö", "🎯Oe")]
+        public void GivenAMappedCharacterAdjacentToASurrogatePair_WhenEliminatingDiacritics_ThenTheDigraphCasingIsUnaffected(
+            string text,
+            string expected)
+            => Assert.That(text.RemoveDiacritics(), Is.EqualTo(expected));
+
+        [Test]
+        [TestCase("🎮\tx", "🎮 x")]
+        [TestCase("helloWorld", "hello World")]
+        [TestCase("_Praise\t_the_Sun_", "Praise the Sun")]
+        [TestCase("a\uD800b", "a\uD800b")]
+        public void GivenAStringContainingSurrogatePairs_WhenConvertingToASentence_ThenTheSurrogatePairsStayIntact(
+            string text,
+            string expected)
+            => Assert.That(text.ToSentence(), Is.EqualTo(expected));
+
+        [Test]
+        public void GivenAStringWithAHighSurrogateAtTheBoundary_WhenTruncating_ThenTheBoundaryCharacterIsDropped()
+        {
+            string text = "\uD800ab";
+
+            string result = text.Truncate(1);
+
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public void GivenAStringWithALowSurrogateAtTheBoundary_WhenTruncating_ThenTheLowSurrogateIsPreserved()
+        {
+            string text = "\uDC00ab";
+
+            string result = text.Truncate(1);
+
+            Assert.That(result, Has.Length.EqualTo(1));
+            Assert.That(char.IsLowSurrogate(result[0]), Is.True);
+        }
+
+        [Test]
+        [TestCase("🎮", 2, "🎮🎮")]
+        [TestCase("a🎮", 3, "a🎮a🎮a🎮")]
+        [TestCase("𐍈𐍉", 2, "𐍈𐍉𐍈𐍉")]
+        public void GivenAStringContainingSurrogatePairs_WhenRepeating_ThenTheSurrogatePairsStayIntact(
+            string text,
+            int count,
+            string expected)
+            => Assert.That(text.Repeat(count), Is.EqualTo(expected));
+
+        [Test]
+        public void GivenAStringWithAnUnpairedSurrogate_WhenRepeating_ThenTheSurrogateIsPreserved()
+        {
+            string text = "\uD800";
+
+            string result = text.Repeat(2);
+
+            Assert.That(result, Has.Length.EqualTo(2));
+            Assert.That(result, Is.EqualTo("\uD800\uD800"));
+        }
+
+        [Test]
+        public void GivenAStringContainingSurrogatePairs_WhenReplacingTheFirstValue_ThenTheSurrogatePairsStayIntact()
+        {
+            string source = "🎮ab";
+
+            Assert.That(source.ReplaceFirst("🎮", "G"), Is.EqualTo("Gab"));
+        }
+
+        [Test]
+        public void GivenAnEmptyStringAndANegativeMaximumLength_WhenTruncating_ThenTheEmptyStringIsReturned()
+            => Assert.That(string.Empty.Truncate(-4), Is.Empty);
     }
 }
