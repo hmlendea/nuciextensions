@@ -26,22 +26,25 @@ Complete method reference for all extension classes in NuciExtensions.
 ### InvertCase
 
 ```csharp
-public static string InvertCase(this string text)
+public static string? InvertCase(this string? text)
 ```
 
 Inverts the case of each character in the string.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `text` | `string` | The string whose case is to be inverted |
+| `text` | `string?` | The string whose case is to be inverted. If null, null is returned without modification. |
 
-**Returns:** `string` — A new string with each character's case inverted
+**Returns:** `string?` — A new string with each character's case inverted, or null when text is null, or the empty string when it is empty.
 
-**Exceptions:** None (returns original if null or empty)
+**Behaviour:** The case is inverted per UTF-16 code unit. Surrogate halves are neither upper nor lower case, so they are copied unchanged and a surrogate pair always stays adjacent.
+
+**Exceptions:** None (null and empty input are returned unchanged)
 
 **Example:**
 ```csharp
 "Hello".InvertCase(); // "hELLO"
+"a🎮b".InvertCase(); // "A🎮B"
 ```
 
 ---
@@ -54,17 +57,22 @@ public static string Reverse(this string text)
 
 Reverses the characters in the string.
 
+Reversal is performed by Unicode code point, so the two halves of a surrogate pair always remain adjacent: no unpaired surrogate is produced, and `Reverse().Reverse()` returns the original string.
+
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `text` | `string` | The string to reverse |
 
 **Returns:** `string` — A new string with characters in reverse order
 
-**Exceptions:** `NullReferenceException` if `text` is null
+**Exceptions:** `ArgumentNullException` if `text` is null
+
+**Limitation:** Combining-mark sequences are not reordered as grapheme clusters; a base character followed by combining marks ends up preceded by those marks in the result. Grapheme-cluster segmentation is not performed.
 
 **Example:**
 ```csharp
 "hello".Reverse(); // "olleh"
+"a🎮b".Reverse(); // "b🎮a"
 ```
 
 ---
@@ -72,23 +80,27 @@ Reverses the characters in the string.
 ### Repeat
 
 ```csharp
-public static string Repeat(this string source, int count)
+public static string Repeat(this string? source, int count)
 ```
 
 Repeats the string a specified number of times.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `source` | `string` | The string to repeat |
+| `source` | `string?` | The string to repeat. A null source yields an empty string. |
 | `count` | `int` | Number of repetitions |
 
-**Returns:** `string` — Concatenated result, or empty string if count ≤ 0
+**Returns:** `string` — Concatenated result. Never null; an empty string is returned when `source` is null or empty, or when `count` ≤ 0.
 
-**Exceptions:** None (returns empty if source is null)
+**Exceptions:** `ArgumentOutOfRangeException` if the result length (`source.Length * count`) exceeds `Array.MaxLength`; a null or empty `source`, or a non-positive `count`, returns an empty string without throwing
+
+**Limit:** `Array.MaxLength` (2 147 483 591 characters) is the largest array-backed string length the runtime supports. The length is computed with a widened multiplication, so the check cannot itself overflow, and the result builder is pre-allocated with the exact length.
 
 **Example:**
 ```csharp
 "ab".Repeat(3); // "ababab"
+"ab".Repeat(0); // ""
+((string?)null).Repeat(3); // ""
 ```
 
 ---
@@ -96,23 +108,23 @@ Repeats the string a specified number of times.
 ### ReplaceFirst
 
 ```csharp
-public static string ReplaceFirst(this string source, string oldValue, string newValue)
+public static string ReplaceFirst(this string source, string oldValue, string? newValue)
 ```
 
 Replaces the first occurrence of `oldValue` with `newValue`.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `source` | `string` | Source string |
+| `source` | `string` | Source string. Nullable-annotated as non-null; a null value throws. |
 | `oldValue` | `string` | String to replace (cannot be null/empty) |
-| `newValue` | `string` | Replacement string (null treated as empty) |
+| `newValue` | `string?` | Replacement string (null treated as empty) |
 
-**Returns:** `string` — New string with first occurrence replaced
+**Returns:** `string` — New string with the first occurrence replaced. Never null; an empty string is returned when `source` is empty.
 
 **Exceptions:**
-- `NullReferenceException` if `source` is null
-- `ArgumentNullException` if `oldValue` is null
-- `ArgumentException` if `oldValue` is empty
+- `ArgumentNullException` if `source` is null (parameter name `source`)
+- `ArgumentNullException` if `oldValue` is null (parameter name `oldValue`)
+- `ArgumentException` if `oldValue` is empty (parameter name `oldValue`)
 
 **Example:**
 ```csharp
@@ -135,13 +147,38 @@ Removes diacritics (accents) from the string with custom mappings for special ch
 
 **Returns:** `string` — String with diacritics removed
 
-**Custom Mappings:**
-- `Ö` → `Oe`, `Č` → `Ch`, `Š` → `Sh`, `Ř` → `Rzh`, `Ž` → `Zh`
+**Exceptions:** `ArgumentNullException` if `source` is null
 
-**Example:**
+**Custom Mappings:**
+
+Each mapped character is replaced by a digraph whose casing follows its context. The character is matched case-insensitively; the casing of the produced digraph depends on the case of the mapped character and of the adjacent letter.
+
+| Mapped Character | Digraph | Lowercase Result | Title-Case Result | Uppercase Result |
+|------------------|---------|------------------|-------------------|------------------|
+| `Ö` | `Oe` | `oe` | `Oe` | `OE` |
+| `Č` | `Ch` | `ch` | `Ch` | `CH` |
+| `Š` | `Sh` | `sh` | `Sh` | `SH` |
+| `Ř` | `Rzh` | `rzh` | `Rzh` | `RZH` |
+| `Ž` | `Zh` | `zh` | `Zh` | `ZH` |
+
+**Casing Rule:**
+- A lowercase mapped character always produces the lowercase digraph.
+- An uppercase mapped character produces the uppercase digraph when the adjacent letter is uppercase, and the title-case digraph otherwise.
+- The adjacent letter is the following character when it is a letter, otherwise the preceding character when it is a letter.
+- Case conversion is culture-invariant; the Turkish dotless-i behaviour is not applied.
+
+**Complexity:** A single pass over the input. No regular expressions are constructed or evaluated.
+
+**Examples:**
 ```csharp
 "Horațiu".RemoveDiacritics(); // "Horatiu"
 "Šimšat".RemoveDiacritics();  // "Shimshat"
+"Ångström".RemoveDiacritics(); // "Angstroem"
+"Žižek".RemoveDiacritics();   // "Zhizhek"
+"ŽIŽEK".RemoveDiacritics();   // "ZHIZHEK"
+"Ö".RemoveDiacritics();       // "Oe"
+"ö".RemoveDiacritics();       // "oe"
+"OÖ".RemoveDiacritics();      // "OOE"
 ```
 
 ---
@@ -158,9 +195,9 @@ Removes all punctuation characters from the string.
 |-----------|------|-------------|
 | `source` | `string` | Source string |
 
-**Returns:** `string` — String without punctuation
+**Returns:** `string` — String without punctuation. Never null. Surrogate halves are not punctuation, so a surrogate pair always stays adjacent.
 
-**Exceptions:** `NullReferenceException` if `source` is null
+**Exceptions:** `ArgumentNullException` if `source` is null (parameter name `source`)
 
 **Example:**
 ```csharp
@@ -175,7 +212,7 @@ Removes all punctuation characters from the string.
 public static string ToSentence(this string source)
 ```
 
-Converts a string to sentence format (capitalizes first letter, replaces underscores/tabs with spaces).
+Converts a string to sentence format: underscores and tabs are replaced with spaces, a space is inserted before every interior ASCII uppercase letter, runs of consecutive spaces are collapsed into a single space, and the result is trimmed.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -183,13 +220,23 @@ Converts a string to sentence format (capitalizes first letter, replaces undersc
 
 **Returns:** `string` — Formatted sentence
 
+**Behaviour:**
+- Every underscore (`_`) and tab (`\t`) is transliterated to a space, including in the first and last position.
+- A space is inserted before each interior ASCII uppercase letter (`A`–`Z`); the uppercase letter itself is preserved.
+- Two or more consecutive spaces never appear in the result, regardless of whether they came from the input or from the transliteration.
+- Leading and trailing spaces are removed.
+
 **Exceptions:**
-- `NullReferenceException` if `source` is null
+- `ArgumentNullException` if `source` is null
 - `ArgumentOutOfRangeException` if `source` is empty
 
 **Example:**
 ```csharp
-"hello_world".ToSentence(); // "Hello world"
+"hello_world".ToSentence();       // "Hello world"
+"PraiseTheSun_today\tforever".ToSentence(); // "Praise The Sun today forever"
+"HELLO WORLD".ToSentence();       // "H E L L O W O R L D"
+"already  Sentence.".ToSentence(); // "already Sentence."
+"_x".ToSentence();                // "x"
 ```
 
 ---
@@ -202,18 +249,26 @@ public static string Truncate(this string value, int maxLength)
 
 Truncates a string to a maximum length.
 
+The length is counted in UTF-16 code units, but the cut never splits a surrogate pair. If the boundary falls between the halves of a surrogate pair, the whole character that would have been split is dropped, so the result never ends with an unpaired surrogate and may be shorter than `maxLength` by one code unit.
+
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `value` | `string` | String to truncate |
 | `maxLength` | `int` | Maximum length |
 
-**Returns:** `string` — Truncated string (or original if shorter)
+**Returns:** `string` — Truncated string (or original if shorter). Never ends with an unpaired surrogate.
 
-**Exceptions:** `ArgumentOutOfRangeException` if `maxLength` < 0
+**Exceptions:**
+- `ArgumentNullException` if `value` is null (parameter name `value`)
+- `ArgumentOutOfRangeException` if `maxLength` is negative (parameter name `maxLength`)
+
+**Note:** An empty `value` is returned unchanged before `maxLength` is validated, so `string.Empty.Truncate(-1)` returns an empty string rather than throwing.
 
 **Example:**
 ```csharp
 "Hello world".Truncate(5); // "Hello"
+"🎮".Truncate(1);          // ""    (the pair is not split)
+"a🎮".Truncate(2);         // "a"   (the pair is not split)
 ```
 
 ---
@@ -221,20 +276,20 @@ Truncates a string to a maximum length.
 ### FromJson (Deserialization)
 
 ```csharp
-public static TObject FromJson<TObject>(this string json)
-public static TObject FromJson<TObject>(this string json, JsonSerializerOptions options)
+public static TObject? FromJson<TObject>(this string json)
+public static TObject? FromJson<TObject>(this string json, JsonSerializerOptions options)
 ```
 
 Deserializes a JSON string to an object.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `json` | `string` | JSON string |
-| `options` | `JsonSerializerOptions` | Optional serialization options |
+| `json` | `string` | JSON string. Nullable-annotated as non-null; a null value throws. |
+| `options` | `JsonSerializerOptions` | Serialization options |
 
-**Returns:** `TObject` — Deserialized object
+**Returns:** `TObject?` — The deserialized object, or null when the JSON literal is `null` or when `TObject` is a reference type
 
-**Exceptions:** `JsonException` on invalid JSON; `ArgumentNullException` if json is null
+**Exceptions:** `JsonException` on invalid JSON; `ArgumentNullException` if `json` is null (parameter name `json`, on both overloads)
 
 **Example:**
 ```csharp
@@ -621,7 +676,7 @@ Converts UNIX timestamp string to DateTime (UTC).
 
 **Returns:** `DateTime` — UTC DateTime
 
-**Exceptions:** 
+**Exceptions:**
 - `ArgumentException` if string is not a valid number
 - `ArgumentOutOfRangeException` if timestamp is negative
 
