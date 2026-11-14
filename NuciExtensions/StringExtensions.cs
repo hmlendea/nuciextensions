@@ -23,13 +23,13 @@ namespace NuciExtensions
         /// <summary>
         /// Inverts the case of each character in the specified string.
         /// </summary>
-        /// <param name="text">The string whose case is to be inverted.</param>
-        /// <returns>A new string with each character's case inverted.</returns>
-        public static string InvertCase(this string? text)
+        /// <param name="text">The string whose case is to be inverted. If null or empty, it is returned unchanged.</param>
+        /// <returns>A new string with each character's case inverted, null when <paramref name="text"/> is null, or the empty string when it is empty.</returns>
+        public static string? InvertCase(this string? text)
         {
             if (string.IsNullOrEmpty(text))
             {
-                return text!;
+                return text;
             }
 
             char[] result = new char[text.Length];
@@ -274,10 +274,13 @@ namespace NuciExtensions
         /// <param name="value">The string to truncate.</param>
         /// <param name="maxLength">The maximum length of the string after truncation.</param>
         /// <returns>A new string that is truncated to the specified maximum length.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="maxLength"/> is negative.</exception>
         public static string Truncate(this string value, int maxLength)
         {
-            if (string.IsNullOrEmpty(value))
+            ArgumentNullException.ThrowIfNull(value);
+
+            if (value.Length == 0)
             {
                 return value;
             }

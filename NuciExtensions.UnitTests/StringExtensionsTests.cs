@@ -33,9 +33,12 @@ namespace NuciExtensions.UnitTests
 
         [Test]
         [TestCase("")]
-        [TestCase(null)]
-        public void GivenANullOrEmptyString_WhenInvertingTheCase_ThenTheOriginalStringIsReturned(string? text)
+        public void GivenAnEmptyString_WhenInvertingTheCase_ThenTheEmptyStringIsReturned(string? text)
             => Assert.That(text!.InvertCase(), Is.EqualTo(text));
+
+        [Test]
+        public void GivenANullString_WhenInvertingTheCase_ThenNullIsReturned()
+            => Assert.That(((string)null).InvertCase(), Is.Null);
 
         [Test]
         [TestCase("", "")]
@@ -539,9 +542,20 @@ namespace NuciExtensions.UnitTests
 
         [Test]
         [TestCase("")]
-        [TestCase(null)]
-        public void GivenANullOrEmptyString_WhenTruncating_ThenTheStringIsReturnedAsIs(string? inputString)
-            => Assert.That(inputString!.Truncate(4), Is.EqualTo(inputString));
+        public void GivenAnEmptyString_WhenTruncating_ThenTheStringIsReturnedAsIs(string? inputString)
+            => Assert.That(inputString.Truncate(4), Is.EqualTo(inputString));
+
+        [Test]
+        public void GivenANullString_WhenTruncating_ThenAnArgumentNullExceptionIsThrown()
+        {
+            string inputString = null;
+
+            Assert.That(
+                () => inputString.Truncate(4),
+                Throws.TypeOf<ArgumentNullException>()
+                    .With.Property(nameof(ArgumentNullException.ParamName))
+                    .EqualTo("value"));
+        }
 
         [Test]
         [TestCase("Minecraft", 16)]

@@ -26,18 +26,18 @@ Complete method reference for all extension classes in NuciExtensions.
 ### InvertCase
 
 ```csharp
-public static string InvertCase(this string text)
+public static string? InvertCase(this string? text)
 ```
 
 Inverts the case of each character in the string.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `text` | `string` | The string whose case is to be inverted |
+| `text` | `string?` | The string whose case is to be inverted. If null, null is returned without modification. |
 
-**Returns:** `string` — A new string with each character's case inverted
+**Returns:** `string?` — A new string with each character's case inverted, or null when text is null, or the empty string when it is empty.
 
-**Exceptions:** None (returns original if null or empty)
+**Exceptions:** None (null and empty input are returned unchanged)
 
 **Example:**
 ```csharp
@@ -241,7 +241,9 @@ The length is counted in UTF-16 code units, but the cut never splits a surrogate
 
 **Returns:** `string` — Truncated string (or original if shorter). Never ends with an unpaired surrogate.
 
-**Exceptions:** `ArgumentOutOfRangeException` if `maxLength` < 0
+**Exceptions:**
+- `ArgumentNullException` if `value` is null
+- `ArgumentOutOfRangeException` if `maxLength` is negative
 
 **Example:**
 ```csharp
