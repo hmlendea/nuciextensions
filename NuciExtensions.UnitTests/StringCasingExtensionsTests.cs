@@ -73,6 +73,65 @@ namespace NuciExtensions.UnitTests
             => Assert.That(text.ToSnakeCase(), Is.EqualTo(expectedResult));
 
         [Test]
+        [TestCase("_", "")]
+        [TestCase("__", "")]
+        [TestCase("___", "")]
+        [TestCase("a_", "a")]
+        [TestCase("_a", "a")]
+        [TestCase("a__b", "ab")]
+        [TestCase("a_ _b", "a_b")]
+        [TestCase("a \t b", "a_b")]
+        [TestCase("a \t\t b", "a_b")]
+        [TestCase("a\t\tb", "a_b")]
+        [TestCase("a  b", "a_b")]
+        [TestCase("a   b", "a_b")]
+        [TestCase("a - b", "a_b")]
+        [TestCase("a.b.c", "abc")]
+        [TestCase("a,b;c:d", "abcd")]
+        [TestCase("a!@#$%^&*()b", "ab")]
+        [TestCase("a/b\\b", "abb")]
+        [TestCase("a_b-c.d", "abcd")]
+        [TestCase("a___b___c", "abc")]
+        [TestCase("   ", "_")]
+        [TestCase("\t\t", "_")]
+        [TestCase("a\nb", "a_b")]
+        [TestCase("a\r\nb", "a_b")]
+        [TestCase("héllo", "héllo")]
+        [TestCase("héllo wörld", "héllo_wörld")]
+        [TestCase("日本語", "日本語")]
+        [TestCase("日本 語", "日本_語")]
+        public void GivenAString_WhenConvertingToSnakeCase_ThenSeparatorsAreRemovedAndWhitespaceIsCollapsed(string text, string expectedResult)
+            => Assert.That(text.ToSnakeCase(), Is.EqualTo(expectedResult));
+
+        [Test]
+        public void GivenAStringContainingOnlySeparators_WhenConvertingToSnakeCase_ThenAnEmptyStringIsReturned()
+            => Assert.That("___---...".ToSnakeCase(), Is.Empty);
+
+        [Test]
+        public void GivenAStringWithMixedSeparators_WhenConvertingToSnakeCase_ThenAllNonAlphanumericsAreRemovedExceptCollapsedWhitespace()
+            => Assert.That("hello-world_foo.bar baz".ToSnakeCase(), Is.EqualTo("helloworldfoobar_baz"));
+
+        [Test]
+        public void GivenAnEmptyString_WhenConvertingToSnakeCase_ThenAnEmptyStringIsReturned()
+            => Assert.That(string.Empty.ToSnakeCase(), Is.Empty);
+
+        [Test]
+        public void GivenASingleCharacterString_WhenConvertingToSnakeCase_ThenTheCharacterIsReturned()
+        {
+            Assert.That("a".ToSnakeCase(), Is.EqualTo("a"));
+            Assert.That("1".ToSnakeCase(), Is.EqualTo("1"));
+            Assert.That("_".ToSnakeCase(), Is.Empty);
+        }
+
+        [Test]
+        public void GivenAStringWithNonAsciiLetters_WhenConvertingToSnakeCase_ThenLettersArePreserved()
+            => Assert.That("café résumé".ToSnakeCase(), Is.EqualTo("café_résumé"));
+
+        [Test]
+        public void GivenAStringWithLeadingAndTrailingWhitespace_WhenConvertingToSnakeCase_ThenUnderscoresAreAddedAtTheBoundaries()
+            => Assert.That("  hello  ".ToSnakeCase(), Is.EqualTo("_hello_"));
+
+        [Test]
         [TestCase("Praise the Sun!", "PRAISE_THE_SUN")]
         [TestCase("hello world", "HELLO_WORLD")]
         [TestCase("HelloWorld", "HELLOWORLD")]

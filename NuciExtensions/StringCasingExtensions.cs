@@ -114,6 +114,12 @@ namespace NuciExtensions
         /// </summary>
         /// <param name="source">The source string.</param>
         /// <returns>A new string in snake case.</returns>
+        /// <remarks>
+        /// Only alphanumeric characters and whitespace are retained; whitespace runs become single
+        /// underscores. All other characters (including existing underscores, hyphens, dots, and
+        /// other separators) are removed. Letters are copied unchanged (never upper- or lower-cased).
+        /// Consecutive underscores are collapsed in a single pass.
+        /// </remarks>
         /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         public static string ToSnakeCase(this string source)
         {
@@ -134,18 +140,15 @@ namespace NuciExtensions
                 }
                 else if (char.IsWhiteSpace(c))
                 {
-                    result.Append('_');
+                    if (result.Length == 0 || result[^1] != '_')
+                    {
+                        result.Append('_');
+                    }
                 }
+                // All other characters (underscores, hyphens, dots, etc.) are silently dropped
             }
 
-            string output = result.ToString();
-
-            while (output.Contains("__"))
-            {
-                output = output.Replace("__", "_");
-            }
-
-            return output;
+            return result.ToString();
         }
     }
 }

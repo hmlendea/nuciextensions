@@ -350,13 +350,16 @@ public static string ToSnakeCase(this string source)
 
 Converts to snake_case (words separated by underscores).
 
-**Behaviour:** Only alphanumeric characters and whitespace are retained; whitespace runs become single underscores. Letters are copied unchanged (never upper- or lower-cased).
+**Behaviour:** Only alphanumeric characters and whitespace are retained; all other characters (including existing underscores, hyphens, dots, and other separators) are removed. Whitespace runs become single underscores. Letters are copied unchanged (never upper- or lower-cased). Consecutive underscores are collapsed in a single pass with no repeated allocations.
 
 **Returns:** `string` — Snake case string
 
 **Example:**
 ```csharp
 "Hello World".ToSnakeCase(); // "Hello_World"
+"hello-world".ToSnakeCase(); // "helloworld"
+"snake_case".ToSnakeCase(); // "snakecase"
+"multiple___underscores".ToSnakeCase(); // "multipleunderscores"
 ```
 
 ---
