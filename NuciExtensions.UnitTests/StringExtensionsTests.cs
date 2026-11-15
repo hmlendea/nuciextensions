@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text.Json;
 
 using NUnit.Framework;
@@ -39,6 +40,57 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullString_WhenInvertingTheCase_ThenNullIsReturned()
             => Assert.That(((string?)null).InvertCase(), Is.Null);
+
+        [Test]
+        [TestCase("iki", "IKI")]
+        [TestCase("IKI", "iki")]
+        [TestCase("I", "i")]
+        [TestCase("i", "I")]
+        [TestCase("\u0130stanbul", "\u0130STANBUL")]
+        [TestCase("D\u0130YARBAKIR", "d\u0130yarbakir")]
+        public void GivenACultureSensitiveAlphabet_WhenInvertingTheCase_ThenTheInvariantResultIsReturned(
+            string text,
+            string expectedText)
+            => Assert.That(text.InvertCase(), Is.EqualTo(expectedText));
+
+        [Test]
+        [TestCase("tr-TR")]
+        [TestCase("az-AZ")]
+        [TestCase("lt-LT")]
+        [TestCase("de-DE")]
+        [TestCase("en-US")]
+        public void GivenANonInvariantCulture_WhenInvertingTheCase_ThenTheResultMatchesTheInvariantResult(string cultureName)
+        {
+            string[] samples = { "iki", "IKI", "I", "i", "\u0130stanbul", "D\u0130YARBAKIR", "Praise the Sun!" };
+
+            string[] expectedResults = new string[samples.Length];
+
+            using (new CultureScope(CultureInfo.InvariantCulture))
+            {
+                for (int i = 0; i < samples.Length; i++)
+                {
+                    expectedResults[i] = samples[i].InvertCase()!;
+                }
+            }
+
+            using (new CultureScope(cultureName))
+            {
+                for (int i = 0; i < samples.Length; i++)
+                {
+                    Assert.That(samples[i].InvertCase(), Is.EqualTo(expectedResults[i]));
+                }
+            }
+        }
+
+        [Test]
+        [TestCase("a\U0001F3AEb", "A\U0001F3AEB")]
+        [TestCase("\U0001F3AEhello", "\U0001F3AEHELLO")]
+        [TestCase("hello\U0001F3AE", "HELLO\U0001F3AE")]
+        [TestCase("caf\u00E9", "CAF\u00C9")]
+        public void GivenAStringContainingSurrogatePairs_WhenInvertingTheCase_ThenThePairIsPreserved(
+            string text,
+            string expectedText)
+            => Assert.That(text.InvertCase(), Is.EqualTo(expectedText));
 
         [Test]
         [TestCase("", "")]

@@ -112,13 +112,14 @@ namespace NuciExtensions
         /// <summary>
         /// Converts the string to snake case.
         /// </summary>
-        /// <param name="source">The source string.</param>
-        /// <returns>A new string in snake case.</returns>
+        /// <param name="source">The source string that is to be converted. Must not be null.</param>
+        /// <returns>A new string in snake case. Never null.</returns>
         /// <remarks>
         /// Only alphanumeric characters and whitespace are retained; whitespace runs become single
         /// underscores. All other characters (including existing underscores, hyphens, dots, and
-        /// other separators) are removed. Letters are copied unchanged (never upper- or lower-cased).
-        /// Consecutive underscores are collapsed in a single pass.
+        /// other separators) are removed. Letters are copied unchanged (never upper- or lower-cased),
+        /// so no case conversion is performed and the result is culture-invariant. Consecutive
+        /// underscores are collapsed in a single pass.
         /// </remarks>
         /// <exception cref="ArgumentNullException">Thrown if the source string is null.</exception>
         public static string ToSnakeCase(this string source)

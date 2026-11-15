@@ -160,7 +160,7 @@ This document describes how to extend NuciExtensions with new functionality whil
 **Patterns:**
 - Return new string instances (immutability)
 - Use `StringBuilder` for multi-step transformations
-- Leverage `System.Globalization` for culture-aware operations
+- Use culture-invariant case conversion (`ToLowerInvariant`/`ToUpperInvariant`); never depend on the current culture
 - Custom character mappings in `RemoveDiacritics`
 
 **Adding new string methods:**

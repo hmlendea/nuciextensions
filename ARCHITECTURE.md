@@ -112,7 +112,7 @@ The principal architecture boundaries are:
 **Boundary rules:**
 - String methods must not modify the original string; return new instances
 - All operations use `StringBuilder` for concatenation loops to ensure O(n) performance
-- Case conversions rely on `System.Globalization.CultureInfo` for correctness
+- Case conversions use culture-invariant APIs (`string.ToLowerInvariant`, `char.ToUpperInvariant`), so results never depend on the current culture
 - Diacritic removal defines custom character mappings for enhanced accuracy
 
 ### Collection Extensions
@@ -179,7 +179,7 @@ The principal architecture boundaries are:
 | **Standard .NET Types** | Outbound | Extension methods via `this` parameter; methods are injected into call chain without modification to types | All extension classes | Type mismatch or method not found at compile time |
 | **System.Text.Json** | Outbound | JSON serialisation via `JsonSerializer.Serialize/Deserialize`; no custom options unless caller provides | `ObjectExtensions`, `StringExtensions` | `JsonException` on invalid JSON or mismatched schema; caller must handle |
 | **System Environment (PATH)** | Outbound | Environment variable lookup via `Environment.GetEnvironmentVariable("PATH")`; file existence check via `File.Exists` | `FileExtensions` | No error on missing PATH or no matching file; method returns `false` |
-| **System.Globalization** | Outbound | Culture-aware character classification via `char.IsUpper`, `char.IsLetter`, etc. | `StringExtensions`, `StringCasingExtensions` | Incorrect results only if custom culture overrides are installed; default behaviour is deterministic |
+| **System.Globalization** | Outbound | Culture-invariant character classification and case conversion via `char.IsUpper`, `char.IsLetter`, `string.ToLowerInvariant`, `char.ToUpperInvariant`, etc. | `StringExtensions`, `StringCasingExtensions` | Results never depend on the current culture |
 
 ## 💾 Data Architecture
 
@@ -205,7 +205,7 @@ sequenceDiagram
     Caller->>StringCasingExtensions: ToLowerSnakeCase()
     StringCasingExtensions->>StringCasingExtensions: ToSnakeCase()
     StringCasingExtensions->>StringBuilder: Build snake_case chars
-    StringCasingExtensions->>StringCasingExtensions: Replace __ with _
+    StringCasingExtensions->>StringCasingExtensions: Collapse consecutive underscores
     StringCasingExtensions->>Caller: Return lowercase snake_case
 ```
 
@@ -336,7 +336,7 @@ The principal dependency rules are:
 | Dependency | Responsibility | Integration Boundary | Architectural Consequence |
 |------------|----------------|----------------------|---------------------------|
 | `System.Text.Json` | JSON serialisation and deserialisation | `ObjectExtensions.ToJson*`, `StringExtensions.FromJson*` | Tight coupling to `System.Text.Json` API; no custom JSON implementation |
-| `System.Globalization` | Culture-aware character classification | `StringExtensions`, `StringCasingExtensions` | Behaviour depends on installed cultures; default culture is deterministic but may vary across machines |
+| `System.Globalization` | Culture-invariant character classification and case conversion | `StringExtensions`, `StringCasingExtensions` | Behaviour never depends on installed cultures or the current culture |
 | `System.Reflection` | Display attribute extraction from enum members | `EnumExtensions.GetDisplayName` | Runtime cost on first call per enum value; frequent callers should cache |
 | `System.ComponentModel.DataAnnotations` | Annotation types for enum display values | `EnumExtensions` | Dependency on attributed enums; unmarked enums fall back to `ToString()` |
 | `System.IO` | File system and PATH environment access | `FileExtensions.ExistsInPathVariable` | Synchronous I/O; results may be stale if filesystem changes during execution |
