@@ -286,6 +286,105 @@ namespace NuciExtensions.UnitTests
                     .EqualTo(count));
 
         [Test]
+        public void GivenASingleCharacterStringAndACountOneAboveTheMaximumLength_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrown()
+            => Assert.That(
+                () => "x".Repeat(Array.MaxLength + 1),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("count"));
+
+        [Test]
+        public void GivenATwoCharacterStringAndACountJustAboveTheMaximumLength_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrown()
+        {
+            int count = (Array.MaxLength / 2) + 1;
+
+            Assert.That(
+                () => "ab".Repeat(count),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("count"));
+        }
+
+        [Test]
+        public void GivenAThreeCharacterStringAndACountJustAboveTheMaximumLength_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrown()
+        {
+            int count = (Array.MaxLength / 3) + 1;
+
+            Assert.That(
+                () => "abc".Repeat(count),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ActualValue))
+                    .EqualTo(count));
+        }
+
+        [Test]
+        [TestCase("ab")]
+        [TestCase("Praise the Sun!")]
+        public void GivenAStringAndACountWhoseProductExceedsTheMaximumLength_WhenRepeating_ThenTheExceptionMessageStatesTheLimit(
+            string text)
+            => Assert.That(
+                () => text.Repeat(int.MaxValue),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Message.Contains(Array.MaxLength.ToString()));
+
+        [Test]
+        public void GivenASingleCharacterStringAndMaximumCount_WhenRepeating_ThenTheExceptionMessageStatesTheSupportedMaximum()
+            => Assert.That(
+                () => "x".Repeat(int.MaxValue),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Message.Contains($"of {Array.MaxLength} characters"));
+
+        [Test]
+        public void GivenALongStringAndMaximumCount_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrownInsteadOfOverflowing()
+        {
+            string text = new('a', 1000);
+
+            Assert.That(
+                () => text.Repeat(int.MaxValue),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("count"));
+        }
+
+        [Test]
+        public void GivenALongStringAndMaximumCount_WhenRepeating_ThenTheExceptionMessageStatesTheWidenedLength()
+        {
+            string text = new('a', 1000);
+            long expectedLength = (long)text.Length * int.MaxValue;
+
+            Assert.That(
+                () => text.Repeat(int.MaxValue),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Message.Contains(expectedLength.ToString()));
+        }
+
+        [Test]
+        public void GivenAStringAndMinimumCount_WhenRepeating_ThenAnEmptyStringIsReturned()
+            => Assert.That("Praise the Sun!".Repeat(int.MinValue), Is.Empty);
+
+        [Test]
+        public void GivenAStringAndACountOfOneMillion_WhenRepeating_ThenTheResultIsTheExactRepetition()
+        {
+            string text = "Minecraft";
+
+            string result = text.Repeat(1_000_000);
+
+            Assert.That(result, Has.Length.EqualTo(9_000_000));
+            Assert.That(result, Does.StartWith(text));
+            Assert.That(result, Does.EndWith(text));
+        }
+
+        [Test]
+        [TestCase("🎮", 100000)]
+        [TestCase("🎮🎯", 50000)]
+        public void GivenAStringContainingSurrogatePairsAndALargeCountBelowTheMaximum_WhenRepeating_ThenTheResultLengthIsTheExactProduct(
+            string text,
+            int count)
+            => Assert.That(
+                text.Repeat(count),
+                Has.Length.EqualTo(text.Length * count));
+
+        [Test]
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(1000)]

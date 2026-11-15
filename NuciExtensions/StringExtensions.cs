@@ -28,7 +28,9 @@ namespace NuciExtensions
         /// <remarks>
         /// The case is inverted per UTF-16 code unit. Surrogate halves are not upper
         /// or lower case, so they are copied unchanged and a surrogate pair always
-        /// stays adjacent.
+        /// stays adjacent. Inversion is culture-invariant: <see cref="char.ToLowerInvariant(char)"/>
+        /// and <see cref="char.ToUpperInvariant(char)"/> are used, so the Turkish-I behaviour
+        /// is never applied and <c>"I".InvertCase()</c> always returns <c>"i"</c>.
         /// </remarks>
         public static string? InvertCase(this string? text)
         {
@@ -45,11 +47,11 @@ namespace NuciExtensions
 
                 if (char.IsUpper(c))
                 {
-                    result[i] = char.ToLower(c);
+                    result[i] = char.ToLowerInvariant(c);
                 }
                 else
                 {
-                    result[i] = char.ToUpper(c);
+                    result[i] = char.ToUpperInvariant(c);
                 }
             }
 

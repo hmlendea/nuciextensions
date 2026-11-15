@@ -37,7 +37,7 @@ Inverts the case of each character in the string.
 
 **Returns:** `string?` — A new string with each character's case inverted, or null when text is null, or the empty string when it is empty.
 
-**Behaviour:** The case is inverted per UTF-16 code unit. Surrogate halves are neither upper nor lower case, so they are copied unchanged and a surrogate pair always stays adjacent.
+**Behaviour:** The case is inverted per UTF-16 code unit. Surrogate halves are neither upper nor lower case, so they are copied unchanged and a surrogate pair always stays adjacent. Inversion is culture-invariant (`char.ToLowerInvariant` / `char.ToUpperInvariant`), so results are identical under `tr-TR`, `en-US`, `de-DE` and `az-AZ`.
 
 **Exceptions:** None (null and empty input are returned unchanged)
 
@@ -312,6 +312,8 @@ public static string ToTitleCase(this string source)
 
 Converts to title case (each word capitalized).
 
+**Behaviour:** Title-casing is culture-invariant (`string.ToLowerInvariant` / `char.ToUpperInvariant`), so the Turkish dotless-i behaviour is never applied. `"iki".ToTitleCase()` always returns `"Iki"`.
+
 **Returns:** `string` — Title-cased string
 
 **Example:**
@@ -328,6 +330,8 @@ public static string ToSentenceCase(this string source)
 ```
 
 Capitalizes the first letter of each sentence.
+
+**Behaviour:** Interior characters are left untouched and interior capitals are preserved. Uppercasing the leading letter of each sentence uses `char.ToUpperInvariant`, so results are culture-invariant (e.g. `"iki".ToSentenceCase()` always starts with `I`).
 
 **Returns:** `string` — Sentence-cased string
 
@@ -346,6 +350,8 @@ public static string ToSnakeCase(this string source)
 
 Converts to snake_case (words separated by underscores).
 
+**Behaviour:** Only alphanumeric characters and whitespace are retained; whitespace runs become single underscores. Letters are copied unchanged (never upper- or lower-cased).
+
 **Returns:** `string` — Snake case string
 
 **Example:**
@@ -363,6 +369,8 @@ public static string ToUpperSnakeCase(this string source)
 
 Converts to UPPER_SNAKE_CASE.
 
+**Behaviour:** Snake-cased first, then uppercased with `string.ToUpperInvariant`, so results are culture-invariant (e.g. `"iki".ToUpperSnakeCase()` returns `"IKI"` under any culture).
+
 **Returns:** `string` — Upper snake case string
 
 **Example:**
@@ -379,6 +387,8 @@ public static string ToLowerSnakeCase(this string source)
 ```
 
 Converts to lower_snake_case.
+
+**Behaviour:** Snake-cased first, then lowercased with `string.ToLowerInvariant`, so results are culture-invariant (e.g. `"IKI".ToLowerSnakeCase()` returns `"iki"` under any culture).
 
 **Returns:** `string` — Lower snake case string
 

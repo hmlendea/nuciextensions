@@ -1,3 +1,5 @@
+using System.Globalization;
+
 using NUnit.Framework;
 
 namespace NuciExtensions.UnitTests
@@ -137,5 +139,111 @@ namespace NuciExtensions.UnitTests
             => Assert.That(
                 () => ((string)null).ToLowerSnakeCase(),
                 Throws.TypeOf<System.ArgumentNullException>());
+
+        [Test]
+        [SetCulture("tr-TR")]
+        [TestCase("iki", "Iki")]
+        [TestCase("IKI", "Iki")]
+        [TestCase("i", "I")]
+        [TestCase("I", "I")]
+        [TestCase("istanbul", "Istanbul")]
+        [TestCase("İstanbul", "İstanbul")]
+        [TestCase("", "")]
+        public void GivenATurkishCulture_WhenConvertingToTitleCase_ThenTheResultIsCultureInvariant(
+            string text,
+            string expectedResult)
+            => Assert.That(text.ToTitleCase(), Is.EqualTo(expectedResult));
+
+        [Test]
+        [SetCulture("tr-TR")]
+        [TestCase("iki", "IKI")]
+        [TestCase("i", "I")]
+        [TestCase("istanbul", "ISTANBUL")]
+        [TestCase("i-stanbul", "ISTANBUL")]
+        [TestCase("", "")]
+        public void GivenATurkishCulture_WhenConvertingToUpperSnakeCase_ThenTheResultIsCultureInvariant(
+            string text,
+            string expectedResult)
+            => Assert.That(text.ToUpperSnakeCase(), Is.EqualTo(expectedResult));
+
+        [Test]
+        [SetCulture("tr-TR")]
+        [TestCase("IKI", "iki")]
+        [TestCase("I", "i")]
+        [TestCase("ISTANBUL", "istanbul")]
+        [TestCase("ISI", "isi")]
+        [TestCase("", "")]
+        public void GivenATurkishCulture_WhenConvertingToLowerSnakeCase_ThenTheResultIsCultureInvariant(
+            string text,
+            string expectedResult)
+            => Assert.That(text.ToLowerSnakeCase(), Is.EqualTo(expectedResult));
+
+        [Test]
+        [SetCulture("tr-TR")]
+        [TestCase("iki. IKI", "Iki. IKI")]
+        [TestCase("i. I", "I. I")]
+        [TestCase("iki istanbul. IKI", "Iki istanbul. IKI")]
+        [TestCase("", "")]
+        public void GivenATurkishCulture_WhenConvertingToSentenceCase_ThenTheResultIsCultureInvariant(
+            string text,
+            string expectedResult)
+            => Assert.That(text.ToSentenceCase(), Is.EqualTo(expectedResult));
+
+        [Test]
+        [TestCase("tr-TR")]
+        [TestCase("en-US")]
+        [TestCase("de-DE")]
+        [TestCase("az-AZ")]
+        [TestCase("")]
+        public void GivenADifferentCulture_WhenConvertingCasing_ThenTheResultIsIdentical(string cultureName)
+        {
+            CultureInfo originalCulture = CultureInfo.CurrentCulture;
+
+            try
+            {
+                CultureInfo.CurrentCulture = new CultureInfo(cultureName);
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That("iki World".ToTitleCase(), Is.EqualTo("Iki World"));
+                    Assert.That("iki World".ToUpperSnakeCase(), Is.EqualTo("IKI_WORLD"));
+                    Assert.That("IKI World".ToLowerSnakeCase(), Is.EqualTo("iki_world"));
+                    Assert.That("iki. IKI".ToSentenceCase(), Is.EqualTo("Iki. IKI"));
+                });
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = originalCulture;
+            }
+        }
+
+        [Test]
+        public void GivenADifferentCulture_WhenConvertingCasing_ThenTheOriginalCultureIsRestored()
+        {
+            CultureInfo originalCulture = CultureInfo.CurrentCulture;
+
+            try
+            {
+                CultureInfo.CurrentCulture = new CultureInfo("tr-TR");
+
+                _ = "iki".ToTitleCase();
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = originalCulture;
+            }
+
+            Assert.That(CultureInfo.CurrentCulture, Is.EqualTo(originalCulture));
+        }
+
+        [Test]
+        [SetCulture("tr-TR")]
+        [TestCase("iki", "IKI")]
+        [TestCase("I", "i")]
+        [TestCase("Hello", "hELLO")]
+        public void GivenATurkishCulture_WhenInvertingTheCase_ThenTheResultIsCultureInvariant(
+            string text,
+            string expectedResult)
+            => Assert.That(text.InvertCase(), Is.EqualTo(expectedResult));
     }
 }
