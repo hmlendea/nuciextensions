@@ -131,7 +131,7 @@ The principal architecture boundaries are:
 
 **Boundary rules:**
 - Enumerable methods must not consume the sequence more than once; use `Any()` for efficient checks
-- Random number generation is statically cached to avoid repeated allocation
+- Random number generation uses `Random.Shared`, which is thread-safe and allocated once per process
 - Pop and Shuffle modify the list in place; callers must manage the original reference
 - Dictionary add-or-update atomically checks and updates to prevent race conditions in single-threaded contexts
 
@@ -162,9 +162,9 @@ The principal architecture boundaries are:
 |-----------|----------------|------------------------|-----------------------|
 | `StringExtensions` | Text transformation, case management, and JSON round-trip for strings | `System.Globalization`, `System.Text`, `System.Text.Json` | Static; no state |
 | `StringCasingExtensions` | Case-sensitive reformatting (title case, sentence case, snake case) | `System.Text` | Static; no state |
-| `EnumerableExtensions` | Random selection, duplicate detection, and emptiness checking for sequences | `System.Collections.Generic`, `System.Linq` | Static; shared `Random` instance (cached) |
+| `EnumerableExtensions` | Random selection, duplicate detection, and emptiness checking for sequences | `System.Collections.Generic`, `System.Linq` | Static; no state (uses `Random.Shared`) |
 | `EnumerableExt` | Null-safe wrappers for enumerable emptiness checks | `System.Collections.Generic` | Static; no state |
-| `ListExtensions` | In-place shuffling and pop operations for mutable lists | `System.Collections.Generic`, `System.Linq` | Static; shared `Random` instance (cached) |
+| `ListExtensions` | In-place shuffling and pop operations for mutable lists | `System.Collections.Generic`, `System.Linq` | Static; no state (uses `Random.Shared`) |
 | `DictionaryExtensions` | Add-or-update and safe value lookup for dictionaries | `System.Collections.Generic` | Static; no state |
 | `DateTimeExtensions` | UNIX timestamp conversion in both directions | Built-in; UNIX epoch constant | Static; no state |
 | `EnumExtensions` | Display name extraction via `DisplayAttribute` reflection | `System.ComponentModel.DataAnnotations`, `System.Reflection` | Static; no state |
@@ -190,7 +190,7 @@ NuciExtensions does not own persistent data stores. All data transformations are
 | **String State** | Caller | Immutable; new instances created by each transformation method | Created on method entry, eligible for garbage collection on method exit |
 | **Collection State** | Caller | Mutable collections are modified in place (Shuffle, Pop); enumerable methods do not modify source | Caller owns lifetime; methods do not cache or retain references |
 | **UNIX Timestamp** | Caller | Double or string representation on input; `DateTime` object on output; UTC semantics enforced | Converted at method boundary; no caching |
-| **Random State** | Static cache | `System.Random` instance created on first use; shared across all calls in the AppDomain | Singleton; reused for all random selection operations |
+| **Random State** | Runtime | `Random.Shared` instance provided by the runtime; thread-safe and used by both `EnumerableExtensions` and `ListExtensions` | Process-wide singleton owned by the runtime; no state is held by this library |
 | **File System State** | System | Queried via PATH environment variable and file existence checks; no caching | Read-only at invocation time; results may be stale if PATH or filesystem changes |
 
 ## 🔀 Key Flows
@@ -218,12 +218,12 @@ sequenceDiagram
     Caller->>EnumerableExtensions: GetRandomElement(enumerable)
     EnumerableExtensions->>EnumerableExt: IsNullOrEmpty(enumerable)
     EnumerableExt->>EnumerableExtensions: Throws NullReferenceException if true
-    EnumerableExtensions->>Random: Next(count)
-    Random->>EnumerableExtensions: Return random index
-    EnumerableExtensions->>Caller: Return element at index
+    EnumerableExtensions->>Random: Random.Shared
+    Random->>EnumerableExtensions: Return thread-safe random source
+    EnumerableExtensions->>Caller: Return indexed or sampled element
 ```
 
-This flow ensures fail-fast behaviour on invalid input and reuses the cached `Random` instance.
+This flow ensures fail-fast behaviour on invalid input and uses the thread-safe `Random.Shared` instance, so concurrent callers need not supply their own source.
 
 ### Dictionary Add-or-Update (Atomic in Single-Threaded Context)
 
@@ -268,18 +268,19 @@ Callers are responsible for logging or monitoring their use of the library.
 ### Performance Considerations
 
 - **StringBuilder for concatenation:** String methods that loop use `StringBuilder` to avoid O(n²) performance
-- **Lazy Random caching:** The static `Random` instance is created only on first use, avoiding allocation on AppDomain startup
+- **Shared random source:** `Random.Shared` is provided by the runtime and allocated once per process, so random selection allocates no generator of its own
 - **No reflection caching:** Enum display name extraction via reflection is performed on each call; frequent callers should cache results
 - **Zero-allocation primitives:** Methods like `IsEmpty`, `NotEquals`, and `Truncate` allocate no intermediate objects
 
 ### Thread Safety
 
-All static fields are **not thread-safe**:
+Extension methods hold **no mutable static state**:
 
-- **Shared `Random` instance** in `EnumerableExtensions` and `ListExtensions` is not synchronised; concurrent calls from multiple threads may produce unexpected results
+- **Random selection** in `EnumerableExtensions` and `ListExtensions` uses `Random.Shared`, which is thread-safe since .NET 6, so the default overloads may be called concurrently
+- **Explicit `Random` overloads** use the caller-supplied instance, which is not synchronised; callers sharing one instance across threads must synchronise it themselves
 - **No internal state** exists elsewhere; extension methods are stateless and independent
 
-Callers requiring thread-safe random number generation should pass a thread-local or synchronised `Random` instance to the overloads that accept it.
+Callers who need reproducible sequences should pass their own `Random` instance to the overloads that accept one.
 
 ### Dependency Versioning
 
@@ -391,7 +392,7 @@ This command runs all 118 unit tests and produces a Cobertura coverage report. *
 - **No asynchronous methods:** All methods are synchronous; long-running I/O (e.g., file lookup) is not suitable for the extension model.
 - **Backward compatibility:** Once a method signature is public, it cannot change without a major version bump. Consumers depend on stable signatures across minor and patch versions.
 - **No NuGet package dependencies:** The package has zero runtime dependencies; all functionality derives from .NET Base Class Library types only.
-- **Thread-safety of Random:** The shared `Random` instance in enumerable and list extensions is not thread-safe; multi-threaded callers must provide their own synchronised instance.
+- **Random thread safety:** Random selection uses `Random.Shared`, which is thread-safe; the explicit `Random` overloads use the caller-supplied instance, which callers must synchronise themselves if shared across threads.
 
 ## 🔧 Extension Points
 
@@ -411,7 +412,7 @@ This command runs all 118 unit tests and produces a Cobertura coverage report. *
 
 - Extension class names must end with `Extensions` (e.g., `CustomTypeExtensions`)
 - All methods must be `public static` with no private state
-- Use lazy static initialization (e.g., `static Random random;` with null-coalescing assignment `??=`) if caching is necessary
+- Use the runtime-provided shared state (e.g. `Random.Shared`) if a thread-safe shared instance is needed
 
 ### Adding a New Method to an Existing Extension Class
 
@@ -433,7 +434,7 @@ This command runs all 118 unit tests and produces a Cobertura coverage report. *
 | **No package dependencies** | Reduces version conflicts and bloat for consumers; increases stability. | All functionality must derive from .NET Base Class Library; community-requested features cannot depend on third-party libraries. | `NuciExtensions.csproj` has no `<PackageReference>` items |
 | **100% test coverage** | Ensures all branches and lines are exercised; prevents silent regressions on refactoring. | Higher maintenance burden; each new method requires comprehensive tests. Coverage is verified in CI. | Test files in `NuciExtensions.UnitTests/`; CI workflow checks `--collect:"XPlat Code Coverage"` |
 | **Backward-compatible refactoring only** | Minor and patch version changes must not break consumers. | Refactorings are limited to internals (string concatenation → `StringBuilder`, simplifying boolean logic); public signatures are immutable. | Refactoring completed 2026-08-16; all 118 tests pass; no breaking changes |
-| **Shared `Random` instance with no locking** | Avoids repeated allocation on every random call; reduces GC pressure. | Thread-unsafe; concurrent calls from multiple threads may produce correlated results. Callers can pass their own `Random` for thread-safety. | `EnumerableExtensions`, `ListExtensions` define static `Random` field |
+| **`Random.Shared` instead of a cached instance** | The runtime provides one thread-safe generator per process, so no allocation and no locking is needed. | Concurrent callers are safe by default; reproducible sequences require the explicit `Random` overloads. | `EnumerableExtensions`, `ListExtensions` use `Random.Shared` |
 
 ---
 

@@ -9,13 +9,15 @@ namespace NuciExtensions
     /// </summary>
     public static class ListExtensions
     {
-        private static readonly Lazy<Random> lazyRandom = new(() => new Random());
-
         /// <summary>
         /// Shuffles the elements of the specified list.
         /// </summary>
         /// <param name="list">The list to shuffle.</param>
         /// <returns>A new list containing the shuffled elements.</returns>
+        /// <remarks>
+        /// The elements are ordered using <see cref="Random.Shared"/>, which is thread-safe since
+        /// .NET 6, so the method is safe to call concurrently from multiple threads.
+        /// </remarks>
         /// <exception cref="ArgumentNullException">Thrown if the list is null.</exception>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         public static IList<T> Shuffle<T>(this IList<T> list)
@@ -27,7 +29,7 @@ namespace NuciExtensions
                 return list;
             }
 
-            Random random = lazyRandom.Value;
+            Random random = Random.Shared;
 
             List<T> clone = [.. list];
             List<T> result = [];

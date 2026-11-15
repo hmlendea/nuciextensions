@@ -9,27 +9,27 @@ namespace NuciExtensions
     /// </summary>
     public static class EnumerableExtensions
     {
-        private static readonly Lazy<Random> lazyRandom = new(() => new Random());
-
         /// <summary>
         /// Gets a random element.
         /// </summary>
         /// <returns>The element.</returns>
         /// <param name="enumerable">Enumerable.</param>
+        /// <remarks>
+        /// The sequence is enumerated at most once, so single-pass, stateful and side-effecting
+        /// sequences are never re-read and cannot produce inconsistent results between passes.
+        /// A sequence that provides indexed access is indexed directly and is never enumerated;
+        /// any other sequence is sampled in a single pass while it is enumerated, so no element
+        /// is buffered. An unbounded sequence that is not indexable does not terminate. This
+        /// overload uses <see cref="Random.Shared"/>, which is thread-safe since .NET 6, so it is
+        /// safe to call concurrently from multiple threads.
+        /// </remarks>
         /// <exception cref="ArgumentNullException">Thrown if the enumerable is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the enumerable is empty.</exception>
         public static T GetRandomElement<T>(this IEnumerable<T> enumerable)
         {
             ArgumentNullException.ThrowIfNull(enumerable);
 
-            if (!enumerable.Any())
-            {
-                throw new InvalidOperationException("Cannot get a random element from an empty collection.");
-            }
-
-            Random random = lazyRandom.Value;
-
-            return enumerable.ElementAt(random.Next(enumerable.Count()));
+            return enumerable.GetRandomElement(Random.Shared);
         }
 
         /// <summary>
@@ -38,6 +38,16 @@ namespace NuciExtensions
         /// <returns>The element.</returns>
         /// <param name="enumerable">Enumerable.</param>
         /// <param name="random">Random object to use.</param>
+        /// <remarks>
+        /// The sequence is enumerated at most once, so single-pass, stateful and side-effecting
+        /// sequences are never re-read and cannot produce inconsistent results between passes.
+        /// A sequence that provides indexed access is indexed directly and is never enumerated;
+        /// any other sequence is sampled in a single pass while it is enumerated, so no element
+        /// is buffered. An unbounded sequence that is not indexable does not terminate. Results
+        /// are reproducible only for the same sequence and the same <paramref name="random"/>
+        /// state; the supplied instance is not synchronised, so concurrent callers must provide a
+        /// thread-safe instance. <see cref="Random.Shared"/> is a ready-made thread-safe source.
+        /// </remarks>
         /// <exception cref="ArgumentNullException">Thrown if the enumerable or random is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the enumerable is empty.</exception>
         public static T GetRandomElement<T>(this IEnumerable<T> enumerable, Random random)
@@ -45,12 +55,17 @@ namespace NuciExtensions
             ArgumentNullException.ThrowIfNull(enumerable);
             ArgumentNullException.ThrowIfNull(random);
 
-            if (!enumerable.Any())
+            if (enumerable is IReadOnlyList<T> readOnlyList)
             {
-                throw new InvalidOperationException("Cannot get a random element from an empty collection.");
+                if (readOnlyList.Count == 0)
+                {
+                    throw new InvalidOperationException("Cannot get a random element from an empty collection.");
+                }
+
+                return readOnlyList[random.Next(readOnlyList.Count)];
             }
 
-            return enumerable.ElementAt(random.Next(enumerable.Count()));
+            return SampleRandomElement(enumerable, random);
         }
 
         /// <summary>
@@ -86,6 +101,32 @@ namespace NuciExtensions
             ArgumentNullException.ThrowIfNull(enumerable);
 
             return !enumerable.Any();
+        }
+
+        private static T SampleRandomElement<T>(IEnumerable<T> enumerable, Random random)
+        {
+            using (IEnumerator<T> enumerator = enumerable.GetEnumerator())
+            {
+                if (!enumerator.MoveNext())
+                {
+                    throw new InvalidOperationException("Cannot get a random element from an empty collection.");
+                }
+
+                T selectedElement = enumerator.Current;
+                int elementCount = 1;
+
+                while (enumerator.MoveNext())
+                {
+                    elementCount += 1;
+
+                    if (random.Next(elementCount) == 0)
+                    {
+                        selectedElement = enumerator.Current;
+                    }
+                }
+
+                return selectedElement;
+            }
         }
     }
 }

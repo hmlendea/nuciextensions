@@ -83,7 +83,7 @@ NuciExtensions is a **curated library of extension methods** that enhance standa
 - **Shared logic:** ToSnakeCase is the base for upper/lower variants
 
 #### EnumerableExtensions
-- **Random selection:** GetRandomElement (with/without seeded Random)
+- **Random selection:** GetRandomElement (with/without seeded Random; default overload uses thread-safe `Random.Shared`)
 - **Analysis:** GetDuplicates (yields each duplicate once)
 - **Validation:** IsEmpty (throws on null)
 - **Dependency:** Uses `EnumerableExt.IsNullOrEmpty` for validation
@@ -240,7 +240,7 @@ Without the `using`, methods are not visible — prevents namespace pollution.
 | `public static class` | All extension classes |
 | `this` modifier | First parameter of every extension method |
 | No instance members | No constructors, instance fields, properties |
-| Static fields allowed | Only for caching (e.g., `static Random random;`) |
+| Static fields allowed | Only for immutable mappings and constants (e.g. `Random.Shared` is used for random selection) |
 
 ---
 
@@ -317,16 +317,16 @@ NuciExtensions (Package)
 |-----------|--------------|-------|
 | StringExtensions | ✅ Yes | Stateless, immutable returns |
 | StringCasingExtensions | ✅ Yes | Stateless |
-| EnumerableExtensions | ❌ No | Shared `static Random random` |
+| EnumerableExtensions | ✅ Yes | Stateless; uses thread-safe `Random.Shared` by default |
 | EnumerableExt | ✅ Yes | Stateless |
-| ListExtensions | ❌ No | Shared `static Random random` |
+| ListExtensions | ✅ Yes | Stateless; uses thread-safe `Random.Shared` |
 | DictionaryExtensions | ✅ Yes | Stateless (caller owns dictionary) |
 | DateTimeExtensions | ✅ Yes | Stateless |
 | EnumExtensions | ✅ Yes | Stateless (reflection per call) |
 | FileExtensions | ✅ Yes | Stateless (read-only FS access) |
 | ObjectExtensions | ✅ Yes | Stateless |
 
-**For thread-safe random:** Pass own `Random` instance to `GetRandomElement(enumerable, random)`
+**For reproducible random:** Pass your own `Random` instance to `GetRandomElement(enumerable, random)`; the default overload is already thread-safe.
 
 ### Error Handling Philosophy
 
@@ -367,7 +367,7 @@ NuciExtensions (Package)
 
 ### Memory Management
 
-- **No caching** except static `Random` (single instance per AppDomain)
+- **No caching** except the runtime-provided `Random.Shared` instance
 - **No object pooling**
 - **String methods:** New string per call (immutability)
 - **Collection methods:** Caller owns collections; methods don't retain references
@@ -482,7 +482,7 @@ dotnet pack NuciExtensions/NuciExtensions.csproj -c Release
 | Attribute | Implementation |
 |-----------|----------------|
 | **Fail-fast** | Exceptions on invalid input |
-| **No hidden state** | Stateless methods (except Random cache) |
+| **No hidden state** | Stateless methods (randomness comes from the runtime-provided `Random.Shared`) |
 | **Deterministic** | Same input → same output (with seeded Random) |
 | **100% coverage** | All branches and lines tested |
 
@@ -492,7 +492,7 @@ dotnet pack NuciExtensions/NuciExtensions.csproj -c Release
 |-----------|----------------|
 | **Zero overhead** | Extension methods = static calls |
 | **StringBuilder** | O(n) concatenation |
-| **Lazy Random** | Allocated on first use |
+| **Shared Random** | Runtime-provided `Random.Shared`, no per-call allocation |
 | **No reflection caching** | Explicit — callers control caching |
 
 ### Security
@@ -525,6 +525,7 @@ dotnet pack NuciExtensions/NuciExtensions.csproj -c Release
 | 2026-08-16 | Zero package dependencies | Stability, no version conflicts, minimal attack surface |
 | 2026-08-16 | 100% test coverage | Prevent regressions, enforce quality gate |
 | 2026-08-16 | Shared Random (no locking) | Performance; thread-safety documented, overload provided |
+| 2026-11-15 | `Random.Shared` instead of a cached instance | Thread-safe by default, no allocation, no synchronisation needed; reproducible sequences available through the explicit `Random` overloads |
 | 2026-08-16 | Namespace-scoped extensions | Opt-in prevents pollution, clear ownership |
 
 ---
