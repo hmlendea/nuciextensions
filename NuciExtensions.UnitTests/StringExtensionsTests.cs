@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text.Json;
 
 using NUnit.Framework;
@@ -39,6 +40,57 @@ namespace NuciExtensions.UnitTests
         [Test]
         public void GivenANullString_WhenInvertingTheCase_ThenNullIsReturned()
             => Assert.That(((string?)null).InvertCase(), Is.Null);
+
+        [Test]
+        [TestCase("iki", "IKI")]
+        [TestCase("IKI", "iki")]
+        [TestCase("I", "i")]
+        [TestCase("i", "I")]
+        [TestCase("\u0130stanbul", "\u0130STANBUL")]
+        [TestCase("D\u0130YARBAKIR", "d\u0130yarbakir")]
+        public void GivenACultureSensitiveAlphabet_WhenInvertingTheCase_ThenTheInvariantResultIsReturned(
+            string text,
+            string expectedText)
+            => Assert.That(text.InvertCase(), Is.EqualTo(expectedText));
+
+        [Test]
+        [TestCase("tr-TR")]
+        [TestCase("az-AZ")]
+        [TestCase("lt-LT")]
+        [TestCase("de-DE")]
+        [TestCase("en-US")]
+        public void GivenANonInvariantCulture_WhenInvertingTheCase_ThenTheResultMatchesTheInvariantResult(string cultureName)
+        {
+            string[] samples = { "iki", "IKI", "I", "i", "\u0130stanbul", "D\u0130YARBAKIR", "Praise the Sun!" };
+
+            string[] expectedResults = new string[samples.Length];
+
+            using (new CultureScope(CultureInfo.InvariantCulture))
+            {
+                for (int i = 0; i < samples.Length; i++)
+                {
+                    expectedResults[i] = samples[i].InvertCase()!;
+                }
+            }
+
+            using (new CultureScope(cultureName))
+            {
+                for (int i = 0; i < samples.Length; i++)
+                {
+                    Assert.That(samples[i].InvertCase(), Is.EqualTo(expectedResults[i]));
+                }
+            }
+        }
+
+        [Test]
+        [TestCase("a\U0001F3AEb", "A\U0001F3AEB")]
+        [TestCase("\U0001F3AEhello", "\U0001F3AEHELLO")]
+        [TestCase("hello\U0001F3AE", "HELLO\U0001F3AE")]
+        [TestCase("caf\u00E9", "CAF\u00C9")]
+        public void GivenAStringContainingSurrogatePairs_WhenInvertingTheCase_ThenThePairIsPreserved(
+            string text,
+            string expectedText)
+            => Assert.That(text.InvertCase(), Is.EqualTo(expectedText));
 
         [Test]
         [TestCase("", "")]
@@ -284,6 +336,105 @@ namespace NuciExtensions.UnitTests
                 Throws.TypeOf<ArgumentOutOfRangeException>()
                     .With.Property(nameof(ArgumentOutOfRangeException.ActualValue))
                     .EqualTo(count));
+
+        [Test]
+        public void GivenASingleCharacterStringAndACountOneAboveTheMaximumLength_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrown()
+            => Assert.That(
+                () => "x".Repeat(Array.MaxLength + 1),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("count"));
+
+        [Test]
+        public void GivenATwoCharacterStringAndACountJustAboveTheMaximumLength_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrown()
+        {
+            int count = (Array.MaxLength / 2) + 1;
+
+            Assert.That(
+                () => "ab".Repeat(count),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("count"));
+        }
+
+        [Test]
+        public void GivenAThreeCharacterStringAndACountJustAboveTheMaximumLength_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrown()
+        {
+            int count = (Array.MaxLength / 3) + 1;
+
+            Assert.That(
+                () => "abc".Repeat(count),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ActualValue))
+                    .EqualTo(count));
+        }
+
+        [Test]
+        [TestCase("ab")]
+        [TestCase("Praise the Sun!")]
+        public void GivenAStringAndACountWhoseProductExceedsTheMaximumLength_WhenRepeating_ThenTheExceptionMessageStatesTheLimit(
+            string text)
+            => Assert.That(
+                () => text.Repeat(int.MaxValue),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Message.Contains(Array.MaxLength.ToString()));
+
+        [Test]
+        public void GivenASingleCharacterStringAndMaximumCount_WhenRepeating_ThenTheExceptionMessageStatesTheSupportedMaximum()
+            => Assert.That(
+                () => "x".Repeat(int.MaxValue),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Message.Contains($"of {Array.MaxLength} characters"));
+
+        [Test]
+        public void GivenALongStringAndMaximumCount_WhenRepeating_ThenAnArgumentOutOfRangeExceptionIsThrownInsteadOfOverflowing()
+        {
+            string text = new('a', 1000);
+
+            Assert.That(
+                () => text.Repeat(int.MaxValue),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Property(nameof(ArgumentOutOfRangeException.ParamName))
+                    .EqualTo("count"));
+        }
+
+        [Test]
+        public void GivenALongStringAndMaximumCount_WhenRepeating_ThenTheExceptionMessageStatesTheWidenedLength()
+        {
+            string text = new('a', 1000);
+            long expectedLength = (long)text.Length * int.MaxValue;
+
+            Assert.That(
+                () => text.Repeat(int.MaxValue),
+                Throws.TypeOf<ArgumentOutOfRangeException>()
+                    .With.Message.Contains(expectedLength.ToString()));
+        }
+
+        [Test]
+        public void GivenAStringAndMinimumCount_WhenRepeating_ThenAnEmptyStringIsReturned()
+            => Assert.That("Praise the Sun!".Repeat(int.MinValue), Is.Empty);
+
+        [Test]
+        public void GivenAStringAndACountOfOneMillion_WhenRepeating_ThenTheResultIsTheExactRepetition()
+        {
+            string text = "Minecraft";
+
+            string result = text.Repeat(1_000_000);
+
+            Assert.That(result, Has.Length.EqualTo(9_000_000));
+            Assert.That(result, Does.StartWith(text));
+            Assert.That(result, Does.EndWith(text));
+        }
+
+        [Test]
+        [TestCase("🎮", 100000)]
+        [TestCase("🎮🎯", 50000)]
+        public void GivenAStringContainingSurrogatePairsAndALargeCountBelowTheMaximum_WhenRepeating_ThenTheResultLengthIsTheExactProduct(
+            string text,
+            int count)
+            => Assert.That(
+                text.Repeat(count),
+                Has.Length.EqualTo(text.Length * count));
 
         [Test]
         [TestCase(1)]

@@ -140,7 +140,7 @@ Input String
 ┌─────────────────────────────────────┐
 │ Character-by-character Processing   │
 │ • char.IsUpper/IsLower/IsLetter     │
-│ • CultureInfo for case conversion   │
+│ • Invariant case conversion         │
 │ • Custom diacritic mappings         │
 │ • Unicode normalization (FormD/FormC)│
 └─────────────────────────────────────┘
@@ -284,7 +284,7 @@ StringExtensions
 | Dependency | Used By | Coupling |
 |------------|---------|----------|
 | `System.Text.Json` | StringExtensions, ObjectExtensions | Tight (API surface) |
-| `System.Globalization` | StringExtensions, StringCasingExtensions | Medium (culture behavior) |
+| `System.Globalization` | StringExtensions, StringCasingExtensions | Low (culture-invariant) |
 | `System.Reflection` | EnumExtensions | Loose (single method) |
 | `System.ComponentModel.DataAnnotations` | EnumExtensions | Loose (attribute) |
 | `System.IO` | FileExtensions | Medium (sync I/O) |
