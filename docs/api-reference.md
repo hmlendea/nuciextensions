@@ -422,13 +422,15 @@ Returns a random element from the sequence.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `enumerable` | `IEnumerable<T>` | Source sequence |
-| `random` | `Random` | Optional random instance (uses shared static if omitted) |
+| `random` | `Random` | Optional random instance (uses `Random.Shared` if omitted) |
 
 **Returns:** `T` — Random element
 
 **Behaviour:** The sequence is enumerated at most once, so single-pass, stateful and side-effecting sequences are never re-read and cannot produce inconsistent results between passes. A sequence that provides indexed access (`IReadOnlyList<T>`) is indexed directly and is never enumerated; any other sequence is sampled in a single pass while it is enumerated, so no element is buffered and an unbounded sequence that is not indexable does not terminate.
 
-**Determinism:** Results are reproducible only when the same sequence and the same `Random` state are supplied to the `random` overload; the parameterless overload uses a shared static instance and therefore returns different elements between calls. The supplied `Random` instance is not synchronised, so concurrent callers must provide a thread-safe instance.
+**Thread safety:** The parameterless overload uses `Random.Shared`, which is thread-safe since .NET 6, so it may be called concurrently from multiple threads without synchronisation.
+
+**Determinism:** Results are reproducible only when the same sequence and the same `Random` state are supplied to the `random` overload; the parameterless overload uses `Random.Shared` and therefore returns different elements between calls. The supplied `Random` instance is not synchronised, so concurrent callers must provide a thread-safe instance.
 
 **Exceptions:** `NullReferenceException` if sequence is null or empty
 

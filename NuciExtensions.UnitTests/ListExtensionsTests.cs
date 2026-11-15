@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 
@@ -148,6 +151,77 @@ namespace NuciExtensions.UnitTests
             Assert.That(
                 () => collection.Pop(),
                 Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void GivenMultipleThreads_WhenShuffling_ThenNoFailureOccursAndEveryElementIsPreserved()
+        {
+            const int TaskCount = 8;
+            const int IterationsPerTask = 2_000;
+
+            IList<int> source = [4, 8, 16, 32, 42, 48, 64, 96];
+            int[] expected = [.. source];
+            ConcurrentQueue<Exception> failures = [];
+            ConcurrentQueue<int[]> results = [];
+
+            Task[] tasks = new Task[TaskCount];
+
+            for (int taskIndex = 0; taskIndex < TaskCount; taskIndex++)
+            {
+                tasks[taskIndex] = Task.Run(() =>
+                {
+                    try
+                    {
+                        for (int iteration = 0; iteration < IterationsPerTask; iteration++)
+                        {
+                            results.Enqueue([.. source.Shuffle()]);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        failures.Enqueue(exception);
+                    }
+                });
+            }
+
+            Task.WaitAll(tasks);
+
+            Assert.That(failures, Is.Empty, string.Join(Environment.NewLine, failures.Select(failure => failure.ToString())));
+            Assert.That(results, Has.Count.EqualTo(TaskCount * IterationsPerTask));
+            Assert.That(results, Is.All.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void GivenMultipleThreads_WhenShuffling_ThenTheSourceListIsNeverModified()
+        {
+            IList<int> source = [4, 8, 16, 32, 42, 48, 64, 96];
+            int[] expected = [.. source];
+            ConcurrentQueue<Exception> failures = [];
+
+            Task[] tasks = new Task[8];
+
+            for (int taskIndex = 0; taskIndex < tasks.Length; taskIndex++)
+            {
+                tasks[taskIndex] = Task.Run(() =>
+                {
+                    try
+                    {
+                        for (int iteration = 0; iteration < 2_000; iteration++)
+                        {
+                            source.Shuffle();
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        failures.Enqueue(exception);
+                    }
+                });
+            }
+
+            Task.WaitAll(tasks);
+
+            Assert.That(failures, Is.Empty, string.Join(Environment.NewLine, failures.Select(failure => failure.ToString())));
+            Assert.That(source, Is.EqualTo(expected));
         }
     }
 }

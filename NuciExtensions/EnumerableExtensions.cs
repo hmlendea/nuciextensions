@@ -9,8 +9,6 @@ namespace NuciExtensions
     /// </summary>
     public static class EnumerableExtensions
     {
-        private static readonly Lazy<Random> lazyRandom = new(() => new Random());
-
         /// <summary>
         /// Gets a random element.
         /// </summary>
@@ -21,7 +19,9 @@ namespace NuciExtensions
         /// sequences are never re-read and cannot produce inconsistent results between passes.
         /// A sequence that provides indexed access is indexed directly and is never enumerated;
         /// any other sequence is sampled in a single pass while it is enumerated, so no element
-        /// is buffered. An unbounded sequence that is not indexable does not terminate.
+        /// is buffered. An unbounded sequence that is not indexable does not terminate. This
+        /// overload uses <see cref="Random.Shared"/>, which is thread-safe since .NET 6, so it is
+        /// safe to call concurrently from multiple threads.
         /// </remarks>
         /// <exception cref="ArgumentNullException">Thrown if the enumerable is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the enumerable is empty.</exception>
@@ -29,7 +29,7 @@ namespace NuciExtensions
         {
             ArgumentNullException.ThrowIfNull(enumerable);
 
-            return enumerable.GetRandomElement(lazyRandom.Value);
+            return enumerable.GetRandomElement(Random.Shared);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace NuciExtensions
         /// is buffered. An unbounded sequence that is not indexable does not terminate. Results
         /// are reproducible only for the same sequence and the same <paramref name="random"/>
         /// state; the supplied instance is not synchronised, so concurrent callers must provide a
-        /// thread-safe instance.
+        /// thread-safe instance. <see cref="Random.Shared"/> is a ready-made thread-safe source.
         /// </remarks>
         /// <exception cref="ArgumentNullException">Thrown if the enumerable or random is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the enumerable is empty.</exception>

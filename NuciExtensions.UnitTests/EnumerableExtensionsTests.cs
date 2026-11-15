@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 
@@ -393,6 +395,133 @@ namespace NuciExtensions.UnitTests
             Assert.That(
                 () => collection.IsEmpty(),
                 Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void GivenMultipleThreads_WhenGettingARandomElementWithTheDefaultOverload_ThenNoFailureOccursAndEveryResultComesFromTheSequence()
+        {
+            const int TaskCount = 8;
+            const int IterationsPerTask = 10_000;
+
+            ConcurrentQueue<string> observed = [];
+            ConcurrentQueue<Exception> failures = [];
+
+            Task[] tasks = new Task[TaskCount];
+
+            for (int taskIndex = 0; taskIndex < TaskCount; taskIndex++)
+            {
+                tasks[taskIndex] = Task.Run(() =>
+                {
+                    try
+                    {
+                        for (int iteration = 0; iteration < IterationsPerTask; iteration++)
+                        {
+                            observed.Enqueue(GameCollection.GetRandomElement());
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        failures.Enqueue(exception);
+                    }
+                });
+            }
+
+            Task.WaitAll(tasks);
+
+            Assert.That(failures, Is.Empty, string.Join(Environment.NewLine, failures.Select(failure => failure.ToString())));
+            Assert.That(observed, Has.Count.EqualTo(TaskCount * IterationsPerTask));
+
+            foreach (string element in observed)
+            {
+                Assert.That(GameCollection, Does.Contain(element));
+            }
+        }
+
+        [Test]
+        public void GivenMultipleThreads_WhenGettingARandomElementWithTheDefaultOverload_ThenAllElementsAreEventuallySelected()
+        {
+            const int TaskCount = 8;
+            const int IterationsPerTask = 5_000;
+
+            ConcurrentDictionary<string, byte> observed = new();
+
+            Task[] tasks = new Task[TaskCount];
+
+            for (int taskIndex = 0; taskIndex < TaskCount; taskIndex++)
+            {
+                tasks[taskIndex] = Task.Run(() =>
+                {
+                    for (int iteration = 0; iteration < IterationsPerTask; iteration++)
+                    {
+                        observed.TryAdd(GameCollection.GetRandomElement(), 0);
+                    }
+                });
+            }
+
+            Task.WaitAll(tasks);
+
+            Assert.That(observed.Keys, Is.EquivalentTo(GameCollection));
+        }
+
+        [Test]
+        public void GivenMultipleThreads_WhenGettingARandomElementFromAnIndexableSequence_ThenNoFailureOccurs()
+        {
+            TrackingReadOnlyList<string> collection = new(GameCollection);
+            ConcurrentQueue<Exception> failures = [];
+
+            Task[] tasks = new Task[8];
+
+            for (int taskIndex = 0; taskIndex < tasks.Length; taskIndex++)
+            {
+                tasks[taskIndex] = Task.Run(() =>
+                {
+                    try
+                    {
+                        for (int iteration = 0; iteration < 10_000; iteration++)
+                        {
+                            collection.GetRandomElement();
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        failures.Enqueue(exception);
+                    }
+                });
+            }
+
+            Task.WaitAll(tasks);
+
+            Assert.That(failures, Is.Empty, string.Join(Environment.NewLine, failures.Select(failure => failure.ToString())));
+        }
+
+        [Test]
+        public void GivenProductionExtensionClasses_WhenInspectingStaticFields_ThenNoUnsynchronisedRandomInstanceIsStored()
+        {
+            Type[] extensionClasses =
+            [
+                typeof(EnumerableExtensions),
+                typeof(ListExtensions),
+                typeof(EnumerableExt),
+            ];
+
+            List<string> violations = [];
+
+            foreach (Type extensionClass in extensionClasses)
+            {
+                foreach (System.Reflection.FieldInfo field in extensionClass.GetFields(
+                    System.Reflection.BindingFlags.Static |
+                    System.Reflection.BindingFlags.Public |
+                    System.Reflection.BindingFlags.NonPublic))
+                {
+                    if (field.FieldType == typeof(Random) ||
+                        (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(Lazy<>)))
+                    {
+                        violations.Add($"{extensionClass.Name}.{field.Name} stores state of type {field.FieldType}.");
+                    }
+                }
+            }
+
+            Assert.That(violations, Is.Empty, string.Join(Environment.NewLine, violations));
         }
     }
 }
