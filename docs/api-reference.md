@@ -426,6 +426,10 @@ Returns a random element from the sequence.
 
 **Returns:** `T` — Random element
 
+**Behaviour:** The sequence is enumerated at most once, so single-pass, stateful and side-effecting sequences are never re-read and cannot produce inconsistent results between passes. A sequence that provides indexed access (`IReadOnlyList<T>`) is indexed directly and is never enumerated; any other sequence is sampled in a single pass while it is enumerated, so no element is buffered and an unbounded sequence that is not indexable does not terminate.
+
+**Determinism:** Results are reproducible only when the same sequence and the same `Random` state are supplied to the `random` overload; the parameterless overload uses a shared static instance and therefore returns different elements between calls. The supplied `Random` instance is not synchronised, so concurrent callers must provide a thread-safe instance.
+
 **Exceptions:** `NullReferenceException` if sequence is null or empty
 
 **Example:**
